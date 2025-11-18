@@ -1,3 +1,26 @@
+// 🕑 GLOBAL CLOCK LOGIC (Must be outside the IIFE for setTimeout)
+// =======================================================
+
+function checkTime(i) {
+    if (i < 10) {i = "0" + i};
+    return i;
+}
+
+function startTime() {
+    const today = new Date();
+    let h = today.getHours();
+    let m = today.getMinutes();
+    let s = today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    // This assumes you have already fixed the ID to 'real-time-clock'
+    document.getElementById('real-time-clock').innerHTML = h + ":" + m + ":" + s;
+    // The recursive call now works because startTime is a global function
+    setTimeout(startTime, 1000); 
+}
+
+// -------------------------------------------------------
+
 (function(){
     const storageKey = 'homelab-theme-v2';
     const body = document.body;
@@ -5,6 +28,33 @@
     const themeIcon = document.getElementById('theme-toggle-icon');
     const githubIcon = document.getElementById('github-icon');
 
+    // --- Search Filtering Logic ---
+    const searchInput = document.getElementById('global-search-input');
+    const allCards = document.querySelectorAll('.app-card');
+
+    function filterCards() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+
+        allCards.forEach(card => {
+            const titleElement = card.querySelector('.app-title');
+            const subElement = card.querySelector('.app-sub');
+            
+            const titleText = titleElement ? titleElement.textContent.toLowerCase() : '';
+            const subText = subElement ? subElement.textContent.toLowerCase() : '';
+
+            const isMatch = (
+                searchTerm.length === 0 ||
+                titleText.includes(searchTerm) ||
+                subText.includes(searchTerm)
+            );
+
+            card.classList.toggle('hidden', !isMatch);
+        });
+    }
+
+    searchInput.addEventListener('keyup', filterCards);
+
+    // --- Theme and Particle Logic (Existing) ---
     function initParticles(color){
         const root = document.getElementById('particles-js');
         const old = root.querySelector('canvas'); 
@@ -48,18 +98,6 @@
         e.preventDefault(); 
         setTheme(body.classList.contains('light-theme') ? 'dark' : 'light'); 
     });
-
-    function checkIcons(){
-        const test = document.createElement('i'); 
-        test.className = 'bi bi-github'; 
-        test.style.position='absolute'; 
-        test.style.opacity='0'; 
-        document.body.appendChild(test);
-        const height = test.offsetHeight; 
-        document.body.removeChild(test);
-        if(!height || height < 6){
-            document.querySelectorAll('.app-icon').forEach(el => el.classList.add('fallback'));
-        }
-    }
-    setTimeout(checkIcons, 800);
 })();
+
+startTime();

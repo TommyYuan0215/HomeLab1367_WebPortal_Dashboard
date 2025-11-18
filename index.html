@@ -14,106 +14,87 @@
 
 <div id="particles-js"></div>
 
-<nav class="navbar navbar-expand-lg navbar-custom fixed-top">
-    <div class="container-fluid px-3">
-        <a class="navbar-brand" href="#">apps.homelab1367.local</a>
-
-        <div class="d-flex align-items-center ms-auto gap-3">
-            <a id="github-link" href="https://github.com/TommyYuan0215" target="_blank" title="GitHub" aria-label="GitHub">
-                <i id="github-icon" class="bi bi-github" style="font-size:1.25rem;color:var(--text)"></i>
-            </a>
-
-            <button id="theme-toggle-btn" class="btn btn-sm btn-ghost" aria-label="Toggle theme" title="Toggle theme" style="background:transparent;border:none;padding:6px">
-                <i id="theme-toggle-icon" class="bi" style="font-size:1.25rem;color:var(--text)"></i>
-            </button>
+<nav class="navbar-tv fixed-top">
+    <div class="nav-search">
+        <div class="search-input-wrapper">
+            <i class="bi bi-search"></i> 
+            <input type="text" id="global-search-input" placeholder="Search apps" aria-label="Search content">
         </div>
+    </div>
+    <div class="nav-profile">
+        <a href="#" id="theme-toggle-btn" aria-label="Toggle Dark/Light Theme">
+            <i id="theme-toggle-icon" class="bi bi-moon-fill"></i>
+        </a>
+        <a href="https://github.com/homelab1367/webportal" target="_blank" aria-label="GitHub Repository">
+            <i id="github-icon" class="bi bi-github"></i> 
+        </a>
+        <div id="real-time-clock" class="time"></div>
     </div>
 </nav>
 
-<header class="hero" role="banner">
-    <div class="overlay"></div>
-    <div class="title">Welcome to the HomeLab1367 Web Portal.</div>
-</header>
-
-<main class="main-container">
-    <section>
-        <h3 class="section-title"><i class="bi bi-mortarboard-fill"></i> Uni Projects (Top Picks)</h3>
-
-        <div class="h-scroll animate-fade" role="list" aria-label="Top picks">
-            
-            <div class="h-card" role="listitem">
-                <a class="app-card" href="http://apps.homelab1367.local/uni/tvi" target="_blank">
-                    <i class="bi bi-tree-fill app-icon" aria-hidden="true"></i>
-                    <div class="app-card-content">
-                        <div class="app-title">TV Ident</div>
-                        <div class="app-sub">3D Sierpinski Gasket TV Ident</div>
-                    </div>
-                </a>
-            </div>
-            
-            <div class="h-card" role="listitem">
-                <a class="app-card" href="http://apps.homelab1367.local/uni/3dam" target="_blank">
-                    <i class="bi bi-box-fill app-icon" aria-hidden="true"></i>
-                    <div class="app-card-content">
-                        <div class="app-title">3DAM</div>
-                        <div class="app-sub">3D Articulated Model</div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="h-card" role="listitem">
-                <a class="app-card" href="http://apps.homelab1367.local/uni/ecorecyclepenang" target="_blank">
-                    <i class="bi bi-recycle app-icon" aria-hidden="true"></i>
-                    <div class="app-card-content">
-                        <div class="app-title">Eco Recycle Penang</div>
-                        <div class="app-sub">Recycle Web App for Penang</div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="h-card" role="listitem">
-                <a class="app-card" href="http://apps.homelab1367.local/uni/momentsnap" target="_blank">
-                    <i class="bi bi-camera-fill app-icon" aria-hidden="true"></i>
-                    <div class="app-card-content">
-                        <div class="app-title">Moment Snap</div>
-                        <div class="app-sub">USM Photography Participation App</div>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </section>
+<main class="main-container-tv">
     
-    <hr style="border-color:rgba(255,255,255,0.08); margin:20px 0;">
+    <div class="feature-banner">
+        <div class="feature-content">
+            <h1 class="feature-title">Welcome</h1>
+            <p class="feature-meta">HomeLab1367 Web Portal @ 2025</p>
+            <p class="feature-description">Quick access to all self-hosted applications, media servers, and university projects on the local network.</p>
+        </div>
+        <div class="feature-image-overlay">
+             </div>
+    </div>
 
-    <section class="mt-4">
-        <h3 class="section-title"><i class="bi bi-hexagon-fill"></i> Docker Apps (Self‑Hosted)</h3>
-
-        <div class="grid-col animate-fade">
-            <a class="app-card" href="http://apps.homelab1367.local:8096" target="_blank">
-                <i class="bi bi-tv-fill app-icon" aria-hidden="true"></i>
-                <div class="app-card-content">
-                    <div class="app-title">Media Server</div>
-                    <div class="app-sub">Jellyfin: Your free, open-source media system</div>
-                </div>
+    <section class="tv-row">
+        <h3 class="row-title"><i class="bi bi-box-fill"></i>Docker Apps</h3>
+        <div class="tv-row-content">
+            <a class="app-card favorite-app-card" href="http://apps.homelab1367.local:8096" target="_blank">
+                <i class="bi bi-tv-fill app-icon" style="color:var(--accent); font-size: 3rem;" aria-hidden="true"></i>
+                <div class="app-title">Media Server</div>
             </a>
 
-            <a class="app-card" href="http://apps.homelab1367.local:2283" target="_blank">
-                <i class="bi bi-image-fill app-icon" aria-hidden="true"></i>
-                <div class="app-card-content">
-                    <div class="app-title">Photo Viewer</div>
-                    <div class="app-sub">Immich: Self-hosted Google Photos alternative</div>
-                </div>
+            <a class="app-card favorite-app-card" href="http://apps.homelab1367.local:2283" target="_blank">
+                <i class="bi bi-image-fill app-icon" style="color:var(--accent); font-size: 3rem;" aria-hidden="true"></i>
+                <div class="app-title">Photo Viewer</div>
             </a>
 
-            <a class="app-card" href="http://apps.homelab1367.local:8080" target="_blank">
-                <i class="bi bi-cloud-fill app-icon" aria-hidden="true"></i>
-                <div class="app-card-content">
-                    <div class="app-title">Cloud Storage</div>
-                    <div class="app-sub">Nextcloud: Private file sync &amp; share platform</div>
-                </div>
+            <a class="app-card favorite-app-card" href="http://apps.homelab1367.local:8080" target="_blank">
+                <i class="bi bi-cloud-fill app-icon" style="color:var(--accent); font-size: 3rem;" aria-hidden="true"></i>
+                <div class="app-title">Cloud Storage</div>
             </a>
         </div>
     </section>
+
+    <section class="tv-row">
+        <h3 class="row-title"><i class="bi bi-mortarboard-fill"></i> Trending Uni Projects</h3>
+        <div class="tv-row-content">
+            
+            <a class="app-card content-card" href="http://apps.homelab1367.local/uni/tvi" target="_blank">
+                <img src="https://picsum.photos/320/180?random=10" alt="TV Ident" class="card-image"/>
+                <div class="card-content-overlay">TV Ident</div>
+                <div class="app-sub">3D Sierpinski Gasket TV Ident</div>
+            </a>
+            
+            <a class="app-card content-card" href="http://apps.homelab1367.local/uni/3dam" target="_blank">
+                <img src="https://picsum.photos/320/180?random=11" alt="3DAM" class="card-image"/>
+                <div class="card-content-overlay">3DAM</div>
+                <div class="app-sub">3D Articulated Model</div>
+            </a>
+
+            <a class="app-card content-card" href="http://apps.homelab1367.local/uni/ecorecyclepenang" target="_blank">
+                <img src="https://picsum.photos/320/180?random=12" alt="Eco Recycle Penang" class="card-image"/>
+                <div class="card-content-overlay">Eco Recycle Penang</div>
+                <div class="app-sub">Recycle Web App for Penang</div>
+            </a>
+
+            <a class="app-card content-card" href="http://apps.homelab1367.local/uni/momentsnap" target="_blank">
+                <img src="https://picsum.photos/320/180?random=13" alt="Moment Snap" class="card-image"/>
+                <div class="card-content-overlay">Moment Snap</div>
+                <div class="app-sub">USM Photography Participation App</div>
+            </a>
+        </div>
+    </section>
+
+    <hr class="tv-divider">
 
     <footer>
         <small>&copy; 2024 HomeLab1367. Designed by Jun Lin.</small>
