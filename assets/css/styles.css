@@ -53,40 +53,71 @@ body.light-theme{
 /* ====== NEW TV UI STYLES =============================== */
 /* ======================================================= */
 
-/* ===== TV Navbar Styling ===== */
+/* ===== TV Navbar Styling (MODIFIED FOR 3-SECTION LAYOUT) ===== */
 .navbar-tv {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 56px;
+    height: 60px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    /* Use space-between to align Brand (Left) and Profile (Right) */
+    justify-content: space-between; 
     padding: 0 40px;
-    /* Gradient Fade */
+    /* Gradient Fade for Dark Theme */
     background: linear-gradient(180deg, var(--bg-dark) 80%, rgba(15, 15, 18, 0));
     z-index: 200;
     box-sizing: border-box;
 }
+/* LIGHT THEME FIX: Transparent background and no shadow for seamless banner merge */
 body.light-theme .navbar-tv {
-    background: var(--light-bg);
-    box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    background: transparent;
+    box-shadow: none;
 }
 
+/* --- NEW: Navigation Brand Styling --- */
+.nav-brand {
+    /* Ensure the logo and text align vertically */
+    display: flex; 
+    align-items: center;
+    gap: 8px; /* Space between the logo and the text */
+    flex-basis: 250px; 
+}
+
+.brand-logo {
+    /* Height roughly matches the brand-text font-size (1.25rem = approx 20px) */
+    height: 2rem; 
+    width: auto;
+    transition: filter 0.2s ease;
+}
+
+.brand-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+body.light-theme .brand-text {
+    color: var(--light-text);
+}
+
+/* Search Input Styling (MODIFIED FOR CENTER) */
 .nav-search {
     display: flex;
     align-items: center;
+    /* Use margin auto to push the search container to the center */
+    margin: 0 auto; 
 }
 
-/* Search Input Styling */
 .search-input-wrapper {
     display: flex;
     align-items: center;
     background: var(--card-dark); /* Use card background for the input area */
     border-radius: 999px; /* Pill shape */
     padding: 6px 15px;
-    width: 300px;
+    width: 500px; /* Keep fixed width for centering consistency */
     transition: background 0.3s ease;
 }
 body.light-theme .search-input-wrapper {
@@ -116,11 +147,15 @@ body.light-theme #global-search-input {
     color: var(--muted);
 }
 
-/* Clock and Profile Styling */
+/* Clock and Profile Styling (MODIFIED FOR RIGHT ALIGNMENT) */
 .nav-profile {
     display: flex;
     align-items: center;
     gap: 20px;
+    /* Gives the right column a consistent width */
+    flex-basis: 250px; 
+    /* Push content to the far right within its flex-basis container */
+    justify-content: flex-end; 
 }
 
 .nav-profile i, .nav-profile .time {
@@ -142,9 +177,10 @@ body.light-theme .nav-profile i:hover {
 }
 
 
-/* ===== Main Container & Featured Banner (replacing .hero) ===== */
+/* ===== Main Container & Featured Banner (MODIFIED FOR MERGE) ===== */
 .main-container-tv {
-    padding-top: 56px; /* Space for the fixed navbar */
+    /* REMOVED top padding for seamless merge */
+    padding-top: 0; 
     max-width: 100%;
     margin: 0 auto;
     position: relative;
@@ -177,11 +213,20 @@ body.light-theme .feature-banner {
     background: linear-gradient(90deg, var(--bg-dark) 25%, rgba(15, 15, 18, 0.4) 70%, transparent 100%);
     z-index: 1;
 }
+/* LIGHT THEME FIX: Extend gradient to cover the top area, creating the seamless merge */
 body.light-theme .feature-banner::before {
-    background: linear-gradient(90deg, var(--light-bg) 25%, rgba(255, 255, 255, 0.4) 70%, transparent 100%);
+    background: linear-gradient(
+        180deg, 
+        var(--light-bg) 0, /* Start light color at the very top */
+        var(--light-bg) 70px, /* Keep light color solid for navbar height + blending area */
+        rgba(255, 255, 255, 0.4) 100px 
+    ),
+    linear-gradient(90deg, var(--light-bg) 25%, rgba(255, 255, 255, 0.4) 70%, transparent 100%);
 }
 
 .feature-content {
+    /* ADDED top padding to push content below the transparent fixed navbar */
+    padding-top: 56px; 
     z-index: 2;
     max-width: 450px;
     color: var(--text);
@@ -244,16 +289,28 @@ body.light-theme .row-title {
 }
 .row-title i{color:var(--accent);font-size:1.4rem}
 
+/* --- HORIZONTAL ROW (Used for Docker Apps section) --- */
 .tv-row-content {
     display: flex;
     gap: 20px;
     overflow-x: auto; /* Enable horizontal scrolling */
-    padding: 20px;
+    padding: 20px 15px;
+}
+
+/* --- RESPONSIVE ROW (Used for Uni Projects section) --- */
+.tv-fluid-content {
+    display: flex;
+    flex-direction: row; /* Default: Horizontal row for desktop */
+    gap: 20px;
+    overflow-x: auto; /* Allow horizontal scrolling on desktop */
+    padding: 20px 15px;
 }
 
 /* Hide scrollbar for a cleaner look */
-.tv-row-content::-webkit-scrollbar { height: 0; }
-.tv-row-content::-webkit-scrollbar-thumb { background: transparent; }
+.tv-row-content::-webkit-scrollbar,
+.tv-fluid-content::-webkit-scrollbar { height: 0; }
+.tv-row-content::-webkit-scrollbar-thumb,
+.tv-fluid-content::-webkit-scrollbar-thumb { background: transparent; }
 
 /* --- Base App Card (Reset original styles) --- */
 .app-card {
@@ -311,11 +368,19 @@ body.light-theme .favorite-app-card .app-title {
 
 /* --- Content Card (Movie/Poster cards) --- */
 .content-card {
-    width: 320px; 
+    width: 320px; /* Base width */
     height: 180px; /* Standard 16:9 aspect ratio */
     background: var(--card-dark);
     box-shadow: var(--shadow-1);
 }
+/* *** FIX for .tv-fluid-content on desktop to prevent stretching *** */
+.tv-fluid-content .content-card {
+    width: 320px; /* Ensure desktop card width is explicitly 320px */
+    flex-shrink: 1; 
+    flex-grow: 0; 
+}
+/* *************************************************************** */
+
 body.light-theme .content-card {
     background: var(--light-card);
     box-shadow: 0 4px 16px rgba(17,24,39,0.08);
@@ -426,16 +491,106 @@ body.light-theme footer {
 
 /* ===== Mobile (Basic responsiveness for testing, remove for pure TV display) ===== */
 @media (max-width:991.98px) {
-     .feature-banner { height: 300px; padding-left: 20px; background-image: none; }
-     .feature-banner::before { background: none; }
-     .feature-title { font-size: 2rem; }
-     .feature-image-overlay { display: none; }
-     .tv-row { padding-left: 20px; }
-     .navbar-tv { padding: 0 20px; }
-     .nav-search { padding-left: 0; }
-     .search-input-wrapper { width: 100%; }
-     .tv-divider { margin: 50px 20px 30px; }
-     footer { padding-left: 20px; }
-     .favorite-app-card { width: 100px; height: 100px; }
-     .content-card { width: 200px; height: 112px; }
+    
+    /* --------------------
+       1. NAVBAR ALIGNMENT
+       -------------------- */
+    .navbar-tv { 
+        padding: 0 15px; /* Reduce padding on edges */
+    }
+    .nav-brand { 
+        flex-basis: auto; /* Allow brand to take minimum space */
+    } 
+    /* Center the search bar in the remaining space */
+    .nav-search { 
+        margin: 0 auto;
+        padding: 0 15px; /* Add padding here to prevent search from hitting brand/profile */
+    }
+    .nav-profile { 
+        flex-basis: auto;
+        justify-content: flex-end;
+        gap: 15px; /* Reduce gap between icons */
+    }
+    /* Reduce search bar width for mobile screens */
+    .search-input-wrapper { 
+        width: 200px; 
+    }
+    
+    /* --------------------
+       2. FEATURE BANNER
+       -------------------- */
+    .feature-banner { 
+        height: 300px; 
+        padding-left: 20px; 
+        background-image: none; 
+    }
+    .feature-banner::before { 
+        background: none; 
+    }
+    /* Fix: Keep padding on content for the fixed navbar */
+    .feature-content { 
+        padding-top: 56px; 
+        max-width: 90%;
+    } 
+    .feature-title { 
+        font-size: 2rem; 
+    }
+    .feature-image-overlay { 
+        display: none; 
+    }
+    
+    /* --------------------
+       3. CONTENT ROWS & CARDS
+       -------------------- */
+    .tv-row { 
+        padding: 0 15px; 
+    }
+    
+    /* --- FAVORITE DOCKER APPS (4-ICON GRID FIX) --- */
+    .tv-row-content { 
+        flex-wrap: wrap; 
+        flex-direction: row;
+        gap: 10px; 
+        /* FIX: Add 15px padding to the sides of the container */
+        padding: 0 15px 20px; 
+    }
+
+    .favorite-app-card { 
+        /* Calculation: (100% - 3 gaps of 10px) / 4 icons = 24.25% */
+        width: calc(25% - 7.5px); 
+        height: 80px; /* Use a fixed, compact height */
+        flex-shrink: 1; 
+        flex-grow: 0;
+        justify-content: space-evenly; /* Evenly space the icon and title */
+    }
+    .favorite-app-card .app-icon {
+        font-size: 2rem !important; /* Smaller icon size for 4-up grid */
+    }
+
+    /* --- TRENDING UNI PROJECTS (2-COLUMN GRID) --- */
+    .tv-fluid-content {
+        flex-direction: row; 
+        flex-wrap: wrap; 
+        gap: 15px; 
+        overflow-x: hidden; 
+        padding-bottom: 0;
+    }
+    
+    /* Make the responsive content cards take half the width minus the gap */
+    .tv-fluid-content .content-card {
+        width: calc(50% - 7.5px); /* Ensures 2 columns with 15px gap between */
+        height: 140px; 
+        flex-shrink: 1; 
+        flex-grow: 0; 
+    }
+
+    /* --------------------
+       4. FOOTER / DIVIDER
+       -------------------- */
+    .tv-divider { 
+        margin: 50px 15px 30px; 
+    }
+    footer { 
+        padding-left: 15px; 
+    }
 }
