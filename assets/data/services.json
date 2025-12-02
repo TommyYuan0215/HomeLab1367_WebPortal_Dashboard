@@ -23,6 +23,12 @@
           "url": "http://apps.homelab1367.local:8080",
           "icon": "bi-cloud-fill",
           "color": "#8a39ff"
+        },
+        {
+          "title": "Docker Management Tools",
+          "url": "http://apps.homelab1367.local:9000",
+          "icon": "bi bi-gear-wide",
+          "color": "#8a39ff"
         }
       ]
     },
