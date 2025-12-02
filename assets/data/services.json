@@ -1,0 +1,62 @@
+{
+  "sections": [
+    {
+      "id": "docker-apps",
+      "title": "Docker Apps",
+      "icon": "bi-box-fill",
+      "type": "favorite",
+      "items": [
+        {
+          "title": "Media Server",
+          "url": "http://apps.homelab1367.local:8096",
+          "icon": "bi-tv-fill",
+          "color": "#8a39ff"
+        },
+        {
+          "title": "Photo Viewer",
+          "url": "http://apps.homelab1367.local:2283",
+          "icon": "bi-image-fill",
+          "color": "#8a39ff"
+        },
+        {
+          "title": "Cloud Storage",
+          "url": "http://apps.homelab1367.local:8080",
+          "icon": "bi-cloud-fill",
+          "color": "#8a39ff"
+        }
+      ]
+    },
+    {
+      "id": "uni-projects",
+      "title": "Trending Uni Projects",
+      "icon": "bi-mortarboard-fill",
+      "type": "content",
+      "items": [
+        {
+          "title": "TV Ident",
+          "url": "http://apps.homelab1367.local/uni/tvi",
+          "image": "https://picsum.photos/320/180?random=10",
+          "subtitle": "3D Sierpinski Gasket TV Ident"
+        },
+        {
+          "title": "3DAM",
+          "url": "http://apps.homelab1367.local/uni/3dam",
+          "image": "https://picsum.photos/320/180?random=11",
+          "subtitle": "3D Articulated Model"
+        },
+        {
+          "title": "Eco Recycle Penang",
+          "url": "http://apps.homelab1367.local/uni/ecorecyclepenang",
+          "image": "https://picsum.photos/320/180?random=12",
+          "subtitle": "Recycle Web App for Penang"
+        },
+        {
+          "title": "Moment Snap",
+          "url": "http://apps.homelab1367.local/uni/momentsnap",
+          "image": "https://picsum.photos/320/180?random=13",
+          "subtitle": "USM Photography Participation App"
+        }
+      ]
+    }
+  ]
+}
