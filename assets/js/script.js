@@ -98,20 +98,65 @@ function showErrorMessage(error) {
 
 function renderSections(sections) {
     const container = document.getElementById('sections-container');
-    if (!container) {
-        console.error('sections-container not found in DOM');
-        return;
-    }
-
+    if (!container) return;
     container.innerHTML = '';
 
     sections.forEach(section => {
-        const sectionElement = createSectionElement(section);
-        container.appendChild(sectionElement);
-    });
+        const sectionDiv = document.createElement('section');
+        sectionDiv.className = 'tv-row';
+        
+        // 1. Create Title
+        const title = document.createElement('h3');
+        title.className = 'row-title';
+        title.innerHTML = `<i class="bi ${section.icon}"></i>${section.title}`;
+        
+        // 2. Create Container
+        const contentContainer = document.createElement('div');
+        contentContainer.className = 'tv-fluid-content'; // Use fluid layout for news
+        
+        // 3. Handle "News" Type specifically
+        if (section.type === 'news' && section.rssUrl) {
+            // Show a loading text first
+            contentContainer.innerHTML = '<div style="padding:20px; color:var(--muted)">Loading news...</div>';
+            
+            // Fetch from rss2json (Free API bridge)
+            fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(section.rssUrl)}`)
+                .then(res => res.json())
+                .then(data => {
+                    contentContainer.innerHTML = ''; // Clear loading text
+                    
+                    // Take the first 5 news items
+                    data.items.slice(0, 5).forEach(newsItem => {
+                        // Convert RSS item to your Dashboard Card format
+                        const cardData = {
+                            title: newsItem.title,
+                            url: newsItem.link,
+                            // Use a default news image if none exists (Google RSS often hides images)
+                            image: newsItem.thumbnail || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&q=80',
+                            subtitle: new Date(newsItem.pubDate).toLocaleDateString()
+                        };
+                        contentContainer.appendChild(createContentCard(cardData));
+                    });
+                })
+                .catch(err => {
+                    contentContainer.innerHTML = `<div style="color:red">Failed to load news.</div>`;
+                    console.error(err);
+                });
+        } 
+        // 4. Handle Standard Types (Your existing apps)
+        else if (section.items) {
+            section.items.forEach(item => {
+                const card = section.type === 'favorite' 
+                    ? createFavoriteCard(item) 
+                    : createContentCard(item);
+                contentContainer.appendChild(card);
+            });
+        }
 
-    // Update search functionality after rendering
-    updateSearchFunctionality();
+        sectionDiv.appendChild(title);
+        sectionDiv.appendChild(contentContainer);
+        container.appendChild(sectionDiv);
+    });
 }
 
 function createSectionElement(section) {

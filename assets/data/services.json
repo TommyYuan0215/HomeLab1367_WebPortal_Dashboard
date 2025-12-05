@@ -89,6 +89,13 @@
           "subtitle": "USM Photography Participation App"
         }
       ]
+    },
+    {
+      "id": "global-news",
+      "title": "Top Stories",
+      "icon": "bi-newspaper",
+      "type": "news",
+      "rssUrl": "https://news.google.com/rss/search?q=technology&hl=en-US&gl=US&ceid=US:en" 
     }
   ]
 }
