@@ -103,103 +103,94 @@
           </div>
 
           <div class="settings-body">
-            <div class="setting-item">
-              <label for="font-size-range">
-                <i class="bi bi-type"></i> Font Size
-                <span class="setting-value" id="font-size-value">100%</span>
-              </label>
-              <input
-                type="range"
-                id="font-size-range"
-                min="75"
-                max="150"
-                value="100"
-                step="5"
-                aria-label="Font size adjustment"
-              />
-              <div class="setting-buttons">
-                <button class="btn-small" id="font-decrease" aria-label="Decrease font size">
-                  <i class="bi bi-dash-lg"></i>
-                </button>
-                <button class="btn-small" id="font-reset" aria-label="Reset font size">
-                  Reset
-                </button>
-                <button class="btn-small" id="font-increase" aria-label="Increase font size">
-                  <i class="bi bi-plus-lg"></i>
-                </button>
-              </div>
+            <div class="setting-group-title">Display & Visuals</div>
+
+            <div class="setting-item block">
+                <div class="setting-label">
+                    <span>Text Size</span>
+                    <span class="setting-desc" id="font-size-value">100%</span>
+                </div>
+                <input type="range" id="font-size-range" min="75" max="150" value="100" step="5">
+            </div>
+
+            <div class="setting-item block">
+                <div class="setting-label">
+                    <span>Animation Speed</span>
+                    <span class="setting-desc" id="animation-speed-value">Normal</span>
+                </div>
+                <input type="range" id="animation-speed-range" min="1" max="3" value="2" step="1">
             </div>
 
             <div class="setting-item">
-              <label for="animation-speed-range">
-                <i class="bi bi-speedometer2"></i> Animation Speed
-                <span class="setting-value" id="animation-speed-value">Normal</span>
-              </label>
-              <input
-                type="range"
-                id="animation-speed-range"
-                min="1"
-                max="3"
-                value="2"
-                step="1"
-                aria-label="Animation speed adjustment"
-              />
-              <div class="setting-buttons">
-                <button class="btn-small" id="speed-slow" aria-label="Slow animations">
-                  Slow
-                </button>
-                <button class="btn-small" id="speed-reset" aria-label="Normal speed">
-                  Normal
-                </button>
-                <button class="btn-small" id="speed-fast" aria-label="Fast animations">
-                  Fast
-                </button>
-              </div>
+                <div class="setting-label">
+                    <span>High Contrast</span>
+                    <span class="setting-desc">Sharpen colors</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="high-contrast-toggle">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-group-title">Accessibility Tools</div>
+
+            <div class="setting-item">
+                <div class="setting-label">
+                    <span>Dyslexia Friendly</span>
+                    <span class="setting-desc">Easier to read font</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="dyslexic-font-toggle">
+                    <span class="toggle-slider"></span>
+                </label>
             </div>
 
             <div class="setting-item">
-              <label for="high-contrast-toggle">
-                <i class="bi bi-circle-half"></i> High Contrast Mode
-              </label>
-              <label class="toggle-switch">
-                <input
-                  type="checkbox"
-                  id="high-contrast-toggle"
-                  aria-label="Toggle high contrast mode"
-                />
-                <span class="toggle-slider"></span>
-              </label>
+                <div class="setting-label">
+                    <span>Highlight Links</span>
+                    <span class="setting-desc">Underline all links</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="highlight-links-toggle">
+                    <span class="toggle-slider"></span>
+                </label>
             </div>
 
             <div class="setting-item">
-              <label for="reduced-motion-toggle">
-                <i class="bi bi-pause-circle"></i> Reduce Motion
-              </label>
-              <label class="toggle-switch">
-                <input
-                  type="checkbox"
-                  id="reduced-motion-toggle"
-                  aria-label="Toggle reduced motion"
-                />
-                <span class="toggle-slider"></span>
-              </label>
+                <div class="setting-label">
+                    <span>Large Cursor</span>
+                    <span class="setting-desc">Bigger mouse pointer</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="big-cursor-toggle">
+                    <span class="toggle-slider"></span>
+                </label>
             </div>
 
             <div class="setting-item">
-              <label for="show-news-toggle">
-                <i class="bi bi-newspaper"></i> Show News Feed
-              </label>
-              <label class="toggle-switch">
-                <input
-                  type="checkbox"
-                  id="show-news-toggle"
-                  aria-label="Toggle news feed"
-                  checked
-                />
-                <span class="toggle-slider"></span>
-              </label>
+                <div class="setting-label">
+                    <span>Reduce Motion</span>
+                    <span class="setting-desc">Stop animations</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="reduced-motion-toggle">
+                    <span class="toggle-slider"></span>
+                </label>
             </div>
-          </div>
+
+            <div class="setting-group-title">Content</div>
+
+            <div class="setting-item">
+                <div class="setting-label">
+                    <span>Show News Feed</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="show-news-toggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+        </div>
 
           <div class="settings-footer">
             <button class="btn-reset-all" id="reset-all-settings">

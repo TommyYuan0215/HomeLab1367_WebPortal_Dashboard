@@ -1,245 +1,162 @@
 // =======================================================
-// 🎨 ACCESSIBILITY & VISUALIZATION SETTINGS (CLEANED)
+// 🎨 ACCESSIBILITY SETTINGS (UPDATED)
 // =======================================================
 
 (function() {
     'use strict';
 
-    // --- DOM Elements ---
+    // --- Elements ---
     const settingsBtn = document.getElementById('settings-btn');
     const settingsModal = document.getElementById('settings-modal');
     const settingsOverlay = document.getElementById('settings-overlay');
     const settingsClose = document.getElementById('settings-close');
-    
-    // Font Size Elements
-    const fontSizeRange = document.getElementById('font-size-range');
-    const fontSizeValue = document.getElementById('font-size-value');
-    const fontIncrease = document.getElementById('font-increase');
-    const fontDecrease = document.getElementById('font-decrease');
-    const fontReset = document.getElementById('font-reset');
-    
-    // Animation Speed Elements
-    const animationSpeedRange = document.getElementById('animation-speed-range');
-    const animationSpeedValue = document.getElementById('animation-speed-value');
-    const speedSlow = document.getElementById('speed-slow');
-    const speedReset = document.getElementById('speed-reset');
-    const speedFast = document.getElementById('speed-fast');
-    
-    // Toggles
-    const highContrastToggle = document.getElementById('high-contrast-toggle');
-    const reducedMotionToggle = document.getElementById('reduced-motion-toggle');
-    const showNewsToggle = document.getElementById('show-news-toggle'); // New
     const resetAllBtn = document.getElementById('reset-all-settings');
     
-    // Storage keys
-    const STORAGE_KEYS = {
-        fontSize: 'homelab-font-size',
-        animationSpeed: 'homelab-animation-speed',
-        highContrast: 'homelab-high-contrast',
-        reducedMotion: 'homelab-reduced-motion',
-        showNews: 'homelab-show-news'
-    };
-    
-    // --- Modal Functions ---
+    // Sliders
+    const fontSizeRange = document.getElementById('font-size-range');
+    const fontSizeValue = document.getElementById('font-size-value');
+    const animRange = document.getElementById('animation-speed-range');
+    const animValue = document.getElementById('animation-speed-value');
+
+    // Toggles Configuration
+    // maps ID -> { cssClass, storageKey }
+    const togglesConfig = [
+        { 
+            id: 'high-contrast-toggle', 
+            cssClass: 'high-contrast', 
+            storageKey: 'homelab-high-contrast' 
+        },
+        { 
+            id: 'dyslexic-font-toggle', 
+            cssClass: 'dyslexic-font', 
+            storageKey: 'homelab-dyslexic-font' 
+        },
+        { 
+            id: 'highlight-links-toggle', 
+            cssClass: 'highlight-links', 
+            storageKey: 'homelab-highlight-links' 
+        },
+        { 
+            id: 'big-cursor-toggle', 
+            cssClass: 'cursor-big', 
+            storageKey: 'homelab-big-cursor' 
+        },
+        { 
+            id: 'reduced-motion-toggle', 
+            cssClass: 'reduced-motion', 
+            storageKey: 'homelab-reduced-motion' 
+        }
+    ];
+
+    const showNewsToggle = document.getElementById('show-news-toggle');
+
+    // --- Modal Logic ---
     function openSettings() {
-        settingsModal?.classList.add('active');
-        settingsModal?.setAttribute('aria-hidden', 'false');
+        if(!settingsModal) return;
+        settingsModal.classList.add('active');
+        settingsModal.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
     }
     
     function closeSettings() {
-        settingsModal?.classList.remove('active');
-        settingsModal?.setAttribute('aria-hidden', 'true');
+        if(!settingsModal) return;
+        settingsModal.classList.remove('active');
+        settingsModal.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
     }
     
-    // Event Listeners for Modal
-    settingsBtn?.addEventListener('click', function(e) {
-        e.preventDefault();
-        openSettings();
-    });
-    
+    settingsBtn?.addEventListener('click', (e) => { e.preventDefault(); openSettings(); });
     settingsClose?.addEventListener('click', closeSettings);
     settingsOverlay?.addEventListener('click', closeSettings);
     
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && settingsModal?.classList.contains('active')) {
-            closeSettings();
-        }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && settingsModal?.classList.contains('active')) closeSettings();
     });
-    
-    // --- Font Size Functions ---
-    function updateFontSize(value) {
-        const percentage = value + '%';
-        if (fontSizeValue) fontSizeValue.textContent = percentage;
-        
+
+    // --- Settings Logic ---
+
+    // 1. Font Size
+    function updateFontSize(val) {
+        if(fontSizeValue) fontSizeValue.textContent = val + '%';
         document.body.className = document.body.className.replace(/font-size-\d+/g, '');
-        document.body.classList.add(`font-size-${value}`);
-        
-        localStorage.setItem(STORAGE_KEYS.fontSize, value);
+        document.body.classList.add(`font-size-${val}`);
+        localStorage.setItem('homelab-font-size', val);
     }
-    
-    fontSizeRange?.addEventListener('input', function(e) {
-        updateFontSize(parseInt(e.target.value));
-    });
-    
-    fontIncrease?.addEventListener('click', function() {
-        const current = parseInt(fontSizeRange.value);
-        if (current < 150) {
-            fontSizeRange.value = current + 5;
-            updateFontSize(current + 5);
-        }
-    });
-    
-    fontDecrease?.addEventListener('click', function() {
-        const current = parseInt(fontSizeRange.value);
-        if (current > 75) {
-            fontSizeRange.value = current - 5;
-            updateFontSize(current - 5);
-        }
-    });
-    
-    fontReset?.addEventListener('click', function() {
-        if (fontSizeRange) fontSizeRange.value = 100;
-        updateFontSize(100);
-    });
-    
-    // --- Animation Speed Functions ---
+    fontSizeRange?.addEventListener('input', (e) => updateFontSize(e.target.value));
+
+    // 2. Animation Speed
     const speedLabels = { 1: 'Slow', 2: 'Normal', 3: 'Fast' };
-    
-    function updateAnimationSpeed(value) {
-        const label = speedLabels[value];
-        if (animationSpeedValue) animationSpeedValue.textContent = label;
-        
+    function updateAnimSpeed(val) {
+        if(animValue) animValue.textContent = speedLabels[val] || 'Normal';
         document.body.className = document.body.className.replace(/animation-speed-\d+/g, '');
-        document.body.classList.add(`animation-speed-${value}`);
-        
-        localStorage.setItem(STORAGE_KEYS.animationSpeed, value);
+        document.body.classList.add(`animation-speed-${val}`);
+        localStorage.setItem('homelab-animation-speed', val);
     }
-    
-    animationSpeedRange?.addEventListener('input', function(e) {
-        updateAnimationSpeed(parseInt(e.target.value));
-    });
-    
-    speedSlow?.addEventListener('click', function() {
-        if (animationSpeedRange) animationSpeedRange.value = 1;
-        updateAnimationSpeed(1);
-    });
-    
-    speedReset?.addEventListener('click', function() {
-        if (animationSpeedRange) animationSpeedRange.value = 2;
-        updateAnimationSpeed(2);
-    });
-    
-    speedFast?.addEventListener('click', function() {
-        if (animationSpeedRange) animationSpeedRange.value = 3;
-        updateAnimationSpeed(3);
-    });
-    
-    // --- Toggles ---
-    highContrastToggle?.addEventListener('change', function(e) {
-        if (e.target.checked) {
-            document.body.classList.add('high-contrast');
-            localStorage.setItem(STORAGE_KEYS.highContrast, 'true');
-        } else {
-            document.body.classList.remove('high-contrast');
-            localStorage.setItem(STORAGE_KEYS.highContrast, 'false');
-        }
-    });
-    
-    reducedMotionToggle?.addEventListener('change', function(e) {
-        if (e.target.checked) {
-            document.body.classList.add('reduced-motion');
-            localStorage.setItem(STORAGE_KEYS.reducedMotion, 'true');
-        } else {
-            document.body.classList.remove('reduced-motion');
-            localStorage.setItem(STORAGE_KEYS.reducedMotion, 'false');
-        }
+    animRange?.addEventListener('input', (e) => updateAnimSpeed(e.target.value));
+
+    // 3. Generic Toggles
+    togglesConfig.forEach(conf => {
+        const el = document.getElementById(conf.id);
+        if(!el) return;
+
+        el.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            if (isChecked) {
+                document.body.classList.add(conf.cssClass);
+                localStorage.setItem(conf.storageKey, 'true');
+            } else {
+                document.body.classList.remove(conf.cssClass);
+                localStorage.setItem(conf.storageKey, 'false');
+            }
+        });
     });
 
-    showNewsToggle?.addEventListener('change', function(e) {
+    // 4. News Toggle (Special case as it hides an element)
+    showNewsToggle?.addEventListener('change', (e) => {
         const isVisible = e.target.checked;
-        localStorage.setItem(STORAGE_KEYS.showNews, isVisible);
         document.body.classList.toggle('hide-news', !isVisible);
+        localStorage.setItem('homelab-show-news', isVisible);
     });
-    
-    // --- Reset All Settings ---
-    resetAllBtn?.addEventListener('click', function() {
-        if (confirm('Reset all settings to default?')) {
-            // Reset font size
-            if (fontSizeRange) fontSizeRange.value = 100;
-            updateFontSize(100);
-            
-            // Reset animation speed
-            if (animationSpeedRange) animationSpeedRange.value = 2;
-            updateAnimationSpeed(2);
-            
-            // Reset toggles
-            if (highContrastToggle) {
-                highContrastToggle.checked = false;
-                document.body.classList.remove('high-contrast');
-            }
-            if (reducedMotionToggle) {
-                reducedMotionToggle.checked = false;
-                document.body.classList.remove('reduced-motion');
-            }
-            if (showNewsToggle) {
-                showNewsToggle.checked = true;
-                document.body.classList.remove('hide-news');
-            }
-            
-            // Clear localStorage
-            Object.values(STORAGE_KEYS).forEach(key => {
-                localStorage.removeItem(key);
-            });
-        }
-    });
-    
-    // --- Load Saved Settings ---
-    function loadSavedSettings() {
-        // Load font size
-        const savedFontSize = localStorage.getItem(STORAGE_KEYS.fontSize);
-        if (savedFontSize && fontSizeRange) {
-            fontSizeRange.value = savedFontSize;
-            updateFontSize(parseInt(savedFontSize));
-        }
-        
-        // Load animation speed
-        const savedSpeed = localStorage.getItem(STORAGE_KEYS.animationSpeed);
-        if (savedSpeed && animationSpeedRange) {
-            animationSpeedRange.value = savedSpeed;
-            updateAnimationSpeed(parseInt(savedSpeed));
-        }
-        
-        // Load high contrast
-        const savedContrast = localStorage.getItem(STORAGE_KEYS.highContrast);
-        if (savedContrast === 'true' && highContrastToggle) {
-            highContrastToggle.checked = true;
-            document.body.classList.add('high-contrast');
-        }
-        
-        // Load reduced motion
-        const savedMotion = localStorage.getItem(STORAGE_KEYS.reducedMotion);
-        if (savedMotion === 'true' && reducedMotionToggle) {
-            reducedMotionToggle.checked = true;
-            document.body.classList.add('reduced-motion');
-        }
 
-        // Load News Toggle
-        const savedNews = localStorage.getItem(STORAGE_KEYS.showNews);
-        // Default is TRUE (show news), so we only hide if specifically set to 'false'
+    // --- Load Saved ---
+    function loadSaved() {
+        // Font
+        const savedFont = localStorage.getItem('homelab-font-size') || 100;
+        if(fontSizeRange) fontSizeRange.value = savedFont;
+        updateFontSize(savedFont);
+
+        // Anim
+        const savedAnim = localStorage.getItem('homelab-animation-speed') || 2;
+        if(animRange) animRange.value = savedAnim;
+        updateAnimSpeed(savedAnim);
+
+        // Toggles
+        togglesConfig.forEach(conf => {
+            const el = document.getElementById(conf.id);
+            const saved = localStorage.getItem(conf.storageKey) === 'true';
+            if(el) el.checked = saved;
+            if(saved) document.body.classList.add(conf.cssClass);
+        });
+
+        // News
+        const savedNews = localStorage.getItem('homelab-show-news');
         const showNews = savedNews === null ? true : (savedNews === 'true');
-        
-        if (showNewsToggle) {
-            showNewsToggle.checked = showNews;
-        }
+        if(showNewsToggle) showNewsToggle.checked = showNews;
         document.body.classList.toggle('hide-news', !showNews);
     }
-    
-    // Initialize
+
+    // --- Reset ---
+    resetAllBtn?.addEventListener('click', () => {
+        if(confirm('Reset all settings to default?')) {
+            localStorage.clear();
+            location.reload();
+        }
+    });
+
+    // Init
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', loadSavedSettings);
+        document.addEventListener('DOMContentLoaded', loadSaved);
     } else {
-        loadSavedSettings();
+        loadSaved();
     }
 })();

@@ -67,7 +67,7 @@ body.light-theme{
     padding: 0 40px;
     /* Gradient Fade for Dark Theme */
     background: linear-gradient(180deg, var(--bg-dark) 80%, rgba(15, 15, 18, 0));
-    z-index: 200;
+    z-index: 1000;
     box-sizing: border-box;
 }
 /* LIGHT THEME FIX: Transparent background and no shadow for seamless banner merge */
@@ -669,17 +669,36 @@ body.light-theme .footer-name:hover {
     }
 }
 
-/* ===== Settings Modal / Side Panel ===== */
+/* ===== Settings Modal / Side Panel (Material Design 3 Update) ===== */
 .settings-modal {
+    /* M3 Variables */
+    --m3-surface: #1e1e24;
+    --m3-surface-container: #2b2b31;
+    --m3-primary: #d0bcff;
+    --m3-on-primary: #381e72;
+    --m3-outline: #938f99;
+    --m3-text: #e6e1e5;
+    
     position: fixed;
     top: 0;
     right: 0;
     width: 100%;
     height: 100%;
-    z-index: 1000;
+    /* UPDATE: Increased z-index to 2000 to cover the navbar (header) */
+    z-index: 2000; 
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Light Theme overrides for the modal only */
+body.light-theme .settings-modal {
+    --m3-surface: #fdfcff;
+    --m3-surface-container: #f0f0f5;
+    --m3-primary: #6750a4;
+    --m3-on-primary: #ffffff;
+    --m3-outline: #79747e;
+    --m3-text: #1c1b1f;
 }
 
 .settings-modal.active {
@@ -689,12 +708,9 @@ body.light-theme .footer-name:hover {
 
 .settings-modal-overlay {
     position: absolute;
-    top: 40px; /* Start below navbar */
-    left: 0;
-    width: 100%;
-    height: calc(100% - 60px); /* Full height minus navbar */
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(2px);
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -703,300 +719,254 @@ body.light-theme .footer-name:hover {
     opacity: 1;
 }
 
+/* Side Sheet Styling */
 .settings-modal-content {
     position: fixed;
-    top: 60px; /* Start below the navbar */
-    right: -420px; /* Hidden off-screen initially */
+    top: 0;
+    right: -450px; /* Hidden */
     width: 400px;
-    max-width: 90vw;
-    height: calc(100% - 60px); /* Full height minus navbar */
-    background: var(--card-dark);
-    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
-    z-index: 1001;
+    max-width: 85vw;
+    height: 100%;
+    background: var(--m3-surface);
+    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.3);
+    /* UPDATE: Content z-index must be higher than modal container */
+    z-index: 2001; 
     display: flex;
     flex-direction: column;
-    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow-y: auto;
+    transition: right 0.4s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .settings-modal.active .settings-modal-content {
-    right: 0; /* Slide in from right */
+    right: 0; /* Slide in */
 }
 
-body.light-theme .settings-modal-content {
-    background: var(--light-card);
-    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
-}
-
-/* Remove old slideIn animation */
-/* @keyframes slideIn removed - using CSS transitions instead */
-
+/* Header */
 .settings-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 24px 20px;
-    border-bottom: 1px solid var(--glass);
-    flex-shrink: 0;
-    position: sticky;
-    top: 0;
-    background: var(--card-dark);
-    z-index: 10;
-}
-
-body.light-theme .settings-header {
-    border-bottom-color: rgba(0, 0, 0, 0.1);
-    background: var(--light-card);
+    padding: 24px;
+    border-bottom: 1px solid rgba(128,128,128, 0.2);
 }
 
 .settings-header h2 {
     margin: 0;
     font-size: 1.5rem;
-    color: var(--text);
+    font-weight: 400;
+    color: var(--m3-text);
     display: flex;
     align-items: center;
-    gap: 10px;
-}
-
-body.light-theme .settings-header h2 {
-    color: var(--light-text);
-}
-
-.settings-header h2 i {
-    color: var(--accent);
+    gap: 12px;
 }
 
 .settings-close {
     background: transparent;
     border: none;
-    color: var(--muted);
+    color: var(--m3-outline);
     font-size: 1.5rem;
     cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 4px;
-    transition: all 0.2s ease;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
 }
+.settings-close:hover { background: rgba(128,128,128, 0.1); color: var(--m3-text); }
 
-.settings-close:hover {
-    color: var(--text);
-    background: var(--glass);
-}
-
-body.light-theme .settings-close:hover {
-    color: var(--light-text);
-    background: rgba(0, 0, 0, 0.05);
-}
-
+/* Body */
 .settings-body {
     padding: 24px;
     flex: 1;
     overflow-y: auto;
 }
 
+.setting-group-title {
+    color: var(--m3-primary);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin: 24px 0 16px 0;
+}
+.setting-group-title:first-child { margin-top: 0; }
+
 .setting-item {
-    margin-bottom: 28px;
-}
-
-.setting-item:last-child {
-    margin-bottom: 0;
-}
-
-.setting-item label {
+    background: var(--m3-surface-container);
+    padding: 16px;
+    border-radius: 16px; 
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 12px;
-    color: var(--text);
-    font-weight: 500;
-    font-size: 1rem;
+    gap: 16px;
 }
 
-body.light-theme .setting-item label {
-    color: var(--light-text);
+.setting-item.block {
+    display: block;
 }
 
-.setting-item label i {
-    margin-right: 8px;
-    color: var(--accent);
-}
-
-.setting-value {
-    color: var(--accent-400);
-    font-weight: 600;
-    font-size: 0.95rem;
-}
-
-/* Range Input Styling */
-input[type="range"] {
-    width: 100%;
-    height: 6px;
-    border-radius: 3px;
-    background: var(--glass);
-    outline: none;
-    margin: 12px 0;
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-body.light-theme input[type="range"] {
-    background: var(--light-bg-2);
-}
-
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--accent);
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-input[type="range"]::-webkit-slider-thumb:hover {
-    background: var(--accent-600);
-    transform: scale(1.1);
-}
-
-input[type="range"]::-moz-range-thumb {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--accent);
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s ease;
-}
-
-input[type="range"]::-moz-range-thumb:hover {
-    background: var(--accent-600);
-    transform: scale(1.1);
-}
-
-.setting-buttons {
+.setting-label {
     display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin-top: 8px;
+    flex-direction: column;
+    color: var(--m3-text);
+    font-weight: 500;
+}
+.setting-label i { display: none; } 
+.setting-desc {
+    font-size: 0.8rem;
+    color: var(--m3-outline);
+    font-weight: 400;
+    margin-top: 4px;
 }
 
-.btn-small {
-    background: var(--glass);
-    border: 1px solid var(--glass);
-    color: var(--text);
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.btn-small:hover {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-}
-
-body.light-theme .btn-small {
-    background: var(--light-bg-2);
-    color: var(--light-text);
-    border-color: rgba(0, 0, 0, 0.1);
-}
-
-body.light-theme .btn-small:hover {
-    background: var(--accent);
-    color: white;
-}
-
-/* Toggle Switch */
+/* Material Design 3 Switch */
 .toggle-switch {
     position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 24px;
-    cursor: pointer;
+    width: 52px;
+    height: 32px;
+    flex-shrink: 0;
 }
-
-.toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
 
 .toggle-slider {
     position: absolute;
     cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--glass);
-    transition: 0.3s;
-    border-radius: 24px;
-}
-
-body.light-theme .toggle-slider {
-    background-color: var(--light-bg-2);
+    inset: 0;
+    background-color: transparent;
+    border: 2px solid var(--m3-outline);
+    border-radius: 32px;
+    transition: .3s;
 }
 
 .toggle-slider:before {
     position: absolute;
     content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: 0.3s;
+    height: 16px;
+    width: 16px;
+    left: 6px;
+    bottom: 6px;
+    background-color: var(--m3-outline);
     border-radius: 50%;
+    transition: .3s cubic-bezier(0.2, 0, 0, 1);
 }
 
 input:checked + .toggle-slider {
-    background-color: var(--accent);
+    background-color: var(--m3-primary);
+    border-color: var(--m3-primary);
 }
 
 input:checked + .toggle-slider:before {
-    transform: translateX(26px);
+    background-color: var(--m3-on-primary);
+    transform: translateX(20px);
+    width: 20px; 
+    height: 20px; 
+    bottom: 4px;
 }
 
+/* Material Design 3 Slider */
+input[type="range"] {
+    width: 100%;
+    height: 4px;
+    background: var(--m3-outline);
+    border-radius: 2px;
+    outline: none;
+    margin: 24px 0 10px;
+    -webkit-appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--m3-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 0 0 rgba(0,0,0,0);
+    transition: box-shadow 0.2s;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+    box-shadow: 0 0 0 10px rgba(128,128,128, 0.2);
+}
+
+/* Footer */
 .settings-footer {
-    padding: 20px 24px;
-    border-top: 1px solid var(--glass);
+    padding: 20px;
+    border-top: 1px solid rgba(128,128,128, 0.2);
     text-align: center;
-    flex-shrink: 0;
 }
-
-body.light-theme .settings-footer {
-    border-top-color: rgba(0, 0, 0, 0.1);
-}
-
 .btn-reset-all {
     background: transparent;
-    border: 1px solid var(--muted);
-    color: var(--muted);
-    padding: 10px 20px;
-    border-radius: 6px;
+    border: 1px solid var(--m3-outline);
+    color: var(--m3-text);
+    padding: 10px 24px;
+    border-radius: 100px;
+    font-weight: 500;
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
+    transition: 0.2s;
 }
-
 .btn-reset-all:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+    background: rgba(128,128,128, 0.1);
+    border-color: var(--m3-text);
 }
 
-body.light-theme .btn-reset-all {
-    border-color: var(--light-muted);
-    color: var(--light-muted);
+/* ===== NEW FUNCTIONAL ACCESSIBILITY CLASSES (Global helpers) ===== */
+/* These must be global to affect the dashboard, but they don't change styling unless activated */
+
+/* 1. Dyslexia Font */
+body.dyslexic-font {
+    font-family: 'Comic Sans MS', 'Verdana', sans-serif !important;
+    line-height: 1.6 !important;
 }
 
-body.light-theme .btn-reset-all:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+/* 2. Highlight Links */
+body.highlight-links a {
+    text-decoration: underline !important;
+    color: #ffd700 !important; /* High contrast yellow */
+    background-color: #000000 !important;
+    padding: 0 2px;
+}
+body.light-theme.highlight-links a {
+    color: #0000ee !important;
+    background-color: #ffff00 !important;
+}
+
+/* 3. Large Cursor */
+body.cursor-big, body.cursor-big * {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewport="0 0 48 48" style="fill:black;stroke:white;stroke-width:2px;"><polygon points="0,0 0,40 10,28 24,40 28,34 14,22 36,22" /></svg>'), auto !important;
+}
+
+/* 4. Hide News */
+body.hide-news .tv-row[data-section-type="news"] {
+    display: none !important;
+}
+
+/* Font Size Helpers */
+.font-size-75 { font-size: 75%; }
+.font-size-80 { font-size: 80%; }
+.font-size-85 { font-size: 85%; }
+.font-size-90 { font-size: 90%; }
+.font-size-95 { font-size: 95%; }
+.font-size-100 { font-size: 100%; }
+.font-size-105 { font-size: 105%; }
+.font-size-110 { font-size: 110%; }
+.font-size-115 { font-size: 115%; }
+.font-size-120 { font-size: 120%; }
+.font-size-125 { font-size: 125%; }
+.font-size-130 { font-size: 130%; }
+.font-size-135 { font-size: 135%; }
+.font-size-140 { font-size: 140%; }
+.font-size-145 { font-size: 145%; }
+.font-size-150 { font-size: 150%; }
+
+.high-contrast {
+    filter: contrast(1.5);
+}
+
+.reduced-motion * {
+    animation: none !important;
+    transition: none !important;
 }
 
 /* ===== Bing-Style News Grid ===== */
