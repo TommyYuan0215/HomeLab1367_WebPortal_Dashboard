@@ -103,125 +103,101 @@
           </div>
 
           <div class="settings-body">
-            <div class="settings-grid">
-              <div class="setting-item">
-                <div class="setting-label">
-                  <i class="bi bi-type"></i>
-                  <div>
-                    <div class="setting-title">Font Size</div>
-                    <div class="setting-sub">Adjust global text scale</div>
-                  </div>
-                </div>
-                <div class="setting-control">
-                  <input
-                    type="range"
-                    id="font-size-range"
-                    min="75"
-                    max="150"
-                    value="100"
-                    step="5"
-                    aria-label="Font size adjustment"
-                  />
-                  <div class="setting-buttons">
-                    <button class="btn-small" id="font-decrease" aria-label="Decrease font size">
-                      <i class="bi bi-dash-lg"></i>
-                    </button>
-                    <button class="btn-small" id="font-reset" aria-label="Reset font size">
-                      Reset
-                    </button>
-                    <button class="btn-small" id="font-increase" aria-label="Increase font size">
-                      <i class="bi bi-plus-lg"></i>
-                    </button>
-                  </div>
-                </div>
+            <div class="setting-item">
+              <label for="font-size-range">
+                <i class="bi bi-type"></i> Font Size
+                <span class="setting-value" id="font-size-value">100%</span>
+              </label>
+              <input
+                type="range"
+                id="font-size-range"
+                min="75"
+                max="150"
+                value="100"
+                step="5"
+                aria-label="Font size adjustment"
+              />
+              <div class="setting-buttons">
+                <button class="btn-small" id="font-decrease" aria-label="Decrease font size">
+                  <i class="bi bi-dash-lg"></i>
+                </button>
+                <button class="btn-small" id="font-reset" aria-label="Reset font size">
+                  Reset
+                </button>
+                <button class="btn-small" id="font-increase" aria-label="Increase font size">
+                  <i class="bi bi-plus-lg"></i>
+                </button>
               </div>
+            </div>
 
-              <div class="setting-item">
-                <div class="setting-label">
-                  <i class="bi bi-speedometer2"></i>
-                  <div>
-                    <div class="setting-title">Animation Speed</div>
-                    <div class="setting-sub">Control UI animation pacing</div>
-                  </div>
-                </div>
-                <div class="setting-control">
-                  <input
-                    type="range"
-                    id="animation-speed-range"
-                    min="1"
-                    max="3"
-                    value="2"
-                    step="1"
-                    aria-label="Animation speed adjustment"
-                  />
-                  <div class="setting-buttons">
-                    <button class="btn-small" id="speed-slow" aria-label="Slow animations">Slow</button>
-                    <button class="btn-small" id="speed-reset" aria-label="Normal speed">Normal</button>
-                    <button class="btn-small" id="speed-fast" aria-label="Fast animations">Fast</button>
-                  </div>
-                </div>
+            <div class="setting-item">
+              <label for="animation-speed-range">
+                <i class="bi bi-speedometer2"></i> Animation Speed
+                <span class="setting-value" id="animation-speed-value">Normal</span>
+              </label>
+              <input
+                type="range"
+                id="animation-speed-range"
+                min="1"
+                max="3"
+                value="2"
+                step="1"
+                aria-label="Animation speed adjustment"
+              />
+              <div class="setting-buttons">
+                <button class="btn-small" id="speed-slow" aria-label="Slow animations">
+                  Slow
+                </button>
+                <button class="btn-small" id="speed-reset" aria-label="Normal speed">
+                  Normal
+                </button>
+                <button class="btn-small" id="speed-fast" aria-label="Fast animations">
+                  Fast
+                </button>
               </div>
+            </div>
 
-              <div class="setting-item">
-                <div class="setting-label">
-                  <i class="bi bi-circle-half"></i>
-                  <div>
-                    <div class="setting-title">High Contrast</div>
-                    <div class="setting-sub">Improve color contrast</div>
-                  </div>
-                </div>
-                <div class="setting-control">
-                  <label class="toggle-switch">
-                    <input
-                      type="checkbox"
-                      id="high-contrast-toggle"
-                      aria-label="Toggle high contrast mode"
-                    />
-                    <span class="toggle-slider"></span>
-                  </label>
-                </div>
-              </div>
+            <div class="setting-item">
+              <label for="high-contrast-toggle">
+                <i class="bi bi-circle-half"></i> High Contrast Mode
+              </label>
+              <label class="toggle-switch">
+                <input
+                  type="checkbox"
+                  id="high-contrast-toggle"
+                  aria-label="Toggle high contrast mode"
+                />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
 
-              <div class="setting-item">
-                <div class="setting-label">
-                  <i class="bi bi-pause-circle"></i>
-                  <div>
-                    <div class="setting-title">Reduce Motion</div>
-                    <div class="setting-sub">Disable non-essential animations</div>
-                  </div>
-                </div>
-                <div class="setting-control">
-                  <label class="toggle-switch">
-                    <input
-                      type="checkbox"
-                      id="reduced-motion-toggle"
-                      aria-label="Toggle reduced motion"
-                    />
-                    <span class="toggle-slider"></span>
-                  </label>
-                </div>
-              </div>
+            <div class="setting-item">
+              <label for="reduced-motion-toggle">
+                <i class="bi bi-pause-circle"></i> Reduce Motion
+              </label>
+              <label class="toggle-switch">
+                <input
+                  type="checkbox"
+                  id="reduced-motion-toggle"
+                  aria-label="Toggle reduced motion"
+                />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
 
-              <div class="setting-item">
-                <div class="setting-label">
-                  <i class="bi bi-newspaper"></i>
-                  <div>
-                    <div class="setting-title">Show News Feed</div>
-                    <div class="setting-sub">Toggle news panel on dashboard</div>
-                  </div>
-                </div>
-                <div class="setting-control">
-                  <label class="toggle-switch">
-                    <input
-                      type="checkbox"
-                      id="show-news-toggle"
-                      aria-label="Toggle news feed"
-                      checked
-                    />
-                    <span class="toggle-slider"></span>
-                  </label>
-                </div>
-              </div>
+            <div class="setting-item">
+              <label for="show-news-toggle">
+                <i class="bi bi-newspaper"></i> Show News Feed
+              </label>
+              <label class="toggle-switch">
+                <input
+                  type="checkbox"
+                  id="show-news-toggle"
+                  aria-label="Toggle news feed"
+                  checked
+                />
+                <span class="toggle-slider"></span>
+              </label>
             </div>
           </div>
 
