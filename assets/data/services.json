@@ -1,9 +1,9 @@
 {
   "sections": [
     {
-      "id": "docker-apps",
-      "title": "Docker Apps",
-      "icon": "bi-box-fill",
+      "id": "essentials-tools",
+      "title": "Essentials Tools",
+      "icon": "bi-grid-fill",
       "type": "favorite",
       "items": [
         {
@@ -25,10 +25,36 @@
           "color": "#8a39ff"
         },
         {
+          "title": "Home Assistant",
+          "url": "http://apps.homelab1367.local:8123",
+          "icon": "bi-house-heart-fill",
+          "color": "#03a9f4"
+        }
+      ]
+    },
+    {
+      "id": "admin-tools",
+      "title": "Administrative Tools",
+      "icon": "bi-shield-lock-fill",
+      "type": "favorite",
+      "items": [
+        {
+          "title": "File Browser",
+          "url": "http://apps.homelab1367.local:8083",
+          "icon": "bi-folder-fill",
+          "color": "#ffc107"
+        },
+        {
           "title": "Docker Management Tools",
           "url": "http://apps.homelab1367.local:9000",
-          "icon": "bi bi-gear-wide",
-          "color": "#8a39ff"
+          "icon": "bi-gear-wide-connected",
+          "color": "#ff6b6b"
+        },
+        {
+          "title": "System Health Monitor",
+          "url": "http://apps.homelab1367.local:8090",
+          "icon": "bi-activity",
+          "color": "#20c997"
         }
       ]
     },
