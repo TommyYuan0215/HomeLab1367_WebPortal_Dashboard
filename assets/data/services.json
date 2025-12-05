@@ -10,19 +10,19 @@
           "title": "Media Server",
           "url": "http://apps.homelab1367.local:8096",
           "icon": "bi-tv-fill",
-          "color": "#8a39ff"
+          "color": "#fd7e14"
         },
         {
           "title": "Photo Viewer",
           "url": "http://apps.homelab1367.local:2283",
           "icon": "bi-image-fill",
-          "color": "#8a39ff"
+          "color": "#d63384"
         },
         {
           "title": "Cloud Storage",
           "url": "http://apps.homelab1367.local:8080",
           "icon": "bi-cloud-fill",
-          "color": "#8a39ff"
+          "color": "#0d6efd"
         },
         {
           "title": "Home Assistant",
