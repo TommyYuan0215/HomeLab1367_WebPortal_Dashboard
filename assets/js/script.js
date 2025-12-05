@@ -96,6 +96,50 @@ function showErrorMessage(error) {
     container.innerHTML = errorHTML;
 }
 
+// --- Helper Functions for News ---
+
+// 1. Calculate "2h ago", "5m ago"
+function getTimeAgo(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+    
+    let interval = seconds / 31536000;
+    if (interval > 1) return Math.floor(interval) + "y";
+    interval = seconds / 2592000;
+    if (interval > 1) return Math.floor(interval) + "mo";
+    interval = seconds / 86400;
+    if (interval > 1) return Math.floor(interval) + "d";
+    interval = seconds / 3600;
+    if (interval > 1) return Math.floor(interval) + "h";
+    interval = seconds / 60;
+    if (interval > 1) return Math.floor(interval) + "m";
+    return "Just now";
+}
+
+// 2. Extract Source from Google News Title (e.g., "Headline - CNN" -> returns "CNN")
+function extractSource(title) {
+    const separator = " - ";
+    if (title.includes(separator)) {
+        const parts = title.split(separator);
+        return parts[parts.length - 1]; // Return the last part
+    }
+    return "News";
+}
+
+// 3. Clean Headline (Remove the source from the title)
+function cleanTitle(title) {
+    const separator = " - ";
+    if (title.includes(separator)) {
+        const parts = title.split(separator);
+        parts.pop(); // Remove the source
+        return parts.join(separator);
+    }
+    return title;
+}
+
+// --- Modified Render Function ---
+
 function renderSections(sections) {
     const container = document.getElementById('sections-container');
     if (!container) return;
@@ -105,52 +149,88 @@ function renderSections(sections) {
         const sectionDiv = document.createElement('section');
         sectionDiv.className = 'tv-row';
         
-        // 1. Create Title
+        // Title
         const title = document.createElement('h3');
         title.className = 'row-title';
         title.innerHTML = `<i class="bi ${section.icon}"></i>${section.title}`;
         
-        // 2. Create Container
+        // Container
         const contentContainer = document.createElement('div');
-        contentContainer.className = 'tv-fluid-content'; // Use fluid layout for news
-        
-        // 3. Handle "News" Type specifically
+
+        // CHECK: Is this the News section?
         if (section.type === 'news' && section.rssUrl) {
-            // Show a loading text first
-            contentContainer.innerHTML = '<div style="padding:20px; color:var(--muted)">Loading news...</div>';
             
-            // Fetch from rss2json (Free API bridge)
+            // Use the NEW Grid Layout for news
+            contentContainer.className = 'news-grid'; 
+            
+            // Render Loading State
+            contentContainer.innerHTML = `
+                <div class="news-card" style="background: #222; display: flex; align-items: center; justify-content: center; color: #666;">
+                    Loading News...
+                </div>`;
+
+            // Fetch Data
             fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(section.rssUrl)}`)
                 .then(res => res.json())
                 .then(data => {
-                    contentContainer.innerHTML = ''; // Clear loading text
+                    contentContainer.innerHTML = ''; // Clear loading
                     
-                    // Take the first 5 news items
-                    data.items.slice(0, 5).forEach(newsItem => {
-                        // Convert RSS item to your Dashboard Card format
-                        const cardData = {
-                            title: newsItem.title,
-                            url: newsItem.link,
-                            // Use a default news image if none exists (Google RSS often hides images)
-                            image: newsItem.thumbnail || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&q=80',
-                            subtitle: new Date(newsItem.pubDate).toLocaleDateString()
-                        };
-                        contentContainer.appendChild(createContentCard(cardData));
+                    // Display up to 8 news items
+                    data.items.slice(0, 8).forEach(item => {
+                        const sourceName = extractSource(item.title);
+                        const cleanHeadline = cleanTitle(item.title);
+                        const timeAgo = getTimeAgo(item.pubDate);
+                        
+                        // Try to find an image (enclosure or thumbnail)
+                        // Note: Free RSS feeds often lack good images, we use a fallback if missing
+                        let imageUrl = item.thumbnail || item.enclosure?.link;
+                        
+                        // Fallback logic for Google News specifically (which often hides images)
+                        if (!imageUrl || imageUrl.length < 10) {
+                            // Use a random abstract image for variety if no real image found
+                             imageUrl = `https://picsum.photos/seed/${cleanHeadline.length}/400/300`;
+                        }
+
+                        // Try to fetch favicon (Icon of the news source)
+                        const sourceDomain = new URL(item.link).hostname;
+                        const faviconUrl = `https://www.google.com/s2/favicons?domain=${sourceDomain}&sz=32`;
+
+                        // Create the BING-STYLE Card
+                        const card = document.createElement('a');
+                        card.className = 'news-card';
+                        card.href = item.link;
+                        card.target = '_blank';
+                        card.innerHTML = `
+                            <img src="${imageUrl}" class="news-bg-image" loading="lazy" alt="News Image">
+                            <div class="news-overlay">
+                                <div class="news-meta">
+                                    <img src="${faviconUrl}" class="news-source-icon" onerror="this.style.display='none'">
+                                    <span>${sourceName}</span>
+                                    <span>• ${timeAgo}</span>
+                                </div>
+                                <h4 class="news-title">${cleanHeadline}</h4>
+                            </div>
+                        `;
+                        contentContainer.appendChild(card);
                     });
                 })
                 .catch(err => {
-                    contentContainer.innerHTML = `<div style="color:red">Failed to load news.</div>`;
                     console.error(err);
+                    contentContainer.innerHTML = `<div style="color:var(--muted); padding:20px;">Unable to load news feed.</div>`;
                 });
-        } 
-        // 4. Handle Standard Types (Your existing apps)
-        else if (section.items) {
-            section.items.forEach(item => {
-                const card = section.type === 'favorite' 
-                    ? createFavoriteCard(item) 
-                    : createContentCard(item);
-                contentContainer.appendChild(card);
-            });
+
+        } else {
+            // Standard Horizontal Layout for Apps
+            contentContainer.className = section.type === 'favorite' ? 'tv-row-content' : 'tv-fluid-content';
+            
+            if (section.items) {
+                section.items.forEach(item => {
+                    const card = section.type === 'favorite' 
+                        ? createFavoriteCard(item) 
+                        : createContentCard(item);
+                    contentContainer.appendChild(card);
+                });
+            }
         }
 
         sectionDiv.appendChild(title);
