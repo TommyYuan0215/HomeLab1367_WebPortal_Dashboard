@@ -148,6 +148,8 @@ function renderSections(sections) {
     sections.forEach(section => {
         const sectionDiv = document.createElement('section');
         sectionDiv.className = 'tv-row';
+
+        sectionDiv.setAttribute('data-section-type', section.type);
         
         // Title
         const title = document.createElement('h3');

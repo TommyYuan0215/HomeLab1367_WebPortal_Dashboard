@@ -1,5 +1,5 @@
 // =======================================================
-// 🎨 ACCESSIBILITY & VISUALIZATION SETTINGS
+// 🎨 ACCESSIBILITY & VISUALIZATION SETTINGS (CLEANED)
 // =======================================================
 
 (function() {
@@ -11,49 +11,33 @@
     const settingsOverlay = document.getElementById('settings-overlay');
     const settingsClose = document.getElementById('settings-close');
     
+    // Font Size Elements
     const fontSizeRange = document.getElementById('font-size-range');
     const fontSizeValue = document.getElementById('font-size-value');
     const fontIncrease = document.getElementById('font-increase');
     const fontDecrease = document.getElementById('font-decrease');
     const fontReset = document.getElementById('font-reset');
     
-    const cardSpacingRange = document.getElementById('card-spacing-range');
-    const cardSpacingValue = document.getElementById('card-spacing-value');
-    const spacingCompact = document.getElementById('spacing-compact');
-    const spacingReset = document.getElementById('spacing-reset');
-    const spacingSpacious = document.getElementById('spacing-spacious');
-    
-    const borderRadiusRange = document.getElementById('border-radius-range');
-    const borderRadiusValue = document.getElementById('border-radius-value');
-    const radiusSharp = document.getElementById('radius-sharp');
-    const radiusReset = document.getElementById('radius-reset');
-    const radiusRounded = document.getElementById('radius-rounded');
-    
+    // Animation Speed Elements
     const animationSpeedRange = document.getElementById('animation-speed-range');
     const animationSpeedValue = document.getElementById('animation-speed-value');
     const speedSlow = document.getElementById('speed-slow');
     const speedReset = document.getElementById('speed-reset');
     const speedFast = document.getElementById('speed-fast');
     
-    const cardSizeRange = document.getElementById('card-size-range');
-    const cardSizeValue = document.getElementById('card-size-value');
-    const sizeSmall = document.getElementById('size-small');
-    const sizeReset = document.getElementById('size-reset');
-    const sizeLarge = document.getElementById('size-large');
-    
+    // Toggles
     const highContrastToggle = document.getElementById('high-contrast-toggle');
     const reducedMotionToggle = document.getElementById('reduced-motion-toggle');
+    const showNewsToggle = document.getElementById('show-news-toggle'); // New
     const resetAllBtn = document.getElementById('reset-all-settings');
     
     // Storage keys
     const STORAGE_KEYS = {
         fontSize: 'homelab-font-size',
-        cardSpacing: 'homelab-card-spacing',
-        borderRadius: 'homelab-border-radius',
         animationSpeed: 'homelab-animation-speed',
-        cardSize: 'homelab-card-size',
         highContrast: 'homelab-high-contrast',
-        reducedMotion: 'homelab-reduced-motion'
+        reducedMotion: 'homelab-reduced-motion',
+        showNews: 'homelab-show-news'
     };
     
     // --- Modal Functions ---
@@ -78,7 +62,6 @@
     settingsClose?.addEventListener('click', closeSettings);
     settingsOverlay?.addEventListener('click', closeSettings);
     
-    // Close on Escape key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && settingsModal?.classList.contains('active')) {
             closeSettings();
@@ -121,70 +104,6 @@
         updateFontSize(100);
     });
     
-    // --- Card Spacing Functions ---
-    const spacingLabels = { 1: 'Compact', 2: 'Comfortable', 3: 'Spacious' };
-    
-    function updateCardSpacing(value) {
-        const label = spacingLabels[value];
-        if (cardSpacingValue) cardSpacingValue.textContent = label;
-        
-        document.body.className = document.body.className.replace(/card-spacing-\d+/g, '');
-        document.body.classList.add(`card-spacing-${value}`);
-        
-        localStorage.setItem(STORAGE_KEYS.cardSpacing, value);
-    }
-    
-    cardSpacingRange?.addEventListener('input', function(e) {
-        updateCardSpacing(parseInt(e.target.value));
-    });
-    
-    spacingCompact?.addEventListener('click', function() {
-        if (cardSpacingRange) cardSpacingRange.value = 1;
-        updateCardSpacing(1);
-    });
-    
-    spacingReset?.addEventListener('click', function() {
-        if (cardSpacingRange) cardSpacingRange.value = 2;
-        updateCardSpacing(2);
-    });
-    
-    spacingSpacious?.addEventListener('click', function() {
-        if (cardSpacingRange) cardSpacingRange.value = 3;
-        updateCardSpacing(3);
-    });
-    
-    // --- Border Radius Functions ---
-    const radiusLabels = { 1: 'Sharp', 2: 'Rounded', 3: 'Very Rounded' };
-    
-    function updateBorderRadius(value) {
-        const label = radiusLabels[value];
-        if (borderRadiusValue) borderRadiusValue.textContent = label;
-        
-        document.body.className = document.body.className.replace(/border-radius-\d+/g, '');
-        document.body.classList.add(`border-radius-${value}`);
-        
-        localStorage.setItem(STORAGE_KEYS.borderRadius, value);
-    }
-    
-    borderRadiusRange?.addEventListener('input', function(e) {
-        updateBorderRadius(parseInt(e.target.value));
-    });
-    
-    radiusSharp?.addEventListener('click', function() {
-        if (borderRadiusRange) borderRadiusRange.value = 1;
-        updateBorderRadius(1);
-    });
-    
-    radiusReset?.addEventListener('click', function() {
-        if (borderRadiusRange) borderRadiusRange.value = 2;
-        updateBorderRadius(2);
-    });
-    
-    radiusRounded?.addEventListener('click', function() {
-        if (borderRadiusRange) borderRadiusRange.value = 3;
-        updateBorderRadius(3);
-    });
-    
     // --- Animation Speed Functions ---
     const speedLabels = { 1: 'Slow', 2: 'Normal', 3: 'Fast' };
     
@@ -217,39 +136,7 @@
         updateAnimationSpeed(3);
     });
     
-    // --- Card Size Functions ---
-    const sizeLabels = { 1: 'Small', 2: 'Default', 3: 'Large' };
-    
-    function updateCardSize(value) {
-        const label = sizeLabels[value];
-        if (cardSizeValue) cardSizeValue.textContent = label;
-        
-        document.body.className = document.body.className.replace(/card-size-\d+/g, '');
-        document.body.classList.add(`card-size-${value}`);
-        
-        localStorage.setItem(STORAGE_KEYS.cardSize, value);
-    }
-    
-    cardSizeRange?.addEventListener('input', function(e) {
-        updateCardSize(parseInt(e.target.value));
-    });
-    
-    sizeSmall?.addEventListener('click', function() {
-        if (cardSizeRange) cardSizeRange.value = 1;
-        updateCardSize(1);
-    });
-    
-    sizeReset?.addEventListener('click', function() {
-        if (cardSizeRange) cardSizeRange.value = 2;
-        updateCardSize(2);
-    });
-    
-    sizeLarge?.addEventListener('click', function() {
-        if (cardSizeRange) cardSizeRange.value = 3;
-        updateCardSize(3);
-    });
-    
-    // --- High Contrast Toggle ---
+    // --- Toggles ---
     highContrastToggle?.addEventListener('change', function(e) {
         if (e.target.checked) {
             document.body.classList.add('high-contrast');
@@ -260,7 +147,6 @@
         }
     });
     
-    // --- Reduced Motion Toggle ---
     reducedMotionToggle?.addEventListener('change', function(e) {
         if (e.target.checked) {
             document.body.classList.add('reduced-motion');
@@ -270,29 +156,23 @@
             localStorage.setItem(STORAGE_KEYS.reducedMotion, 'false');
         }
     });
+
+    showNewsToggle?.addEventListener('change', function(e) {
+        const isVisible = e.target.checked;
+        localStorage.setItem(STORAGE_KEYS.showNews, isVisible);
+        document.body.classList.toggle('hide-news', !isVisible);
+    });
     
     // --- Reset All Settings ---
     resetAllBtn?.addEventListener('click', function() {
-        if (confirm('Reset all accessibility settings to default?')) {
+        if (confirm('Reset all settings to default?')) {
             // Reset font size
             if (fontSizeRange) fontSizeRange.value = 100;
             updateFontSize(100);
             
-            // Reset card spacing
-            if (cardSpacingRange) cardSpacingRange.value = 2;
-            updateCardSpacing(2);
-            
-            // Reset border radius
-            if (borderRadiusRange) borderRadiusRange.value = 2;
-            updateBorderRadius(2);
-            
             // Reset animation speed
             if (animationSpeedRange) animationSpeedRange.value = 2;
             updateAnimationSpeed(2);
-            
-            // Reset card size
-            if (cardSizeRange) cardSizeRange.value = 2;
-            updateCardSize(2);
             
             // Reset toggles
             if (highContrastToggle) {
@@ -302,6 +182,10 @@
             if (reducedMotionToggle) {
                 reducedMotionToggle.checked = false;
                 document.body.classList.remove('reduced-motion');
+            }
+            if (showNewsToggle) {
+                showNewsToggle.checked = true;
+                document.body.classList.remove('hide-news');
             }
             
             // Clear localStorage
@@ -320,32 +204,11 @@
             updateFontSize(parseInt(savedFontSize));
         }
         
-        // Load card spacing
-        const savedSpacing = localStorage.getItem(STORAGE_KEYS.cardSpacing);
-        if (savedSpacing && cardSpacingRange) {
-            cardSpacingRange.value = savedSpacing;
-            updateCardSpacing(parseInt(savedSpacing));
-        }
-        
-        // Load border radius
-        const savedRadius = localStorage.getItem(STORAGE_KEYS.borderRadius);
-        if (savedRadius && borderRadiusRange) {
-            borderRadiusRange.value = savedRadius;
-            updateBorderRadius(parseInt(savedRadius));
-        }
-        
         // Load animation speed
         const savedSpeed = localStorage.getItem(STORAGE_KEYS.animationSpeed);
         if (savedSpeed && animationSpeedRange) {
             animationSpeedRange.value = savedSpeed;
             updateAnimationSpeed(parseInt(savedSpeed));
-        }
-        
-        // Load card size
-        const savedSize = localStorage.getItem(STORAGE_KEYS.cardSize);
-        if (savedSize && cardSizeRange) {
-            cardSizeRange.value = savedSize;
-            updateCardSize(parseInt(savedSize));
         }
         
         // Load high contrast
@@ -361,17 +224,22 @@
             reducedMotionToggle.checked = true;
             document.body.classList.add('reduced-motion');
         }
-    }
-    
-    // --- Initialize Settings ---
-    function initSettings() {
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', loadSavedSettings);
-        } else {
-            loadSavedSettings();
+
+        // Load News Toggle
+        const savedNews = localStorage.getItem(STORAGE_KEYS.showNews);
+        // Default is TRUE (show news), so we only hide if specifically set to 'false'
+        const showNews = savedNews === null ? true : (savedNews === 'true');
+        
+        if (showNewsToggle) {
+            showNewsToggle.checked = showNews;
         }
+        document.body.classList.toggle('hide-news', !showNews);
     }
     
-    // Initialize when script loads
-    initSettings();
+    // Initialize
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadSavedSettings);
+    } else {
+        loadSavedSettings();
+    }
 })();

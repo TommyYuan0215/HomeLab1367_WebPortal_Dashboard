@@ -1004,7 +1004,7 @@ body.light-theme .btn-reset-all:hover {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responsive Grid */
     gap: 20px;
-    padding: 20px 0 20px 80px; /* Match your existing padding */
+    padding: 20px 15px;
 }
 
 /* On mobile, adjust padding */
@@ -1082,6 +1082,11 @@ body.light-theme .btn-reset-all:hover {
     height: 16px;
     border-radius: 3px;
     background: #fff;
+}
+
+/* ===== Hide News Utility ===== */
+body.hide-news .tv-row[data-section-type="news"] {
+    display: none !important;
 }
 
 /* Accessibility Classes */

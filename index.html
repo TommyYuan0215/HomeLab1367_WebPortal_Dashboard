@@ -103,7 +103,6 @@
           </div>
 
           <div class="settings-body">
-            <!-- Font Size Setting -->
             <div class="setting-item">
               <label for="font-size-range">
                 <i class="bi bi-type"></i> Font Size
@@ -119,121 +118,22 @@
                 aria-label="Font size adjustment"
               />
               <div class="setting-buttons">
-                <button
-                  class="btn-small"
-                  id="font-decrease"
-                  aria-label="Decrease font size"
-                >
+                <button class="btn-small" id="font-decrease" aria-label="Decrease font size">
                   <i class="bi bi-dash-lg"></i>
                 </button>
-                <button
-                  class="btn-small"
-                  id="font-reset"
-                  aria-label="Reset font size"
-                >
+                <button class="btn-small" id="font-reset" aria-label="Reset font size">
                   Reset
                 </button>
-                <button
-                  class="btn-small"
-                  id="font-increase"
-                  aria-label="Increase font size"
-                >
+                <button class="btn-small" id="font-increase" aria-label="Increase font size">
                   <i class="bi bi-plus-lg"></i>
                 </button>
               </div>
             </div>
 
-            <!-- Card Spacing Setting -->
-            <div class="setting-item">
-              <label for="card-spacing-range">
-                <i class="bi bi-grid-3x3-gap"></i> Card Spacing
-                <span class="setting-value" id="card-spacing-value"
-                  >Comfortable</span
-                >
-              </label>
-              <input
-                type="range"
-                id="card-spacing-range"
-                min="1"
-                max="3"
-                value="2"
-                step="1"
-                aria-label="Card spacing adjustment"
-              />
-              <div class="setting-buttons">
-                <button
-                  class="btn-small"
-                  id="spacing-compact"
-                  aria-label="Compact spacing"
-                >
-                  Compact
-                </button>
-                <button
-                  class="btn-small"
-                  id="spacing-reset"
-                  aria-label="Default spacing"
-                >
-                  Default
-                </button>
-                <button
-                  class="btn-small"
-                  id="spacing-spacious"
-                  aria-label="Spacious spacing"
-                >
-                  Spacious
-                </button>
-              </div>
-            </div>
-
-            <!-- Border Radius Setting -->
-            <div class="setting-item">
-              <label for="border-radius-range">
-                <i class="bi bi-square"></i> Border Radius
-                <span class="setting-value" id="border-radius-value"
-                  >Rounded</span
-                >
-              </label>
-              <input
-                type="range"
-                id="border-radius-range"
-                min="1"
-                max="3"
-                value="2"
-                step="1"
-                aria-label="Border radius adjustment"
-              />
-              <div class="setting-buttons">
-                <button
-                  class="btn-small"
-                  id="radius-sharp"
-                  aria-label="Sharp corners"
-                >
-                  Sharp
-                </button>
-                <button
-                  class="btn-small"
-                  id="radius-reset"
-                  aria-label="Default radius"
-                >
-                  Default
-                </button>
-                <button
-                  class="btn-small"
-                  id="radius-rounded"
-                  aria-label="Very rounded"
-                >
-                  Rounded
-                </button>
-              </div>
-            </div>
-
-            <!-- Animation Speed Setting -->
             <div class="setting-item">
               <label for="animation-speed-range">
                 <i class="bi bi-speedometer2"></i> Animation Speed
-                <span class="setting-value" id="animation-speed-value"
-                  >Normal</span
-                >
+                <span class="setting-value" id="animation-speed-value">Normal</span>
               </label>
               <input
                 type="range"
@@ -245,71 +145,18 @@
                 aria-label="Animation speed adjustment"
               />
               <div class="setting-buttons">
-                <button
-                  class="btn-small"
-                  id="speed-slow"
-                  aria-label="Slow animations"
-                >
+                <button class="btn-small" id="speed-slow" aria-label="Slow animations">
                   Slow
                 </button>
-                <button
-                  class="btn-small"
-                  id="speed-reset"
-                  aria-label="Normal speed"
-                >
+                <button class="btn-small" id="speed-reset" aria-label="Normal speed">
                   Normal
                 </button>
-                <button
-                  class="btn-small"
-                  id="speed-fast"
-                  aria-label="Fast animations"
-                >
+                <button class="btn-small" id="speed-fast" aria-label="Fast animations">
                   Fast
                 </button>
               </div>
             </div>
 
-            <!-- Card Size Setting -->
-            <div class="setting-item">
-              <label for="card-size-range">
-                <i class="bi bi-aspect-ratio"></i> Card Size
-                <span class="setting-value" id="card-size-value">Default</span>
-              </label>
-              <input
-                type="range"
-                id="card-size-range"
-                min="1"
-                max="3"
-                value="2"
-                step="1"
-                aria-label="Card size adjustment"
-              />
-              <div class="setting-buttons">
-                <button
-                  class="btn-small"
-                  id="size-small"
-                  aria-label="Small cards"
-                >
-                  Small
-                </button>
-                <button
-                  class="btn-small"
-                  id="size-reset"
-                  aria-label="Default size"
-                >
-                  Default
-                </button>
-                <button
-                  class="btn-small"
-                  id="size-large"
-                  aria-label="Large cards"
-                >
-                  Large
-                </button>
-              </div>
-            </div>
-
-            <!-- High Contrast Mode -->
             <div class="setting-item">
               <label for="high-contrast-toggle">
                 <i class="bi bi-circle-half"></i> High Contrast Mode
@@ -324,7 +171,6 @@
               </label>
             </div>
 
-            <!-- Reduced Motion -->
             <div class="setting-item">
               <label for="reduced-motion-toggle">
                 <i class="bi bi-pause-circle"></i> Reduce Motion
@@ -334,6 +180,21 @@
                   type="checkbox"
                   id="reduced-motion-toggle"
                   aria-label="Toggle reduced motion"
+                />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-item">
+              <label for="show-news-toggle">
+                <i class="bi bi-newspaper"></i> Show News Feed
+              </label>
+              <label class="toggle-switch">
+                <input
+                  type="checkbox"
+                  id="show-news-toggle"
+                  aria-label="Toggle news feed"
+                  checked
                 />
                 <span class="toggle-slider"></span>
               </label>
