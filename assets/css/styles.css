@@ -1,18 +1,18 @@
-/* ===== Theme variables (clean and consistent) ===== */
-:root{
+/* ===== Theme variables ===== */
+:root {
     --bg-dark: #0f0f12;
     --bg-dark-2: #18181b;
     --card-dark: #222228;
-    --glass: rgba(255,255,255,0.04);
+    --glass: rgba(255, 255, 255, 0.04);
 
-    --accent: #8a39ff; /* primary purple */
+    --accent: #8a39ff;
     --accent-600: #6b2ee6;
     --accent-400: #a86bff;
 
     --muted: #9aa0a6;
     --text: #e9eef8;
 
-    /* --- UPDATED LIGHT THEME COLORS --- */
+    /* Light Theme */
     --light-bg: #f3f0f7;
     --light-bg-2: #e9e5f0;
     --light-card: #ffffff;
@@ -20,40 +20,35 @@
     --light-muted: #6c757d;
 
     --radius: 12px;
-    --shadow-1: 0 6px 18px rgba(8,8,10,0.55);
-    --shadow-2: 0 10px 30px rgba(9,9,12,0.6);
-    --shadow-hover: 0 16px 40px rgba(138,57,255,0.25);
+    --shadow-1: 0 6px 18px rgba(8, 8, 10, 0.55);
+    --shadow-2: 0 10px 30px rgba(9, 9, 12, 0.6);
+    --shadow-hover: 0 16px 40px rgba(138, 57, 255, 0.25);
 }
 
 /* ===== Global ===== */
-html,body{height:100%;}
-body{
+html, body { height: 100%; }
+body {
     font-family: 'Roboto', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-    background: linear-gradient(170deg,var(--bg-dark),var(--bg-dark-2));
-    color:var(--text);
-    margin:0;
-    padding:0;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    min-height:100vh;
-    position:relative;
-    overflow-x:hidden;
+    background: linear-gradient(170deg, var(--bg-dark), var(--bg-dark-2));
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
 }
 
-body.light-theme{
-    background: linear-gradient(170deg,var(--light-bg),var(--light-bg-2)); 
-    color:var(--light-text);
+body.light-theme {
+    background: linear-gradient(170deg, var(--light-bg), var(--light-bg-2));
+    color: var(--light-text);
 }
 
 /* ===== Particles layer ===== */
-#particles-js{position:fixed;left:0;top:0;width:100%;height:100%;z-index:-1;pointer-events:none;}
+#particles-js { position: fixed; left: 0; top: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 
-
-/* ======================================================= */
-/* ====== NEW TV UI STYLES =============================== */
-/* ======================================================= */
-
-/* ===== TV Navbar Styling (MODIFIED FOR 3-SECTION LAYOUT) ===== */
+/* ===== TV Navbar Styling ===== */
 .navbar-tv {
     position: fixed;
     top: 0;
@@ -62,39 +57,33 @@ body.light-theme{
     height: 60px;
     display: flex;
     align-items: center;
-    /* Use space-between to align Brand (Left) and Profile (Right) */
-    justify-content: space-between; 
+    justify-content: space-between;
     padding: 0 40px;
-    /* Gradient Fade for Dark Theme */
     background: linear-gradient(180deg, var(--bg-dark) 80%, rgba(15, 15, 18, 0));
     z-index: 1000;
     box-sizing: border-box;
 }
-/* LIGHT THEME FIX: Transparent background and no shadow for seamless banner merge */
+
 body.light-theme .navbar-tv {
     background: transparent;
     box-shadow: none;
 }
 
-/* --- NEW: Navigation Brand Styling --- */
+/* Brand Styling */
 .nav-brand {
-    /* Ensure the logo and text align vertically */
-    display: flex; 
+    display: flex;
     align-items: center;
-    gap: 8px; /* Space between the logo and the text */
+    gap: 8px;
     flex-basis: 250px;
-    text-decoration: none; /* Remove underline from link */
+    text-decoration: none;
     cursor: pointer;
     transition: opacity 0.2s ease;
 }
 
-.nav-brand:hover {
-    opacity: 0.8;
-}
+.nav-brand:hover { opacity: 0.8; }
 
 .brand-logo {
-    /* Height roughly matches the brand-text font-size (1.25rem = approx 20px) */
-    height: 2rem; 
+    height: 2rem;
     width: auto;
     transition: filter 0.2s ease;
 }
@@ -107,43 +96,30 @@ body.light-theme .navbar-tv {
     transition: color 0.2s ease;
 }
 
-/* Hover effect on brand */
-.nav-brand:hover .brand-text {
-    color: var(--accent-400);
-}
+.nav-brand:hover .brand-text { color: var(--accent-400); }
+.nav-brand:hover .brand-logo { filter: brightness(1.1); }
 
-.nav-brand:hover .brand-logo {
-    filter: brightness(1.1);
-}
+body.light-theme .brand-text { color: var(--light-text); }
+body.light-theme .nav-brand:hover .brand-text { color: var(--accent-600); }
 
-body.light-theme .brand-text {
-    color: var(--light-text);
-}
-
-body.light-theme .nav-brand:hover .brand-text {
-    color: var(--accent-600);
-}
-
-/* Search Input Styling (MODIFIED FOR CENTER) */
+/* Search Input Styling */
 .nav-search {
     display: flex;
     align-items: center;
-    /* Use margin auto to push the search container to the center */
-    margin: 0 auto; 
+    margin: 0 auto;
 }
 
 .search-input-wrapper {
     display: flex;
     align-items: center;
-    background: var(--card-dark); /* Use card background for the input area */
-    border-radius: 999px; /* Pill shape */
+    background: var(--card-dark);
+    border-radius: 999px;
     padding: 6px 15px;
-    width: 500px; /* Keep fixed width for centering consistency */
+    width: 500px;
     transition: background 0.3s ease;
 }
-body.light-theme .search-input-wrapper {
-    background: var(--light-bg-2);
-}
+
+body.light-theme .search-input-wrapper { background: var(--light-bg-2); }
 
 .search-input-wrapper i {
     color: var(--muted);
@@ -160,23 +136,17 @@ body.light-theme .search-input-wrapper {
     font-size: 0.95rem;
     outline: none;
 }
-body.light-theme #global-search-input {
-    color: var(--light-text);
-}
 
-#global-search-input::placeholder {
-    color: var(--muted);
-}
+body.light-theme #global-search-input { color: var(--light-text); }
+#global-search-input::placeholder { color: var(--muted); }
 
-/* Clock and Profile Styling (MODIFIED FOR RIGHT ALIGNMENT) */
+/* Clock and Profile Styling */
 .nav-profile {
     display: flex;
     align-items: center;
     gap: 20px;
-    /* Gives the right column a consistent width */
-    flex-basis: 250px; 
-    /* Push content to the far right within its flex-basis container */
-    justify-content: flex-end; 
+    flex-basis: 250px;
+    justify-content: flex-end;
 }
 
 .nav-profile i, .nav-profile .time {
@@ -186,22 +156,14 @@ body.light-theme #global-search-input {
     cursor: pointer;
 }
 
-.nav-profile i:hover {
-    color: var(--text);
-}
-body.light-theme .nav-profile i:hover {
-    color: var(--light-text);
-}
+.nav-profile i:hover { color: var(--text); }
+body.light-theme .nav-profile i:hover { color: var(--light-text); }
 
-.profile-icon {
-    font-size: 1.5rem !important;
-}
+.profile-icon { font-size: 1.5rem !important; }
 
-
-/* ===== Main Container & Featured Banner (MODIFIED FOR MERGE) ===== */
+/* ===== Main Container & Featured Banner ===== */
 .main-container-tv {
-    /* REMOVED top padding for seamless merge */
-    padding-top: 0; 
+    padding-top: 0;
     max-width: 100%;
     margin: 0 auto;
     position: relative;
@@ -210,10 +172,9 @@ body.light-theme .nav-profile i:hover {
 
 .feature-banner {
     position: relative;
-    height: 480px; 
+    height: 480px;
     width: 100%;
-    /* Placeholder for background image. Replace with a static image if preferred. */
-    background-image: linear-gradient(110deg, var(--bg-dark), rgba(0,0,0,0.6)), url('https://picsum.photos/1920/800?blur=4&auto=format');
+    background-image: linear-gradient(110deg, var(--bg-dark), rgba(0, 0, 0, 0.6)), url('https://picsum.photos/1920/800?blur=4&auto=format');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -222,37 +183,32 @@ body.light-theme .nav-profile i:hover {
     box-shadow: var(--shadow-2);
     margin-bottom: 30px;
 }
+
 body.light-theme .feature-banner {
-    background-image: linear-gradient(110deg, var(--light-bg), rgba(255,255,255,0.6)), url('https://picsum.photos/1920/800?blur=1&auto=format');
+    background-image: linear-gradient(110deg, var(--light-bg), rgba(255, 255, 255, 0.6)), url('https://picsum.photos/1920/800?blur=1&auto=format');
 }
 
 .feature-banner::before {
     content: '';
     position: absolute;
     inset: 0;
-    /* Darken the left side where the text is */
     background: linear-gradient(90deg, var(--bg-dark) 25%, rgba(15, 15, 18, 0.4) 70%, transparent 100%);
     z-index: 1;
 }
-/* LIGHT THEME FIX: Extend gradient to cover the top area, creating the seamless merge */
+
 body.light-theme .feature-banner::before {
-    background: linear-gradient(
-        180deg, 
-        var(--light-bg) 0, /* Start light color at the very top */
-        var(--light-bg) 70px, /* Keep light color solid for navbar height + blending area */
-        rgba(255, 255, 255, 0.4) 100px 
-    ),
-    linear-gradient(90deg, var(--light-bg) 25%, rgba(255, 255, 255, 0.4) 70%, transparent 100%);
+    background: linear-gradient(180deg, var(--light-bg) 0, var(--light-bg) 70px, rgba(255, 255, 255, 0.4) 100px),
+                linear-gradient(90deg, var(--light-bg) 25%, rgba(255, 255, 255, 0.4) 70%, transparent 100%);
 }
 
 .feature-content {
-    /* ADDED top padding to push content below the transparent fixed navbar */
-    padding-top: 56px; 
+    padding-top: 56px;
     z-index: 2;
     max-width: 450px;
     color: var(--text);
-    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
+
 body.light-theme .feature-content {
     color: var(--light-text);
     text-shadow: none;
@@ -266,7 +222,7 @@ body.light-theme .feature-content {
 
 .feature-meta {
     font-size: 1.1rem;
-    color: var(--accent-400); /* Use accent color for metadata */
+    color: var(--accent-400);
     font-weight: 500;
 }
 
@@ -276,9 +232,8 @@ body.light-theme .feature-content {
     margin-top: 15px;
     line-height: 1.5;
 }
-body.light-theme .feature-description {
-    color: var(--light-muted);
-}
+
+body.light-theme .feature-description { color: var(--light-muted); }
 
 .feature-image-overlay {
     position: absolute;
@@ -289,12 +244,8 @@ body.light-theme .feature-description {
     z-index: 2;
 }
 
-
 /* ===== TV Content Rows & Cards Styling ===== */
-
-.tv-row {
-    padding: 10px 0 20px 80px; /* Padding for rows, left margin for alignment */
-}
+.tv-row { padding: 10px 0 20px 80px; }
 
 .row-title {
     font-size: 1.2rem;
@@ -305,35 +256,31 @@ body.light-theme .feature-description {
     gap: 12px;
     align-items: center;
 }
-body.light-theme .row-title {
-    color: var(--light-text);
-}
-.row-title i{color:var(--accent);font-size:1.4rem}
 
-/* --- HORIZONTAL ROW (Used for Docker Apps section) --- */
+body.light-theme .row-title { color: var(--light-text); }
+.row-title i { color: var(--accent); font-size: 1.4rem; }
+
 .tv-row-content {
     display: flex;
     gap: 20px;
-    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-x: auto;
     padding: 20px 15px;
 }
 
-/* --- RESPONSIVE ROW (Used for Uni Projects section) --- */
 .tv-fluid-content {
     display: flex;
-    flex-direction: row; /* Default: Horizontal row for desktop */
+    flex-direction: row;
     gap: 20px;
-    overflow-x: auto; /* Allow horizontal scrolling on desktop */
+    overflow-x: auto;
     padding: 20px 15px;
 }
 
-/* Hide scrollbar for a cleaner look */
 .tv-row-content::-webkit-scrollbar,
 .tv-fluid-content::-webkit-scrollbar { height: 0; }
 .tv-row-content::-webkit-scrollbar-thumb,
 .tv-fluid-content::-webkit-scrollbar-thumb { background: transparent; }
 
-/* --- Base App Card (Reset original styles) --- */
+/* Base App Card */
 .app-card {
     background: transparent;
     border-radius: var(--radius);
@@ -345,13 +292,12 @@ body.light-theme .row-title {
     text-decoration: none;
     color: inherit;
     position: relative;
-    /* Important for hover effect on content cards */
-    overflow: hidden; 
-    flex-shrink: 0; /* Important: prevents cards from shrinking */
+    overflow: hidden;
+    flex-shrink: 0;
     cursor: pointer;
 }
 
-/* --- Favorite App Card (Square icons like Netflix) --- */
+/* Favorite App Card */
 .favorite-app-card {
     width: 200px;
     height: 150px;
@@ -362,49 +308,46 @@ body.light-theme .row-title {
     background: var(--card-dark);
     box-shadow: var(--shadow-1);
     border: 2px solid transparent;
-    /* FIX: Allows icon/shadow to extend slightly past bounds when scaled */
-    overflow: visible; 
+    overflow: visible;
 }
-body.light-theme .favorite-app-card {
-    background: var(--light-card);
-}
+
+body.light-theme .favorite-app-card { background: var(--light-card); }
+
 .favorite-app-card .app-title {
     font-size: 0.9rem;
     margin-top: 5px;
     color: var(--text);
     font-weight: 500;
-    transition: color 0.3s ease; /* Added transition for hover effect */
+    transition: color 0.3s ease;
 }
-body.light-theme .favorite-app-card .app-title {
-    color: var(--light-text);
-}
+
+body.light-theme .favorite-app-card .app-title { color: var(--light-text); }
+
 .favorite-app-card .app-icon {
     padding: 0;
     background: none;
     border: none;
-    /* Ensure only filter is transitioned here now */
-    transition: filter 0.3s ease; 
-    filter: drop-shadow(0 0 0 rgba(138,57,255,0.0)); 
+    transition: filter 0.3s ease;
+    filter: drop-shadow(0 0 0 rgba(138, 57, 255, 0.0));
 }
 
-/* --- Content Card (Movie/Poster cards) --- */
+/* Content Card */
 .content-card {
-    width: 320px; /* Base width */
-    height: 180px; /* Standard 16:9 aspect ratio */
+    width: 320px;
+    height: 180px;
     background: var(--card-dark);
     box-shadow: var(--shadow-1);
 }
-/* *** FIX for .tv-fluid-content on desktop to prevent stretching *** */
+
 .tv-fluid-content .content-card {
-    width: 320px; /* Ensure desktop card width is explicitly 320px */
-    flex-shrink: 1; 
-    flex-grow: 0; 
+    width: 320px;
+    flex-shrink: 1;
+    flex-grow: 0;
 }
-/* *************************************************************** */
 
 body.light-theme .content-card {
     background: var(--light-card);
-    box-shadow: 0 4px 16px rgba(17,24,39,0.08);
+    box-shadow: 0 4px 16px rgba(17, 24, 39, 0.08);
 }
 
 .card-image {
@@ -415,41 +358,44 @@ body.light-theme .content-card {
 }
 
 .card-content-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     gap: 4px;
-    background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 60%, transparent 100%); /* Improved readability */
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 60%, transparent 100%);
     padding: 12px;
 }
 
-/* Style for the main title inside overlay */
 .overlay-title {
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--text);
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
-/* Container for Course and Author */
 .overlay-meta {
     font-size: 0.8rem;
-    color: #e0e0e0; /* Slightly lighter than pure white */
+    color: #e0e0e0;
     margin-top: 4px;
     line-height: 1.4;
     font-weight: 400;
 }
 
-/* Specific tweaks for icons */
 .overlay-meta i {
     margin-right: 4px;
-    color: var(--accent-400); /* Use your purple accent color */
+    color: var(--accent-400);
 }
 
-/* App Subtitle on Hover/Focus */
 .content-card .app-sub {
     position: absolute;
-    top: 100%; /* Position right below the card */
+    top: 100%;
     left: 0;
     padding: 5px 12px;
     font-size: 0.85rem;
@@ -459,56 +405,49 @@ body.light-theme .content-card {
     opacity: 0;
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
-body.light-theme .content-card .app-sub {
-    color: var(--light-muted);
-}
 
-.content-card:hover .card-content-overlay, .content-card:focus .card-content-overlay {
+body.light-theme .content-card .app-sub { color: var(--light-muted); }
+
+.content-card:hover .card-content-overlay,
+.content-card:focus .card-content-overlay {
     transform: translateY(0);
 }
 
-.content-card:hover .app-sub, .content-card:focus .app-sub {
+.content-card:hover .app-sub,
+.content-card:focus .app-sub {
     opacity: 1;
     transform: translateY(0);
 }
 
-/* --- The TV Glow Effect (Replaces old .app-card:hover) --- */
+/* TV Glow Effect */
 .app-card:hover, .app-card:focus {
-    /* Reduced scale for better icon clearance */
-    transform: scale(1.08); 
-    box-shadow: 0 0 0 4px var(--accent-400), 0 16px 40px rgba(138,57,255,0.4); 
-    z-index: 10; 
-    outline: none; 
+    transform: scale(1.08);
+    box-shadow: 0 0 0 4px var(--accent-400), 0 16px 40px rgba(138, 57, 255, 0.4);
+    z-index: 10;
+    outline: none;
 }
 
-/* --- FIX: Natural Icon Hover Enhancements --- */
-
-/* 1. Icon scaling/glow for Favorite Apps */
 .favorite-app-card:hover .app-icon,
 .favorite-app-card:focus .app-icon {
-    /* Keep the subtle icon glow */
-    filter: drop-shadow(0 0 10px rgba(138,57,255,0.6));
+    filter: drop-shadow(0 0 10px rgba(138, 57, 255, 0.6));
 }
 
-/* 2. Title emphasis for Favorite Apps */
 .favorite-app-card:hover .app-title,
 .favorite-app-card:focus .app-title {
-    color: var(--accent-400); /* Highlight text with accent color */
+    color: var(--accent-400);
 }
-body.light-theme .favorite-app-card:hover .app-title {
-    color: var(--accent-600);
-}
+
+body.light-theme .favorite-app-card:hover .app-title { color: var(--accent-600); }
 
 /* Divider */
 .tv-divider {
-    border-color: rgba(255,255,255,0.08); 
+    border-color: rgba(255, 255, 255, 0.08);
     margin: 50px 80px;
 }
-body.light-theme .tv-divider {
-    border-color: rgba(0,0,0,0.1);
-}
 
-/* Footer position for TV UI */
+body.light-theme .tv-divider { border-color: rgba(0, 0, 0, 0.1); }
+
+/* Footer */
 footer {
     margin: 40px 0 20px;
     padding: 0 80px;
@@ -524,10 +463,7 @@ footer {
     flex-wrap: wrap;
 }
 
-.footer-copyright,
-.footer-author {
-    display: inline-block;
-}
+.footer-copyright, .footer-author { display: inline-block; }
 
 .footer-divider {
     color: var(--muted);
@@ -541,153 +477,46 @@ footer {
     transition: color 0.2s ease;
 }
 
-.footer-name:hover {
-    color: var(--accent);
-}
+.footer-name:hover { color: var(--accent); }
 
-body.light-theme footer {
-    color: var(--light-muted);
-}
+body.light-theme footer { color: var(--light-muted); }
+body.light-theme .footer-name { color: var(--accent-600); }
+body.light-theme .footer-name:hover { color: var(--accent); }
 
-body.light-theme .footer-name {
-    color: var(--accent-600);
-}
-
-body.light-theme .footer-name:hover {
-    color: var(--accent);
-}
-
-/* Mobile footer adjustments */
+/* Mobile Footer */
 @media (max-width: 991.98px) {
-    footer {
-        padding: 0 15px;
-    }
-    
-    .footer-content {
-        flex-direction: column;
-        gap: 8px;
-    }
-    
-    .footer-divider {
-        display: none;
-    }
+    footer { padding: 0 15px; }
+    .footer-content { flex-direction: column; gap: 8px; }
+    .footer-divider { display: none; }
 }
 
-/* === Utility Class for Search Filtering === */
-.hidden {
-    display: none !important;
+/* Utility Class */
+.hidden { display: none !important; }
+
+/* ===== Mobile Responsiveness ===== */
+@media (max-width: 991.98px) {
+    .navbar-tv { padding: 0 15px; }
+    .nav-brand { flex-basis: auto; }
+    .nav-search { margin: 0 auto; padding: 0 15px; }
+    .nav-profile { flex-basis: auto; justify-content: flex-end; gap: 15px; }
+    .search-input-wrapper { width: 200px; }
+    .feature-banner { height: 300px; padding-left: 20px; background-image: none; }
+    .feature-banner::before { background: none; }
+    .feature-content { padding-top: 56px; max-width: 90%; }
+    .feature-title { font-size: 2rem; }
+    .feature-image-overlay { display: none; }
+    .tv-row { padding: 0 15px; }
+    .tv-row-content { flex-wrap: wrap; flex-direction: row; gap: 10px; padding: 0 15px 20px; }
+    .favorite-app-card { width: calc(25% - 7.5px); height: 80px; flex-shrink: 1; flex-grow: 0; justify-content: space-evenly; }
+    .favorite-app-card .app-icon { font-size: 2rem !important; }
+    .tv-fluid-content { flex-direction: row; flex-wrap: wrap; gap: 15px; overflow-x: hidden; padding-bottom: 0; }
+    .tv-fluid-content .content-card { width: calc(50% - 7.5px); height: 140px; flex-shrink: 1; flex-grow: 0; }
+    .tv-divider { margin: 50px 15px 30px; }
+    footer { padding-left: 15px; }
 }
 
-
-/* ===== Mobile (Basic responsiveness for testing, remove for pure TV display) ===== */
-@media (max-width:991.98px) {
-    
-    /* --------------------
-       1. NAVBAR ALIGNMENT
-       -------------------- */
-    .navbar-tv { 
-        padding: 0 15px; /* Reduce padding on edges */
-    }
-    .nav-brand { 
-        flex-basis: auto; /* Allow brand to take minimum space */
-    } 
-    /* Center the search bar in the remaining space */
-    .nav-search { 
-        margin: 0 auto;
-        padding: 0 15px; /* Add padding here to prevent search from hitting brand/profile */
-    }
-    .nav-profile { 
-        flex-basis: auto;
-        justify-content: flex-end;
-        gap: 15px; /* Reduce gap between icons */
-    }
-    /* Reduce search bar width for mobile screens */
-    .search-input-wrapper { 
-        width: 200px; 
-    }
-    
-    /* --------------------
-       2. FEATURE BANNER
-       -------------------- */
-    .feature-banner { 
-        height: 300px; 
-        padding-left: 20px; 
-        background-image: none; 
-    }
-    .feature-banner::before { 
-        background: none; 
-    }
-    /* Fix: Keep padding on content for the fixed navbar */
-    .feature-content { 
-        padding-top: 56px; 
-        max-width: 90%;
-    } 
-    .feature-title { 
-        font-size: 2rem; 
-    }
-    .feature-image-overlay { 
-        display: none; 
-    }
-    
-    /* --------------------
-       3. CONTENT ROWS & CARDS
-       -------------------- */
-    .tv-row { 
-        padding: 0 15px; 
-    }
-    
-    /* --- FAVORITE DOCKER APPS (4-ICON GRID FIX) --- */
-    .tv-row-content { 
-        flex-wrap: wrap; 
-        flex-direction: row;
-        gap: 10px; 
-        /* FIX: Add 15px padding to the sides of the container */
-        padding: 0 15px 20px; 
-    }
-
-    .favorite-app-card { 
-        /* Calculation: (100% - 3 gaps of 10px) / 4 icons = 24.25% */
-        width: calc(25% - 7.5px); 
-        height: 80px; /* Use a fixed, compact height */
-        flex-shrink: 1; 
-        flex-grow: 0;
-        justify-content: space-evenly; /* Evenly space the icon and title */
-    }
-    .favorite-app-card .app-icon {
-        font-size: 2rem !important; /* Smaller icon size for 4-up grid */
-    }
-
-    /* --- TRENDING UNI PROJECTS (2-COLUMN GRID) --- */
-    .tv-fluid-content {
-        flex-direction: row; 
-        flex-wrap: wrap; 
-        gap: 15px; 
-        overflow-x: hidden; 
-        padding-bottom: 0;
-    }
-    
-    /* Make the responsive content cards take half the width minus the gap */
-    .tv-fluid-content .content-card {
-        width: calc(50% - 7.5px); /* Ensures 2 columns with 15px gap between */
-        height: 140px; 
-        flex-shrink: 1; 
-        flex-grow: 0; 
-    }
-
-    /* --------------------
-       4. FOOTER / DIVIDER
-       -------------------- */
-    .tv-divider { 
-        margin: 50px 15px 30px; 
-    }
-    footer { 
-        padding-left: 15px; 
-    }
-}
-
-/* ===== Settings Modal / Side Panel (Material Design 3 Update) ===== */
+/* ===== Settings Modal ===== */
 .settings-modal {
-    /* M3 Variables */
     --m3-surface: #1e1e24;
     --m3-surface-container: #2b2b31;
     --m3-primary: #d0bcff;
@@ -700,14 +529,12 @@ body.light-theme .footer-name:hover {
     right: 0;
     width: 100%;
     height: 100%;
-    /* UPDATE: Increased z-index to 2000 to cover the navbar (header) */
-    z-index: 2000; 
+    z-index: 2000;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-/* Light Theme overrides for the modal only */
 body.light-theme .settings-modal {
     --m3-surface: #fdfcff;
     --m3-surface-container: #f0f0f5;
@@ -717,10 +544,7 @@ body.light-theme .settings-modal {
     --m3-text: #1c1b1f;
 }
 
-.settings-modal.active {
-    opacity: 1;
-    visibility: visible;
-}
+.settings-modal.active { opacity: 1; visibility: visible; }
 
 .settings-modal-overlay {
     position: absolute;
@@ -731,38 +555,31 @@ body.light-theme .settings-modal {
     transition: opacity 0.3s ease;
 }
 
-.settings-modal.active .settings-modal-overlay {
-    opacity: 1;
-}
+.settings-modal.active .settings-modal-overlay { opacity: 1; }
 
-/* Side Sheet Styling */
 .settings-modal-content {
     position: fixed;
     top: 0;
-    right: -450px; /* Hidden */
+    right: -450px;
     width: 400px;
     max-width: 85vw;
     height: 100%;
     background: var(--m3-surface);
     box-shadow: -8px 0 32px rgba(0, 0, 0, 0.3);
-    /* UPDATE: Content z-index must be higher than modal container */
-    z-index: 2001; 
+    z-index: 2001;
     display: flex;
     flex-direction: column;
     transition: right 0.4s cubic-bezier(0.2, 0, 0, 1);
 }
 
-.settings-modal.active .settings-modal-content {
-    right: 0; /* Slide in */
-}
+.settings-modal.active .settings-modal-content { right: 0; }
 
-/* Header */
 .settings-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 24px;
-    border-bottom: 1px solid rgba(128,128,128, 0.2);
+    border-bottom: 1px solid rgba(128, 128, 128, 0.2);
 }
 
 .settings-header h2 {
@@ -789,14 +606,10 @@ body.light-theme .settings-modal {
     justify-content: center;
     transition: background 0.2s;
 }
-.settings-close:hover { background: rgba(128,128,128, 0.1); color: var(--m3-text); }
 
-/* Body */
-.settings-body {
-    padding: 24px;
-    flex: 1;
-    overflow-y: auto;
-}
+.settings-close:hover { background: rgba(128, 128, 128, 0.1); color: var(--m3-text); }
+
+.settings-body { padding: 24px; flex: 1; overflow-y: auto; }
 
 .setting-group-title {
     color: var(--m3-primary);
@@ -806,12 +619,13 @@ body.light-theme .settings-modal {
     font-weight: 600;
     margin: 24px 0 16px 0;
 }
+
 .setting-group-title:first-child { margin-top: 0; }
 
 .setting-item {
     background: var(--m3-surface-container);
     padding: 16px;
-    border-radius: 16px; 
+    border-radius: 16px;
     margin-bottom: 12px;
     display: flex;
     align-items: center;
@@ -819,9 +633,7 @@ body.light-theme .settings-modal {
     gap: 16px;
 }
 
-.setting-item.block {
-    display: block;
-}
+.setting-item.block { display: block; }
 
 .setting-label {
     display: flex;
@@ -829,7 +641,9 @@ body.light-theme .settings-modal {
     color: var(--m3-text);
     font-weight: 500;
 }
-.setting-label i { display: none; } 
+
+.setting-label i { display: none; }
+
 .setting-desc {
     font-size: 0.8rem;
     color: var(--m3-outline);
@@ -837,13 +651,13 @@ body.light-theme .settings-modal {
     margin-top: 4px;
 }
 
-/* Material Design 3 Switch */
 .toggle-switch {
     position: relative;
     width: 52px;
     height: 32px;
     flex-shrink: 0;
 }
+
 .toggle-switch input { opacity: 0; width: 0; height: 0; }
 
 .toggle-slider {
@@ -876,12 +690,11 @@ input:checked + .toggle-slider {
 input:checked + .toggle-slider:before {
     background-color: var(--m3-on-primary);
     transform: translateX(20px);
-    width: 20px; 
-    height: 20px; 
+    width: 20px;
+    height: 20px;
     bottom: 4px;
 }
 
-/* Material Design 3 Slider */
 input[type="range"] {
     width: 100%;
     height: 4px;
@@ -899,19 +712,20 @@ input[type="range"]::-webkit-slider-thumb {
     background: var(--m3-primary);
     border-radius: 50%;
     cursor: pointer;
-    box-shadow: 0 0 0 0 rgba(0,0,0,0);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
     transition: box-shadow 0.2s;
 }
+
 input[type="range"]::-webkit-slider-thumb:hover {
-    box-shadow: 0 0 0 10px rgba(128,128,128, 0.2);
+    box-shadow: 0 0 0 10px rgba(128, 128, 128, 0.2);
 }
 
-/* Footer */
 .settings-footer {
     padding: 20px;
-    border-top: 1px solid rgba(128,128,128, 0.2);
+    border-top: 1px solid rgba(128, 128, 128, 0.2);
     text-align: center;
 }
+
 .btn-reset-all {
     background: transparent;
     border: 1px solid var(--m3-outline);
@@ -922,41 +736,35 @@ input[type="range"]::-webkit-slider-thumb:hover {
     cursor: pointer;
     transition: 0.2s;
 }
+
 .btn-reset-all:hover {
-    background: rgba(128,128,128, 0.1);
+    background: rgba(128, 128, 128, 0.1);
     border-color: var(--m3-text);
 }
 
-/* ===== NEW FUNCTIONAL ACCESSIBILITY CLASSES (Global helpers) ===== */
-/* These must be global to affect the dashboard, but they don't change styling unless activated */
-
-/* 1. Dyslexia Font */
+/* ===== Accessibility Classes ===== */
 body.dyslexic-font {
     font-family: 'Comic Sans MS', 'Verdana', sans-serif !important;
     line-height: 1.6 !important;
 }
 
-/* 2. Highlight Links */
 body.highlight-links a {
     text-decoration: underline !important;
-    color: #ffd700 !important; /* High contrast yellow */
+    color: #ffd700 !important;
     background-color: #000000 !important;
     padding: 0 2px;
 }
+
 body.light-theme.highlight-links a {
     color: #0000ee !important;
     background-color: #ffff00 !important;
 }
 
-/* 3. Large Cursor */
 body.cursor-big, body.cursor-big * {
     cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewport="0 0 48 48" style="fill:black;stroke:white;stroke-width:2px;"><polygon points="0,0 0,40 10,28 24,40 28,34 14,22 36,22" /></svg>'), auto !important;
 }
 
-/* 4. Hide News */
-body.hide-news .tv-row[data-section-type="news"] {
-    display: none !important;
-}
+body.hide-news .tv-row[data-section-type="news"] { display: none !important; }
 
 /* Font Size Helpers */
 .font-size-75 { font-size: 75%; }
@@ -976,29 +784,25 @@ body.hide-news .tv-row[data-section-type="news"] {
 .font-size-145 { font-size: 145%; }
 .font-size-150 { font-size: 150%; }
 
-.high-contrast {
-    filter: contrast(1.5);
-}
+.high-contrast { filter: contrast(1.5); }
 
 .reduced-motion * {
     animation: none !important;
     transition: none !important;
 }
 
-/* ===== Bing-Style News Grid ===== */
+/* ===== News Grid ===== */
 .news-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responsive Grid */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
     padding: 20px 15px;
 }
 
-/* On mobile, adjust padding */
 @media (max-width: 991px) {
     .news-grid { padding: 0 15px 20px; }
 }
 
-/* ===== Bing-Style News Card ===== */
 .news-card {
     position: relative;
     height: 200px;
@@ -1007,12 +811,12 @@ body.hide-news .tv-row[data-section-type="news"] {
     text-decoration: none;
     background-color: #2c2c35;
     transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .news-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.5);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
     z-index: 2;
 }
 
@@ -1022,20 +826,19 @@ body.hide-news .tv-row[data-section-type="news"] {
     object-fit: cover;
     transition: transform 0.5s ease;
 }
+
 .news-card:hover .news-bg-image { transform: scale(1.05); }
 
-/* The dark gradient at the bottom */
 .news-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.9) 100%);
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.9) 100%);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     padding: 16px;
 }
 
-/* Source and Time (e.g. "BBC • 2h") */
 .news-meta {
     font-size: 0.75rem;
     color: #e0e0e0;
@@ -1048,19 +851,17 @@ body.hide-news .tv-row[data-section-type="news"] {
     letter-spacing: 0.5px;
 }
 
-/* The Headline */
 .news-title {
     color: #ffffff;
     font-size: 1rem;
     font-weight: 700;
     line-height: 1.35;
     margin: 0;
-    /* Limit to 3 lines of text */
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .news-source-icon {
@@ -1070,56 +871,6 @@ body.hide-news .tv-row[data-section-type="news"] {
     background: #fff;
 }
 
-/* ===== Hide News Utility ===== */
-body.hide-news .tv-row[data-section-type="news"] {
-    display: none !important;
-}
-
-/* Accessibility Classes */
-.font-size-75 { font-size: 75%; }
-.font-size-80 { font-size: 80%; }
-.font-size-85 { font-size: 85%; }
-.font-size-90 { font-size: 90%; }
-.font-size-95 { font-size: 95%; }
-.font-size-100 { font-size: 100%; }
-.font-size-105 { font-size: 105%; }
-.font-size-110 { font-size: 110%; }
-.font-size-115 { font-size: 115%; }
-.font-size-120 { font-size: 120%; }
-.font-size-125 { font-size: 125%; }
-.font-size-130 { font-size: 130%; }
-.font-size-135 { font-size: 135%; }
-.font-size-140 { font-size: 140%; }
-.font-size-145 { font-size: 145%; }
-.font-size-150 { font-size: 150%; }
-
-.display-scale-75 { transform: scale(0.75); }
-.display-scale-80 { transform: scale(0.80); }
-.display-scale-85 { transform: scale(0.85); }
-.display-scale-90 { transform: scale(0.90); }
-.display-scale-95 { transform: scale(0.95); }
-.display-scale-100 { transform: scale(1.0); }
-.display-scale-105 { transform: scale(1.05); }
-.display-scale-110 { transform: scale(1.10); }
-.display-scale-115 { transform: scale(1.15); }
-.display-scale-120 { transform: scale(1.20); }
-.display-scale-125 { transform: scale(1.25); }
-
-.high-contrast {
-    --text: #ffffff;
-    --bg-dark: #000000;
-    --bg-dark-2: #000000;
-    --card-dark: #1a1a1a;
-    --muted: #cccccc;
-}
-
-.reduced-motion * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-}
-
-/* Mobile Settings Side Panel */
 @media (max-width: 991.98px) {
     .settings-modal-content {
         width: 85vw;
@@ -1127,13 +878,9 @@ body.hide-news .tv-row[data-section-type="news"] {
         right: -85vw;
     }
     
-    .settings-modal.active .settings-modal-content {
-        right: 0;
-    }
+    .settings-modal.active .settings-modal-content { right: 0; }
     
-    .settings-header,
-    .settings-body,
-    .settings-footer {
+    .settings-header, .settings-body, .settings-footer {
         padding-left: 16px;
         padding-right: 16px;
     }
