@@ -60,7 +60,7 @@
     },
     {
       "id": "uni-projects",
-      "title": "Trending Uni Projects",
+      "title": "Personal University Projects",
       "icon": "bi-mortarboard-fill",
       "type": "content",
       "items": [
