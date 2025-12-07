@@ -306,14 +306,26 @@ function createContentCard(item) {
     image.alt = item.title;
     image.className = 'card-image';
     
-    // Add error handling for images
     image.onerror = function() {
         this.src = 'https://via.placeholder.com/320x180?text=' + encodeURIComponent(item.title);
     };
 
+    // --- START OF CHANGES ---
     const overlay = document.createElement('div');
     overlay.className = 'card-content-overlay';
-    overlay.textContent = item.title;
+    
+    // We create a container for the text to handle the new lines neatly
+    let overlayContent = `<div class="overlay-title">${item.title}</div>`;
+    
+    if (item.course || item.author) {
+        overlayContent += `<div class="overlay-meta">`;
+        if (item.course) overlayContent += `<span class="meta-course"><i class="bi bi-journal-bookmark-fill"></i> ${item.course}</span><br>`;
+        if (item.author) overlayContent += `<span class="meta-author"><i class="bi bi-person-fill"></i> ${item.author}</span>`;
+        overlayContent += `</div>`;
+    }
+    
+    overlay.innerHTML = overlayContent;
+    // --- END OF CHANGES ---
 
     const subtitle = document.createElement('div');
     subtitle.className = 'app-sub';
@@ -321,6 +333,7 @@ function createContentCard(item) {
 
     card.appendChild(image);
     card.appendChild(overlay);
+    
     if (item.subtitle) {
         card.appendChild(subtitle);
     }

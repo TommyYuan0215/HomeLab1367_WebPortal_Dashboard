@@ -68,25 +68,33 @@
           "title": "TV Ident",
           "url": "http://apps.homelab1367.local/uni/tvi",
           "image": "https://picsum.photos/320/180?random=10",
-          "subtitle": "3D Sierpinski Gasket TV Ident"
+          "subtitle": "3D Sierpinski Gasket TV Ident",
+          "course":"CPC354",
+          "author": "Tan Jun Lin"
         },
         {
           "title": "3DAM",
           "url": "http://apps.homelab1367.local/uni/3dam",
           "image": "https://picsum.photos/320/180?random=11",
-          "subtitle": "3D Articulated Model"
+          "subtitle": "3D Articulated Model",
+          "course":"CPC354",
+          "author": "Tan Jun Lin"
         },
         {
           "title": "Eco Recycle Penang",
           "url": "http://apps.homelab1367.local/uni/ecorecyclepenang",
           "image": "https://picsum.photos/320/180?random=12",
-          "subtitle": "Recycle Web App for Penang"
+          "subtitle": "Recycle Web App for Penang",
+          "course":"CAT304",
+          "author": "Tan Jun Lin"
         },
         {
           "title": "Moment Snap",
           "url": "http://apps.homelab1367.local/uni/momentsnap",
           "image": "https://picsum.photos/320/180?random=13",
-          "subtitle": "USM Photography Participation App"
+          "subtitle": "USM Photography Participation App",
+          "course":"CMT322",
+          "author": "Tan Jun Lin"
         }
       ]
     },
