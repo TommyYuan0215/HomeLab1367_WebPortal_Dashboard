@@ -14,7 +14,7 @@
         },
         {
           "title": "Photo Viewer",
-          "url": "https://apps.homelab1367.local:2283",
+          "url": "http://apps.homelab1367.local:2283",
           "icon": "bi-image-fill",
           "color": "#d63384"
         },
