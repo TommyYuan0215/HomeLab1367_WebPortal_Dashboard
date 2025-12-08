@@ -8,27 +8,21 @@
       "items": [
         {
           "title": "Media Server",
-          "url": "https://apps.homelab1367.local:18096",
+          "url": "https://apps.homelab1367.local/media",
           "icon": "bi-tv-fill",
           "color": "#fd7e14"
         },
         {
           "title": "Photo Viewer",
-          "url": "https://apps.homelab1367.local:12283",
+          "url": "https://apps.homelab1367.local:2283",
           "icon": "bi-image-fill",
           "color": "#d63384"
         },
         {
           "title": "Cloud Storage",
-          "url": "https://apps.homelab1367.local:18080",
+          "url": "https://apps.homelab1367.local/cloud",
           "icon": "bi-cloud-fill",
           "color": "#0d6efd"
-        },
-        {
-          "title": "Home Assistant",
-          "url": "https://apps.homelab1367.local:18123",
-          "icon": "bi-house-heart-fill",
-          "color": "#03a9f4"
         }
       ]
     },
@@ -39,20 +33,20 @@
       "type": "favorite",
       "items": [
         {
-          "title": "File Browser",
-          "url": "https://apps.homelab1367.local:18083",
+          "title": "File Explorer",
+          "url": "https://apps.homelab1367.local/explorer",
           "icon": "bi-folder-fill",
           "color": "#ffc107"
         },
         {
           "title": "Docker Management Tools",
-          "url": "https://apps.homelab1367.local:19000",
+          "url": "http://apps.homelab1367.local/9000",
           "icon": "bi-gear-wide-connected",
           "color": "#ff6b6b"
         },
         {
           "title": "System Health Monitor",
-          "url": "https://apps.homelab1367.local:18090",
+          "url": "http://apps.homelab1367.local:8090",
           "icon": "bi-activity",
           "color": "#20c997"
         }
