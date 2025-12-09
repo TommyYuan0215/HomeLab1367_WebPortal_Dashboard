@@ -40,7 +40,7 @@
         },
         {
           "title": "Docker Management Tools",
-          "url": "http://apps.homelab1367.local/9000",
+          "url": "http://apps.homelab1367.local:9000",
           "icon": "bi-gear-wide-connected",
           "color": "#ff6b6b"
         },
