@@ -49,6 +49,12 @@
           "url": "http://apps.homelab1367.local:8090",
           "icon": "bi-activity",
           "color": "#20c997"
+        },
+        {
+          "title": "Server Manager",
+          "url": "https://apps.homelab1367.local:9090",
+          "icon": "bi-server",
+          "color": "#6f42c1"
         }
       ]
     },
