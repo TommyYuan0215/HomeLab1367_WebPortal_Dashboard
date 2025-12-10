@@ -39,22 +39,22 @@
           "color": "#ffc107"
         },
         {
-          "title": "Docker Management Tools",
-          "url": "http://apps.homelab1367.local:9000",
-          "icon": "bi-gear-wide-connected",
-          "color": "#ff6b6b"
-        },
-        {
-          "title": "System Health Monitor",
-          "url": "http://apps.homelab1367.local:8090",
-          "icon": "bi-activity",
-          "color": "#20c997"
+          "title": "Server Monitoring",
+          "url": "https://apps.homelab1367.local:9090",
+          "icon": "bi-speedometer", 
+          "color": "#6f42c1"
         },
         {
           "title": "Server Manager",
-          "url": "https://apps.homelab1367.local:9090",
-          "icon": "bi-server",
-          "color": "#6f42c1"
+          "url": "https://apps.homelab1367.local:10000",
+          "icon": "bi-hdd-rack-fill",
+          "color": "#0dcaf0"
+        },
+        {
+          "title": "Docker Manager",
+          "url": "http://apps.homelab1367.local:9000",
+          "icon": "bi-box-seam-fill",
+          "color": "#ff6b6b"
         }
       ]
     },
