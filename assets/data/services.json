@@ -23,6 +23,12 @@
           "url": "http://apps.homelab1367.local/cloud",
           "icon": "bi-cloud-fill",
           "color": "#0d6efd"
+        },
+        {
+          "title": "Home Assistance",
+          "url": "http://apps.homelab1367.local:8123",
+          "icon": "bi-house-fill",
+          "color": "#20c997"
         }
       ]
     },
