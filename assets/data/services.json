@@ -39,16 +39,10 @@
           "color": "#ffc107"
         },
         {
-          "title": "Server Monitoring",
-          "url": "http://apps.homelab1367.local:9090",
-          "icon": "bi-speedometer", 
-          "color": "#6f42c1"
-        },
-        {
           "title": "Server Manager",
-          "url": "http://apps.homelab1367.local:10000",
-          "icon": "bi-hdd-rack-fill",
-          "color": "#0dcaf0"
+          "url": "http://apps.homelab1367.local:9090",
+          "icon": "bi-hdd-rack-fill", 
+          "color": "#6f42c1"
         },
         {
           "title": "Docker Manager",
