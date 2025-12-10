@@ -13,8 +13,32 @@ function startTime() {
     let s = today.getSeconds();
     m = checkTime(m);
     s = checkTime(s);
-    document.getElementById('real-time-clock').innerHTML = h + ":" + m + ":" + s;
+    const clock = document.getElementById('real-time-clock');
+    if (clock) {
+        clock.innerHTML = h + ":" + m + ":" + s;
+    }
     setTimeout(startTime, 1000); 
+}
+
+// ☀️ GREETING LOGIC
+// =======================================================
+
+function updateGreeting() {
+    const hour = new Date().getHours();
+    const greetingElement = document.getElementById('greeting-text'); // Ensure your HTML <h1> has this ID
+    let greeting = 'Welcome';
+
+    if (hour >= 5 && hour < 12) {
+        greeting = 'Good Morning';
+    } else if (hour >= 12 && hour < 18) {
+        greeting = 'Good Afternoon';
+    } else {
+        greeting = 'Good Evening';
+    }
+
+    if (greetingElement) {
+        greetingElement.textContent = greeting;
+    }
 }
 
 // -------------------------------------------------------
@@ -26,7 +50,7 @@ async function loadServices() {
         // Try different possible paths
         let response;
         const possiblePaths = [
-            'assets/data/services.json',      // ← Updated path
+            'assets/data/services.json',
             './assets/data/services.json',
             '/assets/data/services.json'
         ];
@@ -138,7 +162,7 @@ function cleanTitle(title) {
     return title;
 }
 
-// --- Modified Render Function ---
+// --- Render Functions ---
 
 function renderSections(sections) {
     const container = document.getElementById('sections-container');
@@ -183,21 +207,15 @@ function renderSections(sections) {
                         const cleanHeadline = cleanTitle(item.title);
                         const timeAgo = getTimeAgo(item.pubDate);
                         
-                        // Try to find an image (enclosure or thumbnail)
-                        // Note: Free RSS feeds often lack good images, we use a fallback if missing
                         let imageUrl = item.thumbnail || item.enclosure?.link;
                         
-                        // Fallback logic for Google News specifically (which often hides images)
                         if (!imageUrl || imageUrl.length < 10) {
-                            // Use a random abstract image for variety if no real image found
                              imageUrl = `https://picsum.photos/seed/${cleanHeadline.length}/400/300`;
                         }
 
-                        // Try to fetch favicon (Icon of the news source)
                         const sourceDomain = new URL(item.link).hostname;
                         const faviconUrl = `https://www.google.com/s2/favicons?domain=${sourceDomain}&sz=32`;
 
-                        // Create the BING-STYLE Card
                         const card = document.createElement('a');
                         card.className = 'news-card';
                         card.href = item.link;
@@ -241,37 +259,6 @@ function renderSections(sections) {
     });
 }
 
-function createSectionElement(section) {
-    const sectionDiv = document.createElement('section');
-    sectionDiv.className = 'tv-row';
-    sectionDiv.setAttribute('data-section-id', section.id);
-
-    // Create section title
-    const title = document.createElement('h3');
-    title.className = 'row-title';
-    title.innerHTML = `<i class="bi ${section.icon}"></i>${section.title}`;
-
-    // Create content container
-    const contentContainer = document.createElement('div');
-    contentContainer.className = section.type === 'favorite' ? 'tv-row-content' : 'tv-fluid-content';
-    contentContainer.id = `${section.id}-container`;
-
-    // Render items
-    if (section.items && Array.isArray(section.items)) {
-        section.items.forEach(item => {
-            const card = section.type === 'favorite' 
-                ? createFavoriteCard(item) 
-                : createContentCard(item);
-            contentContainer.appendChild(card);
-        });
-    }
-
-    sectionDiv.appendChild(title);
-    sectionDiv.appendChild(contentContainer);
-
-    return sectionDiv;
-}
-
 function createFavoriteCard(item) {
     const card = document.createElement('a');
     card.className = 'app-card favorite-app-card';
@@ -310,11 +297,9 @@ function createContentCard(item) {
         this.src = 'https://via.placeholder.com/320x180?text=' + encodeURIComponent(item.title);
     };
 
-    // --- START OF CHANGES ---
     const overlay = document.createElement('div');
     overlay.className = 'card-content-overlay';
     
-    // We create a container for the text to handle the new lines neatly
     let overlayContent = `<div class="overlay-title">${item.title}</div>`;
     
     if (item.course || item.author) {
@@ -325,7 +310,6 @@ function createContentCard(item) {
     }
     
     overlay.innerHTML = overlayContent;
-    // --- END OF CHANGES ---
 
     const subtitle = document.createElement('div');
     subtitle.className = 'app-sub';
@@ -342,11 +326,9 @@ function createContentCard(item) {
 }
 
 function updateSearchFunctionality() {
-    // Re-attach search functionality to newly rendered cards
     const searchInput = document.getElementById('global-search-input');
     if (!searchInput) return;
     
-    // Remove all existing listeners by cloning the input
     const newSearchInput = searchInput.cloneNode(true);
     searchInput.parentNode.replaceChild(newSearchInput, searchInput);
     
@@ -381,22 +363,25 @@ function updateSearchFunctionality() {
     const themeIcon = document.getElementById('theme-toggle-icon');
     const githubIcon = document.getElementById('github-icon');
 
-    // --- Theme and Particle Logic (Existing) ---
+    // --- Theme and Particle Logic ---
     function initParticles(color){
         const root = document.getElementById('particles-js');
         const old = root.querySelector('canvas'); 
         if(old) old.remove();
 
-        particlesJS('particles-js', {
-            particles: {
-                number: { value: 55, density: { enable: true, value_area: 800 } },
-                color: { value: color },
-                opacity: { value: 0.08 },
-                size: { value: 3 },
-                move: { speed: 0.9 }
-            },
-            interactivity: { detect_on: 'canvas', events: { onhover: { enable: false } } }
-        });
+        // Check if particlesJS is loaded
+        if (typeof particlesJS !== 'undefined') {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 55, density: { enable: true, value_area: 800 } },
+                    color: { value: color },
+                    opacity: { value: 0.08 },
+                    size: { value: 3 },
+                    move: { speed: 0.9 }
+                },
+                interactivity: { detect_on: 'canvas', events: { onhover: { enable: false } } }
+            });
+        }
     }
 
     function setTheme(t){
@@ -405,14 +390,14 @@ function updateSearchFunctionality() {
             body.classList.add('light-theme'); 
             themeIcon.className = 'bi bi-sun-fill'; 
             themeIcon.style.color = '#ffb020'; 
-            githubIcon.style.color = '#111111';
+            if(githubIcon) githubIcon.style.color = '#111111';
             initParticles('#111111'); 
         }
         else { 
             body.classList.remove('light-theme'); 
             themeIcon.className = 'bi bi-moon-fill'; 
             themeIcon.style.color = 'var(--text)'; 
-            githubIcon.style.color = 'var(--text)';
+            if(githubIcon) githubIcon.style.color = 'var(--text)';
             initParticles('#ffffff'); 
         }
         localStorage.setItem(storageKey, t);
@@ -421,16 +406,25 @@ function updateSearchFunctionality() {
     const saved = localStorage.getItem(storageKey) || 'dark';
     setTheme(saved);
 
-    themeBtn.addEventListener('click', function(e){ 
-        e.preventDefault(); 
-        setTheme(body.classList.contains('light-theme') ? 'dark' : 'light'); 
-    });
+    if (themeBtn) {
+        themeBtn.addEventListener('click', function(e){ 
+            e.preventDefault(); 
+            setTheme(body.classList.contains('light-theme') ? 'dark' : 'light'); 
+        });
+    }
 
-    // Load services when DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', loadServices);
-    } else {
+    // --- INITIALIZATION ---
+    // Load services and greeting when DOM is ready
+    function init() {
         loadServices();
+        updateGreeting(); // Check time and update "Welcome" text
+        updateSearchFunctionality();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
     }
 })();
 

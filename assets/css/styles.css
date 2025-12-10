@@ -174,7 +174,10 @@ body.light-theme .nav-profile i:hover { color: var(--light-text); }
     position: relative;
     height: 480px;
     width: 100%;
-    background-image: linear-gradient(110deg, var(--bg-dark), rgba(0, 0, 0, 0.6)), url('https://picsum.photos/1920/800?blur=4&auto=format');
+    /* Added a subtle purple gradient overlay to make it less "flat black" */
+    background-image: 
+        linear-gradient(100deg, var(--bg-dark) 0%, rgba(15, 15, 18, 0.9) 40%, rgba(138, 57, 255, 0.15) 100%),
+        url('https://picsum.photos/1920/800?blur=4&auto=format');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -182,55 +185,93 @@ body.light-theme .nav-profile i:hover { color: var(--light-text); }
     padding-left: 80px;
     box-shadow: var(--shadow-2);
     margin-bottom: 30px;
+    overflow: hidden; /* Keeps animations inside */
 }
 
+/* Light theme support */
 body.light-theme .feature-banner {
-    background-image: linear-gradient(110deg, var(--light-bg), rgba(255, 255, 255, 0.6)), url('https://picsum.photos/1920/800?blur=1&auto=format');
-}
-
-.feature-banner::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, var(--bg-dark) 25%, rgba(15, 15, 18, 0.4) 70%, transparent 100%);
-    z-index: 1;
-}
-
-body.light-theme .feature-banner::before {
-    background: linear-gradient(180deg, var(--light-bg) 0, var(--light-bg) 70px, rgba(255, 255, 255, 0.4) 100px),
-                linear-gradient(90deg, var(--light-bg) 25%, rgba(255, 255, 255, 0.4) 70%, transparent 100%);
+    background-image: 
+        linear-gradient(100deg, var(--light-bg) 30%, rgba(255, 255, 255, 0.8) 60%, rgba(138, 57, 255, 0.1) 100%),
+        url('https://picsum.photos/1920/800?blur=1&auto=format');
 }
 
 .feature-content {
-    padding-top: 56px;
+    /* Alignment Fix: Adjusted padding to visually center the text */
+    padding-top: 30px;
     z-index: 2;
-    max-width: 450px;
-    color: var(--text);
-    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    max-width: 600px;
+    position: relative;
 }
 
-body.light-theme .feature-content {
-    color: var(--light-text);
-    text-shadow: none;
-}
-
+/* 1. The Greeting: Gradient Text & Glow */
 .feature-title {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 10px;
+    font-size: 4.5rem; /* Larger for impact */
+    font-weight: 800;
+    margin-bottom: 5px;
+    letter-spacing: -2px;
+    line-height: 1.1;
+    
+    /* Creates the "Premium" Gradient Text Effect */
+    background: linear-gradient(135deg, #ffffff 30%, var(--accent-400) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    /* Adds a subtle glow behind the text */
+    filter: drop-shadow(0 0 25px rgba(138, 57, 255, 0.25));
+    
+    /* Entrance Animation */
+    opacity: 0;
+    animation: fadeSlideUp 0.8s ease-out forwards;
 }
 
+/* Light theme gradient adjustment */
+body.light-theme .feature-title {
+    background: linear-gradient(135deg, var(--light-text) 30%, var(--accent-600) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: none;
+}
+
+/* 2. The Subtitle: Crisp & Spaced */
 .feature-meta {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--accent-400);
-    font-weight: 500;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px; /* Wide spacing looks modern */
+    margin-bottom: 15px;
+    display: block;
+    
+    /* Animation delay: appears after title */
+    opacity: 0;
+    animation: fadeSlideUp 0.8s ease-out 0.2s forwards;
 }
 
+/* 3. The Description: Readable */
 .feature-description {
-    font-size: 1rem;
+    font-size: 1.15rem;
     color: var(--muted);
-    margin-top: 15px;
-    line-height: 1.5;
+    line-height: 1.6;
+    max-width: 500px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    
+    /* Animation delay: appears last */
+    opacity: 0;
+    animation: fadeSlideUp 0.8s ease-out 0.4s forwards;
+}
+
+/* 4. Animation Keyframes */
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 body.light-theme .feature-description { color: var(--light-muted); }
