@@ -61,6 +61,12 @@
           "url": "http://apps.homelab1367.local:9000",
           "icon": "bi-box-seam-fill",
           "color": "#ff6b6b"
+        },
+        {
+          "title": "Router Manager",
+          "url": "http://192.168.0.1",
+          "icon": "bi-router-fill",
+          "color": "#4ACBD6"
         }
       ]
     },
