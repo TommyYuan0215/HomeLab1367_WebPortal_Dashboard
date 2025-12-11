@@ -32,7 +32,7 @@
         },
         {
           "title": "Virtual Machine",
-          "url": "http://apps.homelab1367.local:8989/guacamole/#/",
+          "url": "http://apps.homelab1367.local/guacamole/",
           "icon": "bi-window-stack",
           "color": "#4b4b4b"
         }
