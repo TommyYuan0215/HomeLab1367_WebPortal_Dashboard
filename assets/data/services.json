@@ -25,6 +25,12 @@
           "color": "#0d6efd"
         },
         {
+          "title": "File Explorer",
+          "url": "http://apps.homelab1367.local/explorer",
+          "icon": "bi-folder-fill",
+          "color": "#ffc107"
+        },
+        {
           "title": "Home Assistance",
           "url": "http://apps.homelab1367.local:8123",
           "icon": "bi-house-fill",
@@ -39,10 +45,10 @@
       "type": "favorite",
       "items": [
         {
-          "title": "File Explorer",
-          "url": "http://apps.homelab1367.local/explorer",
-          "icon": "bi-folder-fill",
-          "color": "#ffc107"
+          "title": "AdGuard Home",
+          "url": "http://myhomeserver.homelab1367.local:3000",
+          "icon": "bi-shield-fill",
+          "color": "#76D7C4"
         },
         {
           "title": "Server Manager",
