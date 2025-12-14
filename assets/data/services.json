@@ -2,8 +2,8 @@
   "sections": [
     {
       "id": "home-media-services",
-      "title": "🏠 Home & Media Services",
-      "icon": "bi-grid-fill",
+      "title": "Home & Media Services",
+      "icon": "house-heart-fill",
       "type": "favorite",
       "items": [
         {
@@ -40,8 +40,8 @@
     },
     {
       "id": "system-network-management",
-      "title": "🖥️ System & Network Management",
-      "icon": "bi-shield-lock-fill",
+      "title": "System & Network Management",
+      "icon": "bi-house-gear-fill",
       "type": "favorite",
       "items": [
         {
