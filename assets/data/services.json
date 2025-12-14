@@ -3,7 +3,7 @@
     {
       "id": "home-media-services",
       "title": "Home & Media Services",
-      "icon": "house-heart-fill",
+      "icon": "bi-house-heart-fill",
       "type": "favorite",
       "items": [
         {
