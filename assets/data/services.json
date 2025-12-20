@@ -45,6 +45,12 @@
       "type": "favorite",
       "items": [
         {
+          "title": "Server Health",
+          "icon": "bi-cpu-fill",          
+          "url": "http://apps.homelab1367.local:19999",
+          "color": "#87192a"
+        },
+        {
           "title": "AdGuard Home",
           "url": "http://myhomeserver.homelab1367.local:3000",
           "icon": "bi-shield-fill",
