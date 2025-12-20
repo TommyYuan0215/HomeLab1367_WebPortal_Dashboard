@@ -1,18 +1,24 @@
-// 🕑 GLOBAL CLOCK LOGIC (Must be outside the IIFE for setTimeout)
-// =======================================================
+/**
+ * =======================================================
+ * 1. CORE UTILITIES & CLOCK
+ * =======================================================
+ */
 
+// Format numbers (e.g., 9 -> 09)
 function checkTime(i) {
-    if (i < 10) {i = "0" + i};
-    return i;
+    return i < 10 ? "0" + i : i;
 }
 
+// Start the real-time clock
 function startTime() {
     const today = new Date();
     let h = today.getHours();
     let m = today.getMinutes();
     let s = today.getSeconds();
+    
     m = checkTime(m);
     s = checkTime(s);
+    
     const clock = document.getElementById('real-time-clock');
     if (clock) {
         clock.innerHTML = h + ":" + m + ":" + s;
@@ -20,63 +26,52 @@ function startTime() {
     setTimeout(startTime, 1000); 
 }
 
-// ☀️ GREETING LOGIC
-// =======================================================
-
+// Update the "Good Morning/Evening" text
 function updateGreeting() {
     const hour = new Date().getHours();
-    const greetingElement = document.getElementById('greeting-text'); // Ensure your HTML <h1> has this ID
+    const greetingElement = document.getElementById('greeting-text');
     let greeting = 'Welcome';
 
-    if (hour >= 5 && hour < 12) {
-        greeting = 'Good Morning';
-    } else if (hour >= 12 && hour < 18) {
-        greeting = 'Good Afternoon';
-    } else {
-        greeting = 'Good Evening';
-    }
+    if (hour >= 5 && hour < 12) greeting = 'Good Morning';
+    else if (hour >= 12 && hour < 18) greeting = 'Good Afternoon';
+    else greeting = 'Good Evening';
 
     if (greetingElement) {
         greetingElement.textContent = greeting;
     }
 }
 
-// -------------------------------------------------------
-// 📦 DYNAMIC CONTENT LOADING FROM JSON
-// -------------------------------------------------------
+
+/**
+ * =======================================================
+ * 2. DATA FETCHING (Service Links)
+ * =======================================================
+ */
 
 async function loadServices() {
     try {
-        // Try different possible paths
-        let response;
         const possiblePaths = [
             'assets/data/services.json',
             './assets/data/services.json',
             '/assets/data/services.json'
         ];
         
-        let lastError;
+        let response;
         for (const path of possiblePaths) {
             try {
                 response = await fetch(path);
-                if (response.ok) {
-                    break;
-                }
-            } catch (err) {
-                lastError = err;
-                continue;
-            }
+                if (response.ok) break;
+            } catch (err) { continue; }
         }
         
         if (!response || !response.ok) {
-            throw new Error(`Failed to load assets/data/services.json. Make sure you're running a local web server. Status: ${response?.status || 'Network Error'}`);
+            throw new Error(`Failed to load services.json. Status: ${response?.status || 'Network Error'}`);
         }
         
         const data = await response.json();
         
-        // Validate JSON structure
         if (!data.sections || !Array.isArray(data.sections)) {
-            throw new Error('Invalid JSON structure: "sections" array not found');
+            throw new Error('Invalid JSON: "sections" array missing');
         }
         
         renderSections(data.sections);
@@ -90,44 +85,106 @@ function showErrorMessage(error) {
     const container = document.getElementById('sections-container');
     if (!container) return;
     
-    const errorHTML = `
-        <div style="color: var(--muted); padding: 40px; text-align: center; max-width: 800px; margin: 0 auto;">
-            <h3 style="color: var(--accent); margin-bottom: 20px;">⚠️ Failed to load services</h3>
-            <p style="margin-bottom: 15px;"><strong>Error:</strong> ${error.message}</p>
-            <div style="background: var(--card-dark); padding: 20px; border-radius: 8px; margin-top: 20px; text-align: left; font-size: 0.9rem;">
-                <p style="margin-bottom: 10px;"><strong>📋 To fix this issue:</strong></p>
-                <ol style="margin-left: 20px; line-height: 1.8;">
-                    <li>Make sure <code>assets/data/services.json</code> exists in your web directory</li>
-                    <li>Ensure Apache/Nginx has read permissions for the file</li>
-                    <li>Check browser console (F12) for more details</li>
-                    <li>Verify the file path matches: <code>assets/data/services.json</code></li>
-                </ol>
-                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--glass);">
-                    <p style="margin-bottom: 10px;"><strong>🔧 Apache/Nginx Setup:</strong></p>
-                    <p style="margin-bottom: 10px; font-size: 0.9rem;">Make sure your files are in the web server directory:</p>
-                    <ul style="margin-left: 20px; line-height: 1.8; font-size: 0.9rem;">
-                        <li><strong>Apache:</strong> Usually <code>/var/www/html/</code> or your virtual host directory</li>
-                        <li><strong>Nginx:</strong> Usually <code>/var/www/html/</code> or <code>/usr/share/nginx/html/</code></li>
-                    </ul>
-                    <p style="margin-top: 15px; font-size: 0.85rem; color: var(--accent);">
-                        💡 Access via: <code>http://apps.homelab1367.local</code>
-                    </p>
-                </div>
-            </div>
+    container.innerHTML = `
+        <div style="color: var(--muted); padding: 40px; text-align: center;">
+            <h3 style="color: var(--accent);">⚠️ Failed to load services</h3>
+            <p>${error.message}</p>
+            <p style="font-size: 0.9rem; margin-top: 10px;">Check console (F12) for details.</p>
         </div>
     `;
-    
-    container.innerHTML = errorHTML;
 }
 
-// --- Helper Functions for News ---
 
-// 1. Calculate "2h ago", "5m ago"
-function getTimeAgo(dateString) {
-    const date = new Date(dateString);
-    const now = new Date();
-    const seconds = Math.floor((now - date) / 1000);
+/**
+ * =======================================================
+ * 3. SERVER STATS (Netdata Top Bar) - NEW SECTION
+ * =======================================================
+ */
+
+const NETDATA_HOST = 'http://apps.homelab1367.local:19999';
+
+async function updateServerStats() {
+    const container = document.getElementById('server-stats-container');
+    if (!container) return; // Stop if the navbar widget isn't in HTML yet
+
+    try {
+        // --- 1. CPU Usage ---
+        // Chart: system.cpu (Percentage)
+        const cpuRes = await fetch(`${NETDATA_HOST}/api/v1/data?chart=system.cpu&points=1&after=-1&group=average`);
+        const cpuData = await cpuRes.json();
+        const cpuVal = Math.round(cpuData.data[0]); 
+        updateStatUI('cpu', cpuVal, '%');
+
+        // --- 2. RAM Usage ---
+        // Chart: system.ram (MB) -> [Free, Used, Cached, Buffers] (Indices vary, so we sum)
+        const ramRes = await fetch(`${NETDATA_HOST}/api/v1/data?chart=system.ram&points=1&after=-1`);
+        const ramData = await ramRes.json();
+        const ramValues = ramData.data; // Array of values like [500, 2000, 100, 50]
+        
+        // Calculate Total & Used
+        // Netdata usually sends 'used' as the second or third value, but 'total' is sum of all.
+        // We assume the dimension names in `ramData.labels` tell us which is which.
+        // Simplified Logic: Sum all positive numbers = Total. Find 'used' dimension index.
+        const totalMem = ramValues.reduce((a, b) => a + (typeof b === 'number' ? b : 0), 0);
+        
+        // Find index of 'used' in labels (case-insensitive)
+        const usedIndex = ramData.labels.findIndex(l => l.toLowerCase() === 'used');
+        const usedMem = (usedIndex > -1) ? ramValues[usedIndex] : ramValues[1]; // Fallback to index 1
+
+        const ramPercent = Math.round((usedMem / totalMem) * 100);
+        updateStatUI('ram', ramPercent, '%');
+
+        // --- 3. Disk Usage ---
+        // Chart: disk.space (GB/MB) -> usually [avail, used, reserved]
+        const diskRes = await fetch(`${NETDATA_HOST}/api/v1/data?chart=disk.space&points=1&after=-1`);
+        const diskData = await diskRes.json();
+        const diskValues = diskData.data;
+
+        // Calculate Total & Used
+        const totalDisk = diskValues.reduce((a, b) => a + (typeof b === 'number' ? b : 0), 0);
+        const diskUsedIndex = diskData.labels.findIndex(l => l.toLowerCase() === 'used');
+        const usedDiskVal = (diskUsedIndex > -1) ? diskValues[diskUsedIndex] : diskValues[1];
+
+        const diskPercent = Math.round((usedDiskVal / totalDisk) * 100);
+        const diskUsedGB = Math.round(Math.abs(usedDiskVal)); // Convert negative if needed (Netdata quirk)
+        
+        // Update Bar with %, but Text with GB
+        updateStatUI('disk', diskPercent, 'GB', diskUsedGB);
+
+    } catch (err) {
+        // Silent fail (console log only) to avoid UI clutter
+        console.warn('Netdata fetch error:', err);
+    }
+}
+
+// Helper to update the DOM elements
+function updateStatUI(id, percentage, unit, textOverride = null) {
+    const bar = document.getElementById(`bar-${id}`);
+    const text = document.getElementById(`val-${id}`);
     
+    if (bar && text) {
+        // Clamp percentage 0-100
+        const safePercent = Math.min(Math.max(percentage, 0), 100);
+        
+        bar.style.width = `${safePercent}%`;
+        text.innerText = textOverride !== null ? `${textOverride}${unit}` : `${percentage}${unit}`;
+        
+        // Dynamic Colors
+        bar.className = 'stat-bar'; // Reset classes
+        if (percentage > 90) bar.classList.add('danger');
+        else if (percentage > 70) bar.classList.add('warning');
+    }
+}
+
+
+/**
+ * =======================================================
+ * 4. HELPER FUNCTIONS (News & Formatting)
+ * =======================================================
+ */
+
+function getTimeAgo(dateString) {
+    const seconds = Math.floor((new Date() - new Date(dateString)) / 1000);
     let interval = seconds / 31536000;
     if (interval > 1) return Math.floor(interval) + "y";
     interval = seconds / 2592000;
@@ -141,28 +198,25 @@ function getTimeAgo(dateString) {
     return "Just now";
 }
 
-// 2. Extract Source from Google News Title (e.g., "Headline - CNN" -> returns "CNN")
 function extractSource(title) {
-    const separator = " - ";
-    if (title.includes(separator)) {
-        const parts = title.split(separator);
-        return parts[parts.length - 1]; // Return the last part
-    }
-    return "News";
+    return title.includes(" - ") ? title.split(" - ").pop() : "News";
 }
 
-// 3. Clean Headline (Remove the source from the title)
 function cleanTitle(title) {
-    const separator = " - ";
-    if (title.includes(separator)) {
-        const parts = title.split(separator);
-        parts.pop(); // Remove the source
-        return parts.join(separator);
+    if (title.includes(" - ")) {
+        const parts = title.split(" - ");
+        parts.pop();
+        return parts.join(" - ");
     }
     return title;
 }
 
-// --- Render Functions ---
+
+/**
+ * =======================================================
+ * 5. RENDERING LOGIC (The Core)
+ * =======================================================
+ */
 
 function renderSections(sections) {
     const container = document.getElementById('sections-container');
@@ -172,77 +226,31 @@ function renderSections(sections) {
     sections.forEach(section => {
         const sectionDiv = document.createElement('section');
         sectionDiv.className = 'tv-row';
-
         sectionDiv.setAttribute('data-section-type', section.type);
         
-        // Title
+        // 1. Render Title
         const title = document.createElement('h3');
         title.className = 'row-title';
         title.innerHTML = `<i class="bi ${section.icon}"></i>${section.title}`;
+        sectionDiv.appendChild(title);
         
-        // Container
+        // 2. Create Content Container
         const contentContainer = document.createElement('div');
-
-        // CHECK: Is this the News section?
-        if (section.type === 'news' && section.rssUrl) {
-            
-            // Use the NEW Grid Layout for news
-            contentContainer.className = 'news-grid'; 
-            
-            // Render Loading State
-            contentContainer.innerHTML = `
-                <div class="news-card" style="background: #222; display: flex; align-items: center; justify-content: center; color: #666;">
-                    Loading News...
-                </div>`;
-
-            // Fetch Data
-            fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(section.rssUrl)}`)
-                .then(res => res.json())
-                .then(data => {
-                    contentContainer.innerHTML = ''; // Clear loading
-                    
-                    // Display up to 8 news items
-                    data.items.slice(0, 8).forEach(item => {
-                        const sourceName = extractSource(item.title);
-                        const cleanHeadline = cleanTitle(item.title);
-                        const timeAgo = getTimeAgo(item.pubDate);
-                        
-                        let imageUrl = item.thumbnail || item.enclosure?.link;
-                        
-                        if (!imageUrl || imageUrl.length < 10) {
-                             imageUrl = `https://picsum.photos/seed/${cleanHeadline.length}/400/300`;
-                        }
-
-                        const sourceDomain = new URL(item.link).hostname;
-                        const faviconUrl = `https://www.google.com/s2/favicons?domain=${sourceDomain}&sz=32`;
-
-                        const card = document.createElement('a');
-                        card.className = 'news-card';
-                        card.href = item.link;
-                        card.target = '_blank';
-                        card.innerHTML = `
-                            <img src="${imageUrl}" class="news-bg-image" loading="lazy" alt="News Image">
-                            <div class="news-overlay">
-                                <div class="news-meta">
-                                    <img src="${faviconUrl}" class="news-source-icon" onerror="this.style.display='none'">
-                                    <span>${sourceName}</span>
-                                    <span>• ${timeAgo}</span>
-                                </div>
-                                <h4 class="news-title">${cleanHeadline}</h4>
-                            </div>
-                        `;
-                        contentContainer.appendChild(card);
-                    });
-                })
-                .catch(err => {
-                    console.error(err);
-                    contentContainer.innerHTML = `<div style="color:var(--muted); padding:20px;">Unable to load news feed.</div>`;
-                });
-
-        } else {
-            // Standard Horizontal Layout for Apps
+        
+        // --- TYPE: MONITOR (Netdata Main Widget) ---
+        // (Optional: Keep this if you still want the big gauges in the body)
+        if (section.type === 'monitor') {
+            contentContainer.className = 'monitor-grid'; 
+            renderMonitorSection(section, contentContainer);
+        } 
+        // --- TYPE: NEWS (RSS) ---
+        else if (section.type === 'news' && section.rssUrl) {
+            contentContainer.className = 'news-grid';
+            renderNewsSection(section, contentContainer);
+        } 
+        // --- TYPE: APPS (Favorite/Content) ---
+        else {
             contentContainer.className = section.type === 'favorite' ? 'tv-row-content' : 'tv-fluid-content';
-            
             if (section.items) {
                 section.items.forEach(item => {
                     const card = section.type === 'favorite' 
@@ -253,11 +261,75 @@ function renderSections(sections) {
             }
         }
 
-        sectionDiv.appendChild(title);
         sectionDiv.appendChild(contentContainer);
         container.appendChild(sectionDiv);
     });
 }
+
+/**
+ * Renders the Netdata Server Health Section (Big Body Widget)
+ */
+function renderMonitorSection(section, container) {
+    if (!document.getElementById('netdata-script')) {
+        const script = document.createElement('script');
+        script.id = 'netdata-script';
+        script.src = `${section.host}/dashboard.js`; 
+        script.async = true;
+        document.head.appendChild(script);
+    }
+    // (Existing gauge HTML code...)
+    container.innerHTML = `<div class="monitor-wrapper" style="padding: 20px; color: var(--muted);">Netdata Dashboard Loaded</div>`;
+}
+
+/**
+ * Renders the News Section via RSS2JSON
+ */
+function renderNewsSection(section, container) {
+    container.innerHTML = `<div class="news-card" style="background: #222; display: flex; align-items: center; justify-content: center; color: #666;">Loading News...</div>`;
+
+    fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(section.rssUrl)}`)
+        .then(res => res.json())
+        .then(data => {
+            container.innerHTML = '';
+            data.items.slice(0, 8).forEach(item => {
+                const sourceName = extractSource(item.title);
+                const cleanHeadline = cleanTitle(item.title);
+                const timeAgo = getTimeAgo(item.pubDate);
+                let imageUrl = item.thumbnail || item.enclosure?.link;
+                if (!imageUrl || imageUrl.length < 10) imageUrl = `https://picsum.photos/seed/${cleanHeadline.length}/400/300`;
+                
+                const sourceDomain = new URL(item.link).hostname;
+                const faviconUrl = `https://www.google.com/s2/favicons?domain=${sourceDomain}&sz=32`;
+
+                const card = document.createElement('a');
+                card.className = 'news-card';
+                card.href = item.link;
+                card.target = '_blank';
+                card.innerHTML = `
+                    <img src="${imageUrl}" class="news-bg-image" loading="lazy" alt="News Image">
+                    <div class="news-overlay">
+                        <div class="news-meta">
+                            <img src="${faviconUrl}" class="news-source-icon" onerror="this.style.display='none'">
+                            <span>${sourceName}</span>
+                            <span>• ${timeAgo}</span>
+                        </div>
+                        <h4 class="news-title">${cleanHeadline}</h4>
+                    </div>`;
+                container.appendChild(card);
+            });
+        })
+        .catch(err => {
+            console.error(err);
+            container.innerHTML = `<div style="color:var(--muted); padding:20px;">Unable to load news feed.</div>`;
+        });
+}
+
+
+/**
+ * =======================================================
+ * 6. CARD CREATION FACTORIES
+ * =======================================================
+ */
 
 function createFavoriteCard(item) {
     const card = document.createElement('a');
@@ -269,7 +341,6 @@ function createFavoriteCard(item) {
     const icon = document.createElement('i');
     icon.className = `bi ${item.icon} app-icon`;
     icon.style.cssText = `color: ${item.color || 'var(--accent)'}; font-size: 3rem;`;
-    icon.setAttribute('aria-hidden', 'true');
 
     const title = document.createElement('div');
     title.className = 'app-title';
@@ -277,7 +348,6 @@ function createFavoriteCard(item) {
 
     card.appendChild(icon);
     card.appendChild(title);
-
     return card;
 }
 
@@ -292,7 +362,6 @@ function createContentCard(item) {
     image.src = item.image;
     image.alt = item.title;
     image.className = 'card-image';
-    
     image.onerror = function() {
         this.src = 'https://via.placeholder.com/320x180?text=' + encodeURIComponent(item.title);
     };
@@ -301,29 +370,31 @@ function createContentCard(item) {
     overlay.className = 'card-content-overlay';
     
     let overlayContent = `<div class="overlay-title">${item.title}</div>`;
-    
     if (item.course || item.author) {
         overlayContent += `<div class="overlay-meta">`;
         if (item.course) overlayContent += `<span class="meta-course"><i class="bi bi-journal-bookmark-fill"></i> ${item.course}</span><br>`;
         if (item.author) overlayContent += `<span class="meta-author"><i class="bi bi-person-fill"></i> ${item.author}</span>`;
         overlayContent += `</div>`;
     }
-    
     overlay.innerHTML = overlayContent;
-
-    const subtitle = document.createElement('div');
-    subtitle.className = 'app-sub';
-    subtitle.textContent = item.subtitle || '';
-
     card.appendChild(image);
     card.appendChild(overlay);
-    
+
     if (item.subtitle) {
+        const subtitle = document.createElement('div');
+        subtitle.className = 'app-sub';
+        subtitle.textContent = item.subtitle;
         card.appendChild(subtitle);
     }
-
     return card;
 }
+
+
+/**
+ * =======================================================
+ * 7. UI INTERACTIONS (Search, etc.)
+ * =======================================================
+ */
 
 function updateSearchFunctionality() {
     const searchInput = document.getElementById('global-search-input');
@@ -337,24 +408,24 @@ function updateSearchFunctionality() {
         const allCards = document.querySelectorAll('.app-card');
         
         allCards.forEach(card => {
-            const titleElement = card.querySelector('.app-title');
+            const titleElement = card.querySelector('.app-title') || card.querySelector('.overlay-title');
             const subElement = card.querySelector('.app-sub');
             
             const titleText = titleElement ? titleElement.textContent.toLowerCase() : '';
             const subText = subElement ? subElement.textContent.toLowerCase() : '';
 
-            const isMatch = (
-                searchTerm.length === 0 ||
-                titleText.includes(searchTerm) ||
-                subText.includes(searchTerm)
-            );
-
+            const isMatch = (searchTerm.length === 0 || titleText.includes(searchTerm) || subText.includes(searchTerm));
             card.classList.toggle('hidden', !isMatch);
         });
     });
 }
 
-// -------------------------------------------------------
+
+/**
+ * =======================================================
+ * 8. INITIALIZATION (Theme, Particles, Boot)
+ * =======================================================
+ */
 
 (function(){
     const storageKey = 'homelab-theme-v2';
@@ -363,13 +434,13 @@ function updateSearchFunctionality() {
     const themeIcon = document.getElementById('theme-toggle-icon');
     const githubIcon = document.getElementById('github-icon');
 
-    // --- Theme and Particle Logic ---
+    // --- Particle Logic ---
     function initParticles(color){
         const root = document.getElementById('particles-js');
+        if(!root) return;
         const old = root.querySelector('canvas'); 
         if(old) old.remove();
 
-        // Check if particlesJS is loaded
         if (typeof particlesJS !== 'undefined') {
             particlesJS('particles-js', {
                 particles: {
@@ -384,19 +455,18 @@ function updateSearchFunctionality() {
         }
     }
 
+    // --- Theme Logic ---
     function setTheme(t){
         const isLight = t === 'light';
         if(isLight){ 
             body.classList.add('light-theme'); 
-            themeIcon.className = 'bi bi-sun-fill'; 
-            themeIcon.style.color = '#ffb020'; 
+            if(themeIcon) { themeIcon.className = 'bi bi-sun-fill'; themeIcon.style.color = '#ffb020'; }
             if(githubIcon) githubIcon.style.color = '#111111';
             initParticles('#111111'); 
         }
         else { 
             body.classList.remove('light-theme'); 
-            themeIcon.className = 'bi bi-moon-fill'; 
-            themeIcon.style.color = 'var(--text)'; 
+            if(themeIcon) { themeIcon.className = 'bi bi-moon-fill'; themeIcon.style.color = 'var(--text)'; }
             if(githubIcon) githubIcon.style.color = 'var(--text)';
             initParticles('#ffffff'); 
         }
@@ -413,12 +483,14 @@ function updateSearchFunctionality() {
         });
     }
 
-    // --- INITIALIZATION ---
-    // Load services and greeting when DOM is ready
+    // --- Boot Sequence ---
     function init() {
         loadServices();
-        updateGreeting(); // Check time and update "Welcome" text
+        updateGreeting();
         updateSearchFunctionality();
+        // ** START SERVER STATS POLLING **
+        setInterval(updateServerStats, 2000); // Check every 2 seconds
+        updateServerStats(); // Run once immediately
     }
 
     if (document.readyState === 'loading') {
@@ -428,4 +500,5 @@ function updateSearchFunctionality() {
     }
 })();
 
+// Start Global Clock
 startTime();
