@@ -10,31 +10,36 @@
           "title": "Media Server",
           "url": "http://apps.homelab1367.local/media",
           "icon": "bi-tv-fill",
-          "color": "#0D6EFD"
+          "color": "#0D6EFD",
+          "description": "Jellyfin"
         },
         {
           "title": "Photo Viewer",
           "url": "http://apps.homelab1367.local:2283",
           "icon": "bi-image-fill",
-          "color": "#17A2B8"
+          "color": "#17A2B8",
+          "description": "Immich"
         },
         {
           "title": "Cloud Storage",
           "url": "http://apps.homelab1367.local/cloud",
           "icon": "bi-cloud-fill",
-          "color": "#76D7C4"
+          "color": "#76D7C4",
+          "description": "Nextcloud"
         },
         {
           "title": "File Explorer",
           "url": "http://apps.homelab1367.local/explorer",
           "icon": "bi-folder-fill",
-          "color": "#20C997"
+          "color": "#20C997",
+          "description": "File Browser"
         },
         {
           "title": "Home Assistance",
           "url": "http://apps.homelab1367.local:8123",
           "icon": "bi-house-fill",
-          "color": "#FFC107"
+          "color": "#FFC107",
+          "description": "Home Assistant"
         }
       ]
     },
@@ -45,40 +50,53 @@
       "type": "favorite",
       "items": [
         {
-          "title": "AdGuard Home",
+          "title": "AdBlocker & DNS",
           "url": "http://myhomeserver.homelab1367.local:3000",
           "icon": "bi-shield-fill",
-          "color": "#FF6B6B"
+          "color": "#FF6B6B",
+          "description": "AdGuard Home"
         },
         {
           "title": "Server Health",
           "icon": "bi-cpu-fill",          
           "url": "http://apps.homelab1367.local:19999",
-          "color": "#198754"
+          "color": "#198754",
+          "description": "Netdata"
         },
         {
           "title": "Server Manager",
           "url": "http://apps.homelab1367.local:9090",
           "icon": "bi-hdd-rack-fill", 
-          "color": "#6F42C1"
+          "color": "#6F42C1",
+          "description": "Cockpit"
+        },
+        {
+          "title": "Advanced Server Manager",
+          "url": "https://apps.homelab1367.local:10000/",
+          "icon": "bi-tools",
+          "color": "#20c997",
+          "description": "Webmin"
         },
         {
           "title": "Docker Manager",
           "url": "http://apps.homelab1367.local:9000",
           "icon": "bi-box-seam-fill",
-          "color": "#FD7E14"
+          "color": "#FD7E14",
+          "description": "Portainer"
         },
         {
           "title": "Router Manager",
           "url": "http://192.168.0.1",
           "icon": "bi-router-fill",
-          "color": "#D63384"
+          "color": "#D63384",
+          "description": "TP-Link Router"
         },
         {
           "title": "VPN Manager",
           "url": "https://app.netbird.io",
           "icon": "bi-key-fill",
-          "color": "#FFD700"
+          "color": "#FFD700",
+          "description": "NetBird VPN"
         }
       ]
     },
