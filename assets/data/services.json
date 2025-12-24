@@ -57,7 +57,7 @@
           "description": "Cockpit"
         },
         {
-          "title": "Advanced Config",
+          "title": "Advanced Server Manager",
           "url": "https://apps.homelab1367.local:10000/",
           "icon": "bi-tools",
           "color": "#1976D2",
