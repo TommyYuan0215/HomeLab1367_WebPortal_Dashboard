@@ -10,93 +10,101 @@
           "title": "Media Server",
           "url": "http://apps.homelab1367.local/media",
           "icon": "bi-tv-fill",
-          "color": "#0D6EFD",
+          "color": "#AA5CC3",
           "description": "Jellyfin"
         },
         {
           "title": "Photo Viewer",
           "url": "http://apps.homelab1367.local:2283",
           "icon": "bi-image-fill",
-          "color": "#17A2B8",
+          "color": "#E91E63",
           "description": "Immich"
         },
         {
           "title": "Cloud Storage",
           "url": "http://apps.homelab1367.local/cloud",
           "icon": "bi-cloud-fill",
-          "color": "#76D7C4",
+          "color": "#0082C9",
           "description": "Nextcloud"
         },
         {
           "title": "File Explorer",
           "url": "http://apps.homelab1367.local/explorer",
           "icon": "bi-folder-fill",
-          "color": "#20C997",
+          "color": "#F7CA18",
           "description": "File Browser"
         },
         {
           "title": "Home Assistance",
           "url": "http://apps.homelab1367.local:8123",
           "icon": "bi-house-fill",
-          "color": "#FFC107",
+          "color": "#03A9F4",
           "description": "Home Assistant"
         }
       ]
     },
     {
-      "id": "system-network-management",
-      "title": "System & Network Management",
-      "icon": "bi-house-gear-fill",
+      "id": "system-management",
+      "title": "System Management",
+      "icon": "bi-cpu-fill",
       "type": "favorite",
       "items": [
         {
-          "title": "AdBlocker & DNS",
-          "url": "http://myhomeserver.homelab1367.local:3000",
-          "icon": "bi-shield-fill",
-          "color": "#FF6B6B",
-          "description": "AdGuard Home"
-        },
-        {
-          "title": "Server Health",
-          "icon": "bi-cpu-fill",          
-          "url": "http://apps.homelab1367.local:19999",
-          "color": "#198754",
-          "description": "Netdata"
-        },
-        {
           "title": "Server Manager",
           "url": "http://apps.homelab1367.local:9090",
-          "icon": "bi-hdd-rack-fill", 
-          "color": "#6F42C1",
+          "icon": "bi-hdd-rack-fill",
+          "color": "#FF5722",
           "description": "Cockpit"
         },
         {
-          "title": "Advanced Server Manager",
+          "title": "Advanced Config",
           "url": "https://apps.homelab1367.local:10000/",
           "icon": "bi-tools",
-          "color": "#20c997",
+          "color": "#1976D2",
           "description": "Webmin"
+        },
+        {
+          "title": "Server Health",
+          "icon": "bi-activity",
+          "url": "http://apps.homelab1367.local:19999",
+          "color": "#00AB44",
+          "description": "Netdata"
         },
         {
           "title": "Docker Manager",
           "url": "http://apps.homelab1367.local:9000",
           "icon": "bi-box-seam-fill",
-          "color": "#FD7E14",
-          "description": "Portainer"
+          "color": "#2496ED",
+          "description": "Docker"
+        }
+      ]
+    },
+    {
+      "id": "network-management",
+      "title": "Network Management",
+      "icon": "bi-hdd-network-fill",
+      "type": "favorite",
+      "items": [
+        {
+          "title": "AdBlocker & DNS",
+          "url": "http://myhomeserver.homelab1367.local:3000",
+          "icon": "bi-shield-check",
+          "color": "#68BC71",
+          "description": "AdGuard Home"
         },
         {
           "title": "Router Manager",
           "url": "http://192.168.0.1",
           "icon": "bi-router-fill",
-          "color": "#D63384",
-          "description": "TP-Link Router"
+          "color": "#4ACBD6",
+          "description": "Gateway"
         },
         {
           "title": "VPN Manager",
           "url": "https://app.netbird.io",
           "icon": "bi-key-fill",
-          "color": "#FFD700",
-          "description": "NetBird VPN"
+          "color": "#F5A623",
+          "description": "Netbird"
         }
       ]
     },
@@ -111,7 +119,7 @@
           "url": "http://apps.homelab1367.local/uni/tvi",
           "image": "http://apps.homelab1367.local/assets/img/tvi_thumbnail.png",
           "subtitle": "3D Sierpinski Gasket TV Ident",
-          "course":"CPC354 - Computer Graphics & Visualization",
+          "course": "CPC354 - Computer Graphics & Visualization",
           "author": "Tan Jun Lin"
         },
         {
@@ -119,7 +127,7 @@
           "url": "http://apps.homelab1367.local/uni/3dam",
           "image": "http://apps.homelab1367.local/assets/img/3dam_thumbnail.png",
           "subtitle": "3D Articulated Model",
-          "course":"CPC354 - Computer Graphics & Visualization",
+          "course": "CPC354 - Computer Graphics & Visualization",
           "author": "Tan Jun Lin"
         },
         {
@@ -127,7 +135,7 @@
           "url": "http://apps.homelab1367.local/uni/ecorecyclepenang",
           "image": "http://apps.homelab1367.local/assets/img/erp_thumbnail.png",
           "subtitle": "Recycle Web App for Penang",
-          "course":"CAT304 - Group Innovation Project & Study for Sustainability",
+          "course": "CAT304 - Group Innovation Project & Study for Sustainability",
           "author": "Tan Jun Lin"
         },
         {
@@ -135,7 +143,7 @@
           "url": "http://apps.homelab1367.local/uni/momentsnap",
           "image": "http://apps.homelab1367.local/assets/img/momentsnap_thumbnail.png",
           "subtitle": "USM Photography Participation App",
-          "course":"CMT322 - Web Engineering & Technologies",
+          "course": "CMT322 - Web Engineering & Technologies",
           "author": "Tan Jun Lin"
         }
       ]
@@ -145,7 +153,7 @@
       "title": "Top Stories",
       "icon": "bi-newspaper",
       "type": "news",
-      "rssUrl": "https://news.google.com/rss/search?q=technology&hl=en-US&gl=US&ceid=US:en" 
+      "rssUrl": "https://news.google.com/rss/search?q=technology&hl=en-US&gl=US&ceid=US:en"
     }
   ]
 }
