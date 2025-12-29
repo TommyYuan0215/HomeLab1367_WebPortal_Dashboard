@@ -24,6 +24,11 @@
     <div id="particles-js"></div>
 
     <nav class="navbar-tv fixed-top">
+      <!-- Hamburger Menu Button (Mobile Only) -->
+      <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle menu">
+        <i class="bi bi-list"></i>
+      </button>
+
       <a
         href="#"
         class="nav-brand"
@@ -51,7 +56,18 @@
       </div>
 
       <div class="nav-profile">
-        <a href="http://apps.homelab1367.local/author" target="_blank" aria-label="Open Author Profile">
+        <!-- Mobile Search Button (icon only, mobile only) -->
+        <button class="mobile-search-btn" id="mobile-search-toggle" aria-label="Toggle search">
+          <i class="bi bi-search"></i>
+        </button>
+        
+        <a
+          href="http://apps.homelab1367.local/author"
+          target="_blank"
+          rel="noopener"
+          aria-label="Open Author Profile"
+          class="nav-author-link"
+        >
           <i id="author-icon" class="bi bi-person-badge-fill"></i>
         </a>
         <a href="#" id="settings-btn" aria-label="Open accessibility settings">
@@ -63,13 +79,77 @@
         <a
           href="https://github.com/TommyYuan0215/HomeLab1367_WebPortal_Dashboard"
           target="_blank"
+          rel="noopener"
           aria-label="GitHub Repository"
+          class="nav-github-link"
         >
           <i id="github-icon" class="bi bi-github"></i>
         </a>
         <div id="real-time-clock" class="time"></div>
       </div>
     </nav>
+
+    <!-- Mobile Hamburger Menu -->
+    <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
+      <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
+      <div class="mobile-menu-content">
+        <div class="mobile-menu-header">
+          <h3>Menu</h3>
+          <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Close menu">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+
+        <div class="mobile-menu-body">
+          <!-- Links -->
+          <div class="mobile-menu-links">
+            <a
+              href="http://apps.homelab1367.local/author"
+              target="_blank"
+              rel="noopener"
+              class="mobile-menu-link"
+            >
+              <i class="bi bi-person-badge-fill"></i>
+              <span>Author Profile</span>
+            </a>
+            <a
+              href="https://github.com/TommyYuan0215/HomeLab1367_WebPortal_Dashboard"
+              target="_blank"
+              rel="noopener"
+              class="mobile-menu-link"
+            >
+              <i class="bi bi-github"></i>
+              <span>GitHub Repository</span>
+            </a>
+            <a href="#" id="mobile-settings-btn" class="mobile-menu-link">
+              <i class="bi bi-gear-fill"></i>
+              <span>Settings</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Search Popup -->
+    <div id="mobile-search-popup" class="mobile-search-popup" aria-hidden="true">
+      <div class="mobile-search-popup-overlay" id="mobile-search-popup-overlay"></div>
+      <div class="mobile-search-popup-content">
+        <div class="mobile-search-popup-header">
+          <div class="mobile-search-popup-input">
+            <i class="bi bi-search"></i>
+            <input
+              type="text"
+              id="mobile-popup-search-input"
+              placeholder="Search apps"
+              aria-label="Search content"
+            />
+          </div>
+          <button class="mobile-search-popup-close" id="mobile-search-popup-close" aria-label="Close search">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+      </div>
+    </div>
 
     <main class="main-container-tv">
       <div class="feature-banner">
@@ -121,94 +201,203 @@
         </div>
 
         <div class="settings-body">
+          <div class="setting-group-title">Appearance</div>
+
+          <div class="setting-item">
+            <div class="setting-label">
+              <span>Theme</span>
+              <span class="setting-desc" id="theme-desc">Dark Mode</span>
+            </div>
+            <div class="setting-controls">
+              <label class="toggle-switch">
+                <input type="checkbox" id="theme-toggle-setting" />
+                <span class="toggle-slider"></span>
+              </label>
+              <button
+                class="btn-reset-individual"
+                data-reset="theme"
+                aria-label="Reset theme"
+              >
+                <i class="bi bi-arrow-counterclockwise"></i>
+              </button>
+            </div>
+          </div>
+
           <div class="setting-group-title">Display & Visuals</div>
 
           <div class="setting-item block">
+            <div class="setting-label-row">
               <div class="setting-label">
-                  <span>Text Size</span>
-                  <span class="setting-desc" id="font-size-value">100%</span>
+                <span>Text Size</span>
+                <span class="setting-desc" id="font-size-value">100%</span>
               </div>
-              <input type="range" id="font-size-range" min="75" max="150" value="100" step="5">
+              <button
+                class="btn-reset-individual"
+                data-reset="font-size"
+                aria-label="Reset text size"
+              >
+                <i class="bi bi-arrow-counterclockwise"></i>
+              </button>
+            </div>
+            <input
+              type="range"
+              id="font-size-range"
+              min="75"
+              max="150"
+              value="100"
+              step="5"
+            />
           </div>
 
           <div class="setting-item block">
+            <div class="setting-label-row">
               <div class="setting-label">
-                  <span>Animation Speed</span>
-                  <span class="setting-desc" id="animation-speed-value">Normal</span>
+                <span>Animation Speed</span>
+                <span class="setting-desc" id="animation-speed-value"
+                  >Normal</span
+                >
               </div>
-              <input type="range" id="animation-speed-range" min="1" max="3" value="2" step="1">
+              <button
+                class="btn-reset-individual"
+                data-reset="animation-speed"
+                aria-label="Reset animation speed"
+              >
+                <i class="bi bi-arrow-counterclockwise"></i>
+              </button>
+            </div>
+            <input
+              type="range"
+              id="animation-speed-range"
+              min="1"
+              max="3"
+              value="2"
+              step="1"
+            />
           </div>
 
           <div class="setting-item">
-              <div class="setting-label">
-                  <span>High Contrast</span>
-                  <span class="setting-desc">Sharpen colors</span>
-              </div>
+            <div class="setting-label">
+              <span>High Contrast</span>
+              <span class="setting-desc">Sharpen colors</span>
+            </div>
+            <div class="setting-controls">
               <label class="toggle-switch">
-                  <input type="checkbox" id="high-contrast-toggle">
-                  <span class="toggle-slider"></span>
+                <input type="checkbox" id="high-contrast-toggle" />
+                <span class="toggle-slider"></span>
               </label>
+              <button
+                class="btn-reset-individual"
+                data-reset="high-contrast"
+                aria-label="Reset high contrast"
+              >
+                <i class="bi bi-arrow-counterclockwise"></i>
+              </button>
+            </div>
           </div>
 
           <div class="setting-group-title">Accessibility Tools</div>
 
           <div class="setting-item">
-              <div class="setting-label">
-                  <span>Dyslexia Friendly</span>
-                  <span class="setting-desc">Easier to read font</span>
-              </div>
+            <div class="setting-label">
+              <span>Dyslexia Friendly</span>
+              <span class="setting-desc">Easier to read font</span>
+            </div>
+            <div class="setting-controls">
               <label class="toggle-switch">
-                  <input type="checkbox" id="dyslexic-font-toggle">
-                  <span class="toggle-slider"></span>
+                <input type="checkbox" id="dyslexic-font-toggle" />
+                <span class="toggle-slider"></span>
               </label>
+              <button
+                class="btn-reset-individual"
+                data-reset="dyslexic-font"
+                aria-label="Reset dyslexic font"
+              >
+                <i class="bi bi-arrow-counterclockwise"></i>
+              </button>
+            </div>
           </div>
 
           <div class="setting-item">
-              <div class="setting-label">
-                  <span>Highlight Links</span>
-                  <span class="setting-desc">Underline all links</span>
-              </div>
+            <div class="setting-label">
+              <span>Highlight Links</span>
+              <span class="setting-desc">Underline all links</span>
+            </div>
+            <div class="setting-controls">
               <label class="toggle-switch">
-                  <input type="checkbox" id="highlight-links-toggle">
-                  <span class="toggle-slider"></span>
+                <input type="checkbox" id="highlight-links-toggle" />
+                <span class="toggle-slider"></span>
               </label>
+              <button
+                class="btn-reset-individual"
+                data-reset="highlight-links"
+                aria-label="Reset highlight links"
+              >
+                <i class="bi bi-arrow-counterclockwise"></i>
+              </button>
+            </div>
           </div>
 
           <div class="setting-item">
-              <div class="setting-label">
-                  <span>Large Cursor</span>
-                  <span class="setting-desc">Bigger mouse pointer</span>
-              </div>
+            <div class="setting-label">
+              <span>Large Cursor</span>
+              <span class="setting-desc">Bigger mouse pointer</span>
+            </div>
+            <div class="setting-controls">
               <label class="toggle-switch">
-                  <input type="checkbox" id="big-cursor-toggle">
-                  <span class="toggle-slider"></span>
+                <input type="checkbox" id="big-cursor-toggle" />
+                <span class="toggle-slider"></span>
               </label>
+              <button
+                class="btn-reset-individual"
+                data-reset="big-cursor"
+                aria-label="Reset large cursor"
+              >
+                <i class="bi bi-arrow-counterclockwise"></i>
+              </button>
+            </div>
           </div>
 
           <div class="setting-item">
-              <div class="setting-label">
-                  <span>Reduce Motion</span>
-                  <span class="setting-desc">Stop animations</span>
-              </div>
+            <div class="setting-label">
+              <span>Reduce Motion</span>
+              <span class="setting-desc">Stop animations</span>
+            </div>
+            <div class="setting-controls">
               <label class="toggle-switch">
-                  <input type="checkbox" id="reduced-motion-toggle">
-                  <span class="toggle-slider"></span>
+                <input type="checkbox" id="reduced-motion-toggle" />
+                <span class="toggle-slider"></span>
               </label>
+              <button
+                class="btn-reset-individual"
+                data-reset="reduced-motion"
+                aria-label="Reset reduce motion"
+              >
+                <i class="bi bi-arrow-counterclockwise"></i>
+              </button>
+            </div>
           </div>
 
           <div class="setting-group-title">Content</div>
 
           <div class="setting-item">
-              <div class="setting-label">
-                  <span>Show News Feed</span>
-              </div>
+            <div class="setting-label">
+              <span>Show News Feed</span>
+            </div>
+            <div class="setting-controls">
               <label class="toggle-switch">
-                  <input type="checkbox" id="show-news-toggle" checked>
-                  <span class="toggle-slider"></span>
+                <input type="checkbox" id="show-news-toggle" checked />
+                <span class="toggle-slider"></span>
               </label>
+              <button
+                class="btn-reset-individual"
+                data-reset="show-news"
+                aria-label="Reset show news"
+              >
+                <i class="bi bi-arrow-counterclockwise"></i>
+              </button>
+            </div>
           </div>
-
-      </div>
+        </div>
 
         <div class="settings-footer">
           <button class="btn-reset-all" id="reset-all-settings">
@@ -222,5 +411,6 @@
     <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
     <script src="assets/js/script.js"></script>
     <script src="assets/js/settings.js"></script>
+    <script src="assets/js/hamburger.js"></script>
   </body>
 </html>

@@ -326,32 +326,60 @@ function createContentCard(item) {
 }
 
 function updateSearchFunctionality() {
-    const searchInput = document.getElementById('global-search-input');
-    if (!searchInput) return;
+    const desktopSearchInput = document.getElementById('global-search-input');
+    const mobilePopupSearchInput = document.getElementById('mobile-popup-search-input');
     
-    const newSearchInput = searchInput.cloneNode(true);
-    searchInput.parentNode.replaceChild(newSearchInput, searchInput);
-    
-    newSearchInput.addEventListener('keyup', function() {
-        const searchTerm = this.value.toLowerCase().trim();
-        const allCards = document.querySelectorAll('.app-card');
+    // Search filter function
+    function performSearch(searchTerm) {
+        const allCards = document.querySelectorAll('.app-card, .news-card');
         
         allCards.forEach(card => {
+            // For app cards
             const titleElement = card.querySelector('.app-title');
             const subElement = card.querySelector('.app-sub');
+            const overlayTitle = card.querySelector('.overlay-title');
+            
+            // For news cards
+            const newsTitle = card.querySelector('.news-title');
             
             const titleText = titleElement ? titleElement.textContent.toLowerCase() : '';
             const subText = subElement ? subElement.textContent.toLowerCase() : '';
+            const overlayText = overlayTitle ? overlayTitle.textContent.toLowerCase() : '';
+            const newsText = newsTitle ? newsTitle.textContent.toLowerCase() : '';
 
             const isMatch = (
                 searchTerm.length === 0 ||
                 titleText.includes(searchTerm) ||
-                subText.includes(searchTerm)
+                subText.includes(searchTerm) ||
+                overlayText.includes(searchTerm) ||
+                newsText.includes(searchTerm)
             );
 
             card.classList.toggle('hidden', !isMatch);
         });
-    });
+    }
+    
+    // Attach to desktop search
+    if (desktopSearchInput) {
+        const newDesktopInput = desktopSearchInput.cloneNode(true);
+        desktopSearchInput.parentNode.replaceChild(newDesktopInput, desktopSearchInput);
+        
+        newDesktopInput.addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            performSearch(searchTerm);
+        });
+    }
+    
+    // Attach to mobile popup search
+    if (mobilePopupSearchInput) {
+        const newMobileInput = mobilePopupSearchInput.cloneNode(true);
+        mobilePopupSearchInput.parentNode.replaceChild(newMobileInput, mobilePopupSearchInput);
+        
+        newMobileInput.addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            performSearch(searchTerm);
+        });
+    }
 }
 
 // -------------------------------------------------------
