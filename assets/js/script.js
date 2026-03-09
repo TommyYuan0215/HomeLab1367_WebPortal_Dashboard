@@ -170,6 +170,9 @@ function renderSections(sections) {
     container.innerHTML = '';
 
     sections.forEach(section => {
+        // Checking the active status first before render
+        if (section.active === false) return;
+
         const sectionDiv = document.createElement('section');
         sectionDiv.className = 'tv-row';
 
