@@ -162,7 +162,7 @@ function cleanTitle(title) {
     return title;
 }
 
-// --- Render Functions ---
+// --- Render Functions with active status---
 
 function renderSections(sections) {
     const container = document.getElementById('sections-container');
@@ -170,12 +170,11 @@ function renderSections(sections) {
     container.innerHTML = '';
 
     sections.forEach(section => {
-        // Checking the active status first before render
+        // SKIP: If the entire section is marked as inactive
         if (section.active === false) return;
 
         const sectionDiv = document.createElement('section');
         sectionDiv.className = 'tv-row';
-
         sectionDiv.setAttribute('data-section-type', section.type);
         
         // Title
@@ -186,32 +185,24 @@ function renderSections(sections) {
         // Container
         const contentContainer = document.createElement('div');
 
-        // CHECK: Is this the News section?
+        // CASE 1: News Section
         if (section.type === 'news' && section.rssUrl) {
-            
-            // Use the NEW Grid Layout for news
             contentContainer.className = 'news-grid'; 
-            
-            // Render Loading State
             contentContainer.innerHTML = `
                 <div class="news-card" style="background: #222; display: flex; align-items: center; justify-content: center; color: #666;">
                     Loading News...
                 </div>`;
 
-            // Fetch Data
             fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(section.rssUrl)}`)
                 .then(res => res.json())
                 .then(data => {
-                    contentContainer.innerHTML = ''; // Clear loading
-                    
-                    // Display up to 8 news items
+                    contentContainer.innerHTML = ''; 
                     data.items.slice(0, 8).forEach(item => {
                         const sourceName = extractSource(item.title);
                         const cleanHeadline = cleanTitle(item.title);
                         const timeAgo = getTimeAgo(item.pubDate);
                         
                         let imageUrl = item.thumbnail || item.enclosure?.link;
-                        
                         if (!imageUrl || imageUrl.length < 10) {
                              imageUrl = `https://picsum.photos/seed/${cleanHeadline.length}/400/300`;
                         }
@@ -243,11 +234,14 @@ function renderSections(sections) {
                 });
 
         } else {
-            // Standard Horizontal Layout for Apps
+            // CASE 2: Standard App Sections (Favorite or Content)
             contentContainer.className = section.type === 'favorite' ? 'tv-row-content' : 'tv-fluid-content';
             
             if (section.items) {
                 section.items.forEach(item => {
+                    // SKIP: If the specific app/project is marked as inactive
+                    if (item.active === false) return;
+
                     const card = section.type === 'favorite' 
                         ? createFavoriteCard(item) 
                         : createContentCard(item);
