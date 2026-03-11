@@ -55,6 +55,14 @@
       "type": "favorite",
       "items": [
         {
+          "title": "Windows Admin Center",
+          "url": "https://myhomeserver.homelab1367.internal:6600",
+          "icon": "bi-windows",
+          "color": "#4ACBE9",
+          "description": "Windows",
+          "active": true
+        },
+        {
           "title": "Server Manager",
           "url": "http://apps.homelab1367.internal:9090",
           "icon": "bi-hdd-rack-fill",

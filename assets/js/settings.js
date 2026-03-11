@@ -292,8 +292,11 @@ class SettingsManager {
         const displayEl = document.getElementById('font-size-value');
         if (displayEl) displayEl.textContent = val + '%';
         
+        // Update root element font-size to scale all rem units globally
+        document.documentElement.style.fontSize = val + '%';
+        
         // Remove old font-size classes
-        document.body.className = document.body.className.replace(/font-size-\d+/g, '');
+        document.body.className = document.body.className.replace(/\bfont-size-\d+\b/g, '').replace(/\s+/g, ' ').trim();
         document.body.classList.add(`font-size-${val}`);
     }
 

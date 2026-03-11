@@ -414,15 +414,15 @@ function updateSearchFunctionality() {
         if(isLight){ 
             body.classList.add('light-theme'); 
             themeIcon.className = 'bi bi-sun-fill'; 
-            themeIcon.style.color = '#ffb020'; 
-            if(githubIcon) githubIcon.style.color = '#111111';
+            themeIcon.style.color = ''; 
+            if(githubIcon) githubIcon.style.color = '';
             initParticles('#111111'); 
         }
         else { 
             body.classList.remove('light-theme'); 
             themeIcon.className = 'bi bi-moon-fill'; 
-            themeIcon.style.color = 'var(--text)'; 
-            if(githubIcon) githubIcon.style.color = 'var(--text)';
+            themeIcon.style.color = ''; 
+            if(githubIcon) githubIcon.style.color = '';
             initParticles('#ffffff'); 
         }
         localStorage.setItem(storageKey, t);

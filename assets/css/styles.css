@@ -185,15 +185,28 @@ body.light-theme #global-search-input {
   cursor: pointer;
 }
 
+body.light-theme .nav-profile i,
+body.light-theme .nav-profile .time {
+  color: var(--light-text) !important;
+}
+
 .nav-profile i:hover {
-  color: var(--text);
+  color: var(--text) !important;
 }
 body.light-theme .nav-profile i:hover {
-  color: var(--light-text);
+  color: var(--accent-600) !important;
 }
 
 .profile-icon {
   font-size: 1.5rem !important;
+}
+
+body.light-theme .nav-github-link i {
+  color: var(--light-text) !important;
+}
+
+body.light-theme .nav-github-link i:hover {
+  color: var(--accent-600) !important;
 }
 
 /* Hide theme toggle button (accessible in Settings panel) */
