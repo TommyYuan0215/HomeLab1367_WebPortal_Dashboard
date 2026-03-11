@@ -8,7 +8,7 @@
       "items": [
         {
           "title": "Media Server",
-          "url": "http://apps.homelab1367.local/media",
+          "url": "http://apps.homelab1367.internal/media",
           "icon": "bi-tv-fill",
           "color": "#AA5CC3",
           "description": "Jellyfin",
@@ -16,7 +16,7 @@
         },
         {
           "title": "Photo Viewer",
-          "url": "http://apps.homelab1367.local:2283",
+          "url": "http://apps.homelab1367.internal:2283",
           "icon": "bi-image-fill",
           "color": "#E91E63",
           "description": "Immich",
@@ -24,7 +24,7 @@
         },
         {
           "title": "Cloud Storage",
-          "url": "http://apps.homelab1367.local/cloud",
+          "url": "http://apps.homelab1367.internal/cloud",
           "icon": "bi-cloud-fill",
           "color": "#0082C9",
           "description": "Nextcloud",
@@ -32,7 +32,7 @@
         },
         {
           "title": "File Explorer",
-          "url": "http://apps.homelab1367.local/explorer",
+          "url": "http://apps.homelab1367.internal/explorer",
           "icon": "bi-folder-fill",
           "color": "#F7CA18",
           "description": "File Browser",
@@ -40,7 +40,7 @@
         },
         {
           "title": "Home Assistance",
-          "url": "http://apps.homelab1367.local:8123",
+          "url": "http://apps.homelab1367.internal:8123",
           "icon": "bi-house-fill",
           "color": "#03A9F4",
           "description": "Home Assistant",
@@ -56,7 +56,7 @@
       "items": [
         {
           "title": "Server Manager",
-          "url": "http://apps.homelab1367.local:9090",
+          "url": "http://apps.homelab1367.internal:9090",
           "icon": "bi-hdd-rack-fill",
           "color": "#FF5722",
           "description": "Cockpit",
@@ -64,7 +64,7 @@
         },
         {
           "title": "Advanced Server Manager",
-          "url": "https://apps.homelab1367.local:10000/",
+          "url": "https://apps.homelab1367.internal:10000/",
           "icon": "bi-tools",
           "color": "#1976D2",
           "description": "Webmin",
@@ -73,14 +73,14 @@
         {
           "title": "Server Health",
           "icon": "bi-activity",
-          "url": "http://apps.homelab1367.local:19999",
+          "url": "http://apps.homelab1367.internal:19999",
           "color": "#00AB44",
           "description": "Netdata",
           "active": true
         },
         {
           "title": "Docker Manager",
-          "url": "http://apps.homelab1367.local:9000",
+          "url": "http://apps.homelab1367.internal:9000",
           "icon": "bi-box-seam-fill",
           "color": "#2496ED",
           "description": "Docker",
@@ -96,7 +96,7 @@
       "items": [
         {
           "title": "AdBlocker & DNS",
-          "url": "http://myhomeserver.homelab1367.local:3000",
+          "url": "http://myhomeserver.homelab1367.internal:3000",
           "icon": "bi-shield-check",
           "color": "#68BC71",
           "description": "AdGuard Home",
@@ -128,8 +128,8 @@
       "items": [
         {
           "title": "TV Ident",
-          "url": "http://apps.homelab1367.local/uni/tvi",
-          "image": "http://apps.homelab1367.local/assets/img/tvi_thumbnail.png",
+          "url": "http://apps.homelab1367.internal/uni/tvi",
+          "image": "http://apps.homelab1367.internal/assets/img/tvi_thumbnail.png",
           "subtitle": "3D Sierpinski Gasket TV Ident",
           "course": "CPC354 - Computer Graphics & Visualization",
           "author": "Tan Jun Lin",
@@ -137,8 +137,8 @@
         },
         {
           "title": "3DAM",
-          "url": "http://apps.homelab1367.local/uni/3dam",
-          "image": "http://apps.homelab1367.local/assets/img/3dam_thumbnail.png",
+          "url": "http://apps.homelab1367.internal/uni/3dam",
+          "image": "http://apps.homelab1367.internal/assets/img/3dam_thumbnail.png",
           "subtitle": "3D Articulated Model",
           "course": "CPC354 - Computer Graphics & Visualization",
           "author": "Tan Jun Lin",
@@ -146,8 +146,8 @@
         },
         {
           "title": "Eco Recycle Penang",
-          "url": "http://apps.homelab1367.local/uni/ecorecyclepenang",
-          "image": "http://apps.homelab1367.local/assets/img/erp_thumbnail.png",
+          "url": "http://apps.homelab1367.internal/uni/ecorecyclepenang",
+          "image": "http://apps.homelab1367.internal/assets/img/erp_thumbnail.png",
           "subtitle": "Recycle Web App for Penang",
           "course": "CAT304 - Group Innovation Project & Study for Sustainability",
           "author": "Tan Jun Lin",
@@ -155,8 +155,8 @@
         },
         {
           "title": "Moment Snap",
-          "url": "http://apps.homelab1367.local/uni/momentsnap",
-          "image": "http://apps.homelab1367.local/assets/img/momentsnap_thumbnail.png",
+          "url": "http://apps.homelab1367.internal/uni/momentsnap",
+          "image": "http://apps.homelab1367.internal/assets/img/momentsnap_thumbnail.png",
           "subtitle": "USM Photography Participation App",
           "course": "CMT322 - Web Engineering & Technologies",
           "author": "Tan Jun Lin",
