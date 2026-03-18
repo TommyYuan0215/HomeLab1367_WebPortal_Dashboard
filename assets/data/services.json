@@ -60,7 +60,7 @@
           "icon": "bi-windows",
           "color": "#4ACBE9",
           "description": "Windows",
-          "active": true
+          "active": false
         },
         {
           "title": "Server Manager",
@@ -104,15 +104,15 @@
       "items": [
         {
           "title": "AdBlocker & DNS",
-          "url": "http://myhomeserver.homelab1367.internal:3000",
+          "url": "http://adguard.homelab1367.internal",
           "icon": "bi-shield-check",
           "color": "#68BC71",
           "description": "AdGuard Home",
-          "active": false 
+          "active": true 
         },
         {
           "title": "Router Manager",
-          "url": "http://192.168.0.1",
+          "url": "http://router.homelab1367.internal",
           "icon": "bi-router-fill",
           "color": "#4ACBD6",
           "description": "Gateway",
