@@ -454,3 +454,102 @@ function updateSearchFunctionality() {
 })();
 
 startTime();
+
+// -------------------------------------------------------
+// 🔊 CARD HOVER SOUND (event delegation — works with dynamic cards)
+// -------------------------------------------------------
+(function () {
+    var _audioCtx  = null;
+    var _lastPlay  = 0;
+    var COOLDOWN   = 120; // ms between sounds to prevent rapid-fire
+
+    function getCtx() {
+        if (!_audioCtx) {
+            try {
+                _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            } catch (e) { return null; }
+        }
+        // Resume if suspended (browser autoplay policy)
+        if (_audioCtx.state === 'suspended') _audioCtx.resume();
+        return _audioCtx;
+    }
+
+    function navSoundEnabled() {
+        // Read the setting saved by settings.js
+        return localStorage.getItem('homelab-nav-sound') === 'true';
+    }
+
+    /**
+     * Futuristic two-layer hover blip:
+     *  Layer 1 — a short sine sweep (high → low) for the "select" feel
+     *  Layer 2 — a faint noise burst for the "digital texture"
+     */
+    function playHoverSound() {
+        var ctx = getCtx();
+        if (!ctx) return;
+
+        var now = ctx.currentTime;
+
+        // ── Layer 1: frequency-swept sine (140 → 80 Hz) ──
+        var osc1 = ctx.createOscillator();
+        var g1   = ctx.createGain();
+        osc1.connect(g1);
+        g1.connect(ctx.destination);
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(600, now);
+        osc1.frequency.exponentialRampToValueAtTime(320, now + 0.08);
+        g1.gain.setValueAtTime(0, now);
+        g1.gain.linearRampToValueAtTime(0.07, now + 0.012);
+        g1.gain.exponentialRampToValueAtTime(0.0001, now + 0.10);
+        osc1.start(now);
+        osc1.stop(now + 0.11);
+
+        // ── Layer 2: high harmonic shimmer ──
+        var osc2 = ctx.createOscillator();
+        var g2   = ctx.createGain();
+        osc2.connect(g2);
+        g2.connect(ctx.destination);
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(3200, now);
+        osc2.frequency.exponentialRampToValueAtTime(1800, now + 0.06);
+        g2.gain.setValueAtTime(0, now);
+        g2.gain.linearRampToValueAtTime(0.025, now + 0.008);
+        g2.gain.exponentialRampToValueAtTime(0.0001, now + 0.07);
+        osc2.start(now);
+        osc2.stop(now + 0.08);
+    }
+
+    function onMouseEnter(e) {
+        // Only fire for .app-card elements
+        var target = e.target;
+        while (target && target !== this) {
+            if (target.classList && target.classList.contains('app-card')) break;
+            target = target.parentElement;
+        }
+        if (!target || !target.classList.contains('app-card')) return;
+
+        // Cooldown guard
+        var now = Date.now();
+        if (now - _lastPlay < COOLDOWN) return;
+        _lastPlay = now;
+
+        // Only play if nav sound setting is enabled
+        if (!navSoundEnabled()) return;
+
+        playHoverSound();
+    }
+
+    // Attach via delegation after DOM is ready
+    function init() {
+        var container = document.getElementById('sections-container');
+        if (container) {
+            container.addEventListener('mouseenter', onMouseEnter, true);
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();

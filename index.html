@@ -14,23 +14,58 @@
 </head>
 
 <body>
+  <!-- Hidden SVG Color Filters (referenced by CSS for color-vision accessibility) -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+    <defs>
+      <filter id="filter-deuteranopia" x="0" y="0" width="100%" height="100%" color-interpolation-filters="linearRGB">
+        <feColorMatrix type="matrix" values="0.367 0.861 -0.228 0 0  0.280 0.673  0.047 0 0  -0.012 0.043  0.969 0 0  0 0 0 1 0"/>
+      </filter>
+      <filter id="filter-protanopia" x="0" y="0" width="100%" height="100%" color-interpolation-filters="linearRGB">
+        <feColorMatrix type="matrix" values="0.152 1.053 -0.205 0 0  0.115 0.786  0.099 0 0  -0.004 -0.048  1.052 0 0  0 0 0 1 0"/>
+      </filter>
+      <filter id="filter-tritanopia" x="0" y="0" width="100%" height="100%" color-interpolation-filters="linearRGB">
+        <feColorMatrix type="matrix" values="1.256 -0.077 -0.180 0 0  -0.078  0.931  0.148 0 0   0.005  0.691  0.304 0 0  0 0 0 1 0"/>
+      </filter>
+    </defs>
+  </svg>
+
   <!-- ===== Splash Screen ===== -->
   <div id="splash-screen" class="splash-screen" aria-hidden="true">
-    <div class="splash-bg-particles"></div>
+    <!-- Animated dot-grid background -->
+    <div class="splash-grid"></div>
+    <!-- Horizontal scan line sweep -->
+    <div class="splash-scanline"></div>
+    <!-- HUD corner brackets -->
+    <div class="splash-corner splash-corner--tl"></div>
+    <div class="splash-corner splash-corner--tr"></div>
+    <div class="splash-corner splash-corner--bl"></div>
+    <div class="splash-corner splash-corner--br"></div>
+    <!-- Decorative data-stream lines -->
+    <div class="splash-hline splash-hline--top"></div>
+    <div class="splash-hline splash-hline--bot"></div>
+    <!-- Main content -->
     <div class="splash-content">
       <div class="splash-logo-wrap">
         <img src="assets/img/brand.png" alt="IdealHub Logo" class="splash-logo" id="splash-logo" />
         <div class="splash-logo-glow"></div>
+        <div class="splash-orbit-ring"></div>
+        <div class="splash-orbit-ring splash-orbit-ring--2"></div>
       </div>
       <div class="splash-brand" id="splash-brand">
-        <span class="splash-brand-text">IdealHub</span>
+        <span class="splash-brand-text" id="splash-brand-text"></span><span class="splash-cursor">_</span>
       </div>
-      <p class="splash-subtitle" id="splash-subtitle">HomeLab1367 Web Portal</p>
+      <p class="splash-subtitle" id="splash-subtitle"></p>
+      <div class="splash-status" id="splash-status">INITIALIZING SYSTEMS</div>
       <div class="splash-loader" id="splash-loader">
-        <div class="splash-loader-bar"></div>
+        <div class="splash-loader-track">
+          <div class="splash-loader-bar" id="splash-bar"></div>
+          <div class="splash-loader-sweep"></div>
+        </div>
+        <div class="splash-loader-pct" id="splash-pct">0%</div>
       </div>
     </div>
   </div>
+
 
   <div id="particles-js"></div>
 
@@ -68,10 +103,6 @@
       </a>
       <a href="#" id="theme-toggle-btn" aria-label="Toggle Dark/Light Theme">
         <i id="theme-toggle-icon" class="bi bi-moon-fill"></i>
-      </a>
-      <a href="https://github.com/TommyYuan0215/HomeLab1367_WebPortal_Dashboard" target="_blank" rel="noopener"
-        aria-label="GitHub Repository" class="nav-github-link">
-        <i id="github-icon" class="bi bi-github"></i>
       </a>
       <div id="real-time-clock" class="time"></div>
     </div>
@@ -129,7 +160,7 @@
     <div class="feature-banner">
       <div class="feature-content">
         <h1 class="feature-title" id="greeting-text">Welcome</h1>
-        <p class="feature-meta">HomeLab1367 Web Portal @ 2025</p>
+        <p class="feature-meta">HomeLab1367 Web Portal @ 2026</p>
         <p class="feature-description">
           Quick access to all self-hosted applications, media servers, and
           university projects on the local network.
@@ -147,7 +178,7 @@
     <footer>
       <div class="footer-content">
         <div class="footer-copyright">
-          <small>&copy; 2025 HomeLab1367</small>
+          <small>&copy; HomeLab1367 Portal @ 2026</small>
         </div>
         <div class="footer-divider">•</div>
         <div class="footer-author">
@@ -156,20 +187,22 @@
       </div>
     </footer>
   </main>
-
   <!-- Settings Modal -->
   <div id="settings-modal" class="settings-modal" aria-hidden="true">
     <div class="settings-modal-overlay" id="settings-overlay"></div>
     <div class="settings-modal-content">
       <div class="settings-header">
-        <h2><i class="bi bi-gear-fill"></i> Accessibility Settings</h2>
+        <h2><i class="bi bi-universal-access"></i> Accessibility</h2>
         <button class="settings-close" id="settings-close" aria-label="Close settings">
           <i class="bi bi-x-lg"></i>
         </button>
       </div>
 
       <div class="settings-body">
-        <div class="setting-group-title">Appearance</div>
+        <!-- ── Appearance ── -->
+        <div class="setting-group-title">
+          <i class="bi bi-palette-fill"></i> Appearance
+        </div>
 
         <div class="setting-item">
           <div class="setting-label">
@@ -187,8 +220,6 @@
           </div>
         </div>
 
-        <div class="setting-group-title">Display & Visuals</div>
-
         <div class="setting-item block">
           <div class="setting-label-row">
             <div class="setting-label">
@@ -202,23 +233,10 @@
           <input type="range" id="font-size-range" min="75" max="150" value="100" step="5" />
         </div>
 
-        <div class="setting-item block">
-          <div class="setting-label-row">
-            <div class="setting-label">
-              <span>Animation Speed</span>
-              <span class="setting-desc" id="animation-speed-value">Normal</span>
-            </div>
-            <button class="btn-reset-individual" data-reset="animation-speed" aria-label="Reset animation speed">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-          </div>
-          <input type="range" id="animation-speed-range" min="1" max="3" value="2" step="1" />
-        </div>
-
         <div class="setting-item">
           <div class="setting-label">
             <span>High Contrast</span>
-            <span class="setting-desc">Sharpen colors</span>
+            <span class="setting-desc">Boost color separation</span>
           </div>
           <div class="setting-controls">
             <label class="toggle-switch">
@@ -231,12 +249,85 @@
           </div>
         </div>
 
-        <div class="setting-group-title">Accessibility Tools</div>
+        <!-- Card Density -->
+        <div class="setting-item block">
+          <div class="setting-label-row">
+            <div class="setting-label">
+              <span>Card Density</span>
+              <span class="setting-desc" id="card-density-desc">Comfortable</span>
+            </div>
+            <button class="btn-reset-individual" data-reset="card-density" aria-label="Reset card density">
+              <i class="bi bi-arrow-counterclockwise"></i>
+            </button>
+          </div>
+          <div class="range-labels">
+            <span>Compact</span><span>Comfortable</span><span>Cozy</span>
+          </div>
+          <input type="range" id="card-density-range" min="0" max="2" value="1" step="1" />
+        </div>
+
+        <!-- Screen Zoom -->
+        <div class="setting-item block">
+          <div class="setting-label-row">
+            <div class="setting-label">
+              <span>Screen Zoom</span>
+              <span class="setting-desc" id="zoom-level-value">100%</span>
+            </div>
+            <button class="btn-reset-individual" data-reset="zoom-level" aria-label="Reset screen zoom">
+              <i class="bi bi-arrow-counterclockwise"></i>
+            </button>
+          </div>
+          <input type="range" id="zoom-level-range" min="80" max="130" value="100" step="5" />
+        </div>
+
+        <!-- ── Vision ── -->
+        <div class="setting-group-title">
+          <i class="bi bi-eye-fill"></i> Vision
+        </div>
+
+        <!-- Color Filter -->
+        <div class="setting-item block">
+          <div class="setting-label-row">
+            <div class="setting-label">
+              <span>Color Filter</span>
+              <span class="setting-desc" id="color-filter-desc">Off</span>
+            </div>
+            <button class="btn-reset-individual" data-reset="color-filter" aria-label="Reset color filter">
+              <i class="bi bi-arrow-counterclockwise"></i>
+            </button>
+          </div>
+          <div class="range-labels">
+            <span>Off</span><span>Deutan</span><span>Protan</span><span>Tritan</span><span>Grey</span>
+          </div>
+          <input type="range" id="color-filter-range" min="0" max="4" value="0" step="1" />
+        </div>
+
+        <!-- Text Shadow -->
+        <div class="setting-item">
+          <div class="setting-label">
+            <span>Text Shadow</span>
+            <span class="setting-desc">Improve text legibility on images</span>
+          </div>
+          <div class="setting-controls">
+            <label class="toggle-switch">
+              <input type="checkbox" id="text-shadow-toggle" />
+              <span class="toggle-slider"></span>
+            </label>
+            <button class="btn-reset-individual" data-reset="text-shadow" aria-label="Reset text shadow">
+              <i class="bi bi-arrow-counterclockwise"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- ── Interaction ── -->
+        <div class="setting-group-title">
+          <i class="bi bi-hand-index-fill"></i> Interaction
+        </div>
 
         <div class="setting-item">
           <div class="setting-label">
             <span>Dyslexia Friendly</span>
-            <span class="setting-desc">Easier to read font</span>
+            <span class="setting-desc">OpenDyslexic font for readability</span>
           </div>
           <div class="setting-controls">
             <label class="toggle-switch">
@@ -252,7 +343,7 @@
         <div class="setting-item">
           <div class="setting-label">
             <span>Highlight Links</span>
-            <span class="setting-desc">Underline all links</span>
+            <span class="setting-desc">Underline all clickable links</span>
           </div>
           <div class="setting-controls">
             <label class="toggle-switch">
@@ -265,17 +356,52 @@
           </div>
         </div>
 
+        <!-- Focus Highlight -->
         <div class="setting-item">
           <div class="setting-label">
-            <span>Large Cursor</span>
-            <span class="setting-desc">Bigger mouse pointer</span>
+            <span>Focus Highlight</span>
+            <span class="setting-desc">Bold ring on focused elements</span>
           </div>
           <div class="setting-controls">
             <label class="toggle-switch">
-              <input type="checkbox" id="big-cursor-toggle" />
+              <input type="checkbox" id="focus-highlight-toggle" />
               <span class="toggle-slider"></span>
             </label>
-            <button class="btn-reset-individual" data-reset="big-cursor" aria-label="Reset large cursor">
+            <button class="btn-reset-individual" data-reset="focus-highlight" aria-label="Reset focus highlight">
+              <i class="bi bi-arrow-counterclockwise"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sticky Hover -->
+        <div class="setting-item">
+          <div class="setting-label">
+            <span>Sticky Hover</span>
+            <span class="setting-desc">Keep card focused after hover</span>
+          </div>
+          <div class="setting-controls">
+            <label class="toggle-switch">
+              <input type="checkbox" id="sticky-hover-toggle" />
+              <span class="toggle-slider"></span>
+            </label>
+            <button class="btn-reset-individual" data-reset="sticky-hover" aria-label="Reset sticky hover">
+              <i class="bi bi-arrow-counterclockwise"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Navigation Sound -->
+        <div class="setting-item">
+          <div class="setting-label">
+            <span>Navigation Sound</span>
+            <span class="setting-desc">Soft click on card interaction</span>
+          </div>
+          <div class="setting-controls">
+            <label class="toggle-switch">
+              <input type="checkbox" id="nav-sound-toggle" />
+              <span class="toggle-slider"></span>
+            </label>
+            <button class="btn-reset-individual" data-reset="nav-sound" aria-label="Reset navigation sound">
               <i class="bi bi-arrow-counterclockwise"></i>
             </button>
           </div>
@@ -284,7 +410,7 @@
         <div class="setting-item">
           <div class="setting-label">
             <span>Reduce Motion</span>
-            <span class="setting-desc">Stop animations</span>
+            <span class="setting-desc">Disable all UI animations</span>
           </div>
           <div class="setting-controls">
             <label class="toggle-switch">
@@ -297,11 +423,15 @@
           </div>
         </div>
 
-        <div class="setting-group-title">Content</div>
+        <!-- ── Content ── -->
+        <div class="setting-group-title">
+          <i class="bi bi-layout-text-window-reverse"></i> Content
+        </div>
 
         <div class="setting-item">
           <div class="setting-label">
             <span>Show News Feed</span>
+            <span class="setting-desc">Display the news section</span>
           </div>
           <div class="setting-controls">
             <label class="toggle-switch">
@@ -313,11 +443,28 @@
             </button>
           </div>
         </div>
+
+        <!-- Splash Screen Mode -->
+        <div class="setting-item">
+          <div class="setting-label">
+            <span>Splash Screen</span>
+            <span class="setting-desc" id="splash-mode-desc">Always show on startup</span>
+          </div>
+          <div class="setting-controls">
+            <label class="toggle-switch">
+              <input type="checkbox" id="splash-mode-toggle" checked />
+              <span class="toggle-slider"></span>
+            </label>
+            <button class="btn-reset-individual" data-reset="splash-mode" aria-label="Reset splash mode">
+              <i class="bi bi-arrow-counterclockwise"></i>
+            </button>
+          </div>
+        </div>
       </div>
 
       <div class="settings-footer">
         <button class="btn-reset-all" id="reset-all-settings">
-          Reset All Settings
+          <i class="bi bi-arrow-counterclockwise"></i> Reset All Settings
         </button>
       </div>
     </div>
