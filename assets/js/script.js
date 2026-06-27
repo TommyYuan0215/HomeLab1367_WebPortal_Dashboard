@@ -123,12 +123,14 @@ function updateGreeting() {
 
         // ── CASE 3: External / public hostname (Netbird, Cloudflare…) ───
         if (parsed.port) {
-            // Port-based service — that port is NOT exposed through the public proxy.
-            // Use the proxyPath subpath instead (requires Nginx location block).
+            // Port-based service — the port is NOT directly exposed through the public proxy.
+            // If a proxyPath is defined, route via Nginx subpath location block.
+            // Otherwise, fall back to the public base URL so the link stays on the
+            // current host instead of leaking an unreachable internal address.
             if (proxyPath) {
                 return `${window.location.origin}${proxyPath}`;
             }
-            return rawUrl; // No proxyPath defined — will likely fail externally
+            return window.location.origin; // No proxyPath — follow the public base URL
         } else {
             // Path-based service — rewrite to current public host + same path
             return `${window.location.origin}${parsed.pathname}${parsed.search}${parsed.hash}`;

@@ -97,38 +97,6 @@
       ]
     },
     {
-      "id": "network-management",
-      "title": "Network Management",
-      "icon": "bi-hdd-network-fill",
-      "type": "favorite",
-      "items": [
-        {
-          "title": "AdBlocker & DNS",
-          "url": "http://adguard.homelab1367.internal",
-          "icon": "bi-shield-check",
-          "color": "#68BC71",
-          "description": "AdGuard Home",
-          "active": true 
-        },
-        {
-          "title": "Router Manager",
-          "url": "http://router.homelab1367.internal",
-          "icon": "bi-router-fill",
-          "color": "#4ACBD6",
-          "description": "Gateway",
-          "active": true
-        },
-        {
-          "title": "VPN Manager",
-          "url": "https://app.netbird.io",
-          "icon": "bi-key-fill",
-          "color": "#F5A623",
-          "description": "Netbird",
-          "active": true
-        }
-      ]
-    },
-    {
       "id": "uni-projects",
       "title": "Personal University Projects",
       "icon": "bi-mortarboard-fill",
