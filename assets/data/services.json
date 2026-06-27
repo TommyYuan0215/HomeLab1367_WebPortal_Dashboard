@@ -63,17 +63,9 @@
           "active": false
         },
         {
-          "title": "Server Manager",
-          "url": "http://apps.homelab1367.internal:9090",
-          "icon": "bi-hdd-rack-fill",
-          "color": "#FF5722",
-          "description": "Cockpit",
-          "active": true
-        },
-        {
-          "title": "Advanced Server Manager",
+          "title": "Web Server Manager",
           "url": "https://apps.homelab1367.internal:10000/",
-          "icon": "bi-tools",
+          "icon": "bi-hdd-rack-fill",
           "color": "#1976D2",
           "description": "Webmin",
           "active": true
