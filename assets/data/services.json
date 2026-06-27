@@ -17,7 +17,6 @@
         {
           "title": "Photo Viewer",
           "url": "http://apps.homelab1367.internal:2283",
-          "proxyPath": "/photo",
           "icon": "bi-image-fill",
           "color": "#E91E63",
           "description": "Immich",
@@ -42,7 +41,6 @@
         {
           "title": "Home Assistance",
           "url": "http://apps.homelab1367.internal:8123",
-          "proxyPath": "/homeassist",
           "icon": "bi-house-fill",
           "color": "#03A9F4",
           "description": "Home Assistant",
@@ -67,7 +65,6 @@
         {
           "title": "Server Manager",
           "url": "http://apps.homelab1367.internal:9090",
-          "proxyPath": "/cockpit",
           "icon": "bi-hdd-rack-fill",
           "color": "#FF5722",
           "description": "Cockpit",
@@ -76,7 +73,6 @@
         {
           "title": "Advanced Server Manager",
           "url": "https://apps.homelab1367.internal:10000/",
-          "proxyPath": "/webmin",
           "icon": "bi-tools",
           "color": "#1976D2",
           "description": "Webmin",
@@ -86,7 +82,6 @@
           "title": "Server Health",
           "icon": "bi-activity",
           "url": "http://apps.homelab1367.internal:19999",
-          "proxyPath": "/netdata",
           "color": "#00AB44",
           "description": "Netdata",
           "active": true
@@ -94,7 +89,6 @@
         {
           "title": "Docker Manager",
           "url": "http://apps.homelab1367.internal:9000",
-          "proxyPath": "/portainer",
           "icon": "bi-box-seam-fill",
           "color": "#2496ED",
           "description": "Docker",
