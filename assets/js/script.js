@@ -42,6 +42,70 @@ function updateGreeting() {
 }
 
 // -------------------------------------------------------
+// 🔗 SMART URL RESOLVER
+// When the portal is opened via a raw IP address (e.g. 192.168.0.221),
+// links that point to apps.homelab1367.internal are rewritten to use
+// the current host IP + the path. Port-only service URLs keep their port.
+// When accessed via a hostname, all URLs pass through unchanged.
+// -------------------------------------------------------
+
+(function () {
+    /**
+     * Returns true if `host` looks like an IPv4 or IPv6 address
+     * (rather than a hostname like apps.homelab1367.internal).
+     */
+    function isIPAddress(host) {
+        // IPv4: four groups of digits separated by dots
+        if (/^\d{1,3}(\.\d{1,3}){3}$/.test(host)) return true;
+        // IPv6: contains colons (simplified check)
+        if (host.startsWith('[') || host.includes(':')) return true;
+        // localhost
+        if (host === 'localhost') return true;
+        return false;
+    }
+
+    /**
+     * Rewrites a URL from services.json so it works correctly
+     * whether the portal is opened by IP or by hostname.
+     *
+     * Rules (only active when current host is an IP):
+     *  • http://apps.homelab1367.internal/path  → http://<currentIP>/path
+     *  • http://apps.homelab1367.internal:PORT  → http://<currentIP>:PORT
+     *  • Any other domain/host                 → unchanged (go directly)
+     */
+    window.resolveServiceUrl = function (rawUrl) {
+        const currentHost = window.location.hostname;
+
+        // If we're on a named host, always pass through unchanged
+        if (!isIPAddress(currentHost)) return rawUrl;
+
+        let parsed;
+        try {
+            parsed = new URL(rawUrl);
+        } catch (e) {
+            return rawUrl; // not a valid URL, return as-is
+        }
+
+        // Only rewrite URLs pointing at apps.homelab1367.internal
+        if (parsed.hostname !== 'apps.homelab1367.internal') return rawUrl;
+
+        // Preserve the original port if one was explicitly set
+        const port = parsed.port ? `:${parsed.port}` : '';
+        const currentPort = window.location.port ? `:${window.location.port}` : '';
+
+        // Use the scheme from the original URL, fall back to current
+        const scheme = parsed.protocol || window.location.protocol;
+
+        // If the service uses a non-standard port, keep it; otherwise use portal port
+        const targetPort = parsed.port ? port : currentPort;
+
+        // Build rewritten URL: scheme + currentIP + port + path + search
+        const rewritten = `${scheme}//${currentHost}${targetPort}${parsed.pathname}${parsed.search}${parsed.hash}`;
+        return rewritten;
+    };
+}());
+
+// -------------------------------------------------------
 // 📦 DYNAMIC CONTENT LOADING FROM JSON
 // -------------------------------------------------------
 
@@ -259,7 +323,7 @@ function renderSections(sections) {
 function createFavoriteCard(item) {
     const card = document.createElement('a');
     card.className = 'app-card favorite-app-card';
-    card.href = item.url;
+    card.href = window.resolveServiceUrl ? window.resolveServiceUrl(item.url) : item.url;
     card.target = '_blank';
     card.setAttribute('aria-label', item.title);
 
@@ -281,7 +345,7 @@ function createFavoriteCard(item) {
 function createContentCard(item) {
     const card = document.createElement('a');
     card.className = 'app-card content-card';
-    card.href = item.url;
+    card.href = window.resolveServiceUrl ? window.resolveServiceUrl(item.url) : item.url;
     card.target = '_blank';
     card.setAttribute('aria-label', item.title);
 
