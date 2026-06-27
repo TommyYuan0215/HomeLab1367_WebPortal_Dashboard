@@ -43,10 +43,10 @@ function updateGreeting() {
 
 // -------------------------------------------------------
 // 🔗 SMART URL RESOLVER
-// When the portal is opened via a raw IP address (e.g. 192.168.0.221),
-// links that point to apps.homelab1367.internal are rewritten to use
-// the current host IP + the path. Port-only service URLs keep their port.
-// When accessed via a hostname, all URLs pass through unchanged.
+// Handles three access modes automatically:
+//   1. LAN IP       (e.g. 192.168.0.221)
+//   2. Internal DNS (e.g. apps.homelab1367.internal)
+//   3. Public host  (e.g. ideahub.eu1.netbird.services)
 // -------------------------------------------------------
 
 (function () {
@@ -65,43 +65,74 @@ function updateGreeting() {
     }
 
     /**
-     * Rewrites a URL from services.json so it works correctly
-     * whether the portal is opened by IP or by hostname.
+     * Rewrites a URL from services.json so it works correctly across
+     * all three access modes: LAN IP, internal hostname, public hostname.
      *
-     * Rules (only active when current host is an IP):
-     *  • http://apps.homelab1367.internal/path  → http://<currentIP>/path
-     *  • http://apps.homelab1367.internal:PORT  → http://<currentIP>:PORT
-     *  • Any other domain/host                 → unchanged (go directly)
+     * @param {string} rawUrl      - The URL from services.json
+     * @param {string} [proxyPath] - Optional subpath (e.g. "/photo") for port-based
+     *                               services when accessed from an external public host.
+     *                               Configured per-item in services.json as "proxyPath".
+     *
+     * Rewrite rules:
+     *
+     *  [LAN IP - e.g. 192.168.0.221]
+     *    apps.homelab1367.internal/path  → 192.168.0.221/path
+     *    apps.homelab1367.internal:PORT  → 192.168.0.221:PORT  (port accessible on LAN)
+     *
+     *  [Internal DNS - e.g. apps.homelab1367.internal]
+     *    All URLs → unchanged (local DNS resolves everything)
+     *
+     *  [External/public host - e.g. ideahub.eu1.netbird.services]
+     *    apps.homelab1367.internal/path  → publichost/path       (Nginx reverse-proxies)
+     *    apps.homelab1367.internal:PORT  → publichost/proxyPath  (Nginx subpath proxy)
+     *    Other hosts (adguard, router…) → unchanged
      */
-    window.resolveServiceUrl = function (rawUrl) {
+    window.resolveServiceUrl = function (rawUrl, proxyPath) {
         const currentHost = window.location.hostname;
-
-        // If we're on a named host, always pass through unchanged
-        if (!isIPAddress(currentHost)) return rawUrl;
 
         let parsed;
         try {
             parsed = new URL(rawUrl);
         } catch (e) {
-            return rawUrl; // not a valid URL, return as-is
+            return rawUrl;
         }
 
         // Only rewrite URLs pointing at apps.homelab1367.internal
         if (parsed.hostname !== 'apps.homelab1367.internal') return rawUrl;
 
-        // Preserve the original port if one was explicitly set
-        const port = parsed.port ? `:${parsed.port}` : '';
-        const currentPort = window.location.port ? `:${window.location.port}` : '';
+        // ── CASE 1: LAN IP access (e.g. 192.168.0.221) ─────────────────
+        if (isIPAddress(currentHost)) {
+            const scheme = parsed.protocol;
+            if (parsed.port) {
+                // Port-based service: swap host to IP, keep the port (LAN can reach it)
+                return `${scheme}//${currentHost}:${parsed.port}${parsed.pathname}${parsed.search}${parsed.hash}`;
+            } else {
+                // Path-based service: swap host to IP
+                const currentPort = window.location.port ? `:${window.location.port}` : '';
+                return `${scheme}//${currentHost}${currentPort}${parsed.pathname}${parsed.search}${parsed.hash}`;
+            }
+        }
 
-        // Use the scheme from the original URL, fall back to current
-        const scheme = parsed.protocol || window.location.protocol;
+        // ── CASE 2: Internal hostname (*.homelab1367.*) ─────────────────
+        const isInternalHost = currentHost.endsWith('.homelab1367.internal') ||
+                               currentHost.endsWith('.homelab1367.local')    ||
+                               currentHost === 'apps.homelab1367.internal';
+        if (isInternalHost) {
+            return rawUrl; // Local DNS resolves everything — use as-is
+        }
 
-        // If the service uses a non-standard port, keep it; otherwise use portal port
-        const targetPort = parsed.port ? port : currentPort;
-
-        // Build rewritten URL: scheme + currentIP + port + path + search
-        const rewritten = `${scheme}//${currentHost}${targetPort}${parsed.pathname}${parsed.search}${parsed.hash}`;
-        return rewritten;
+        // ── CASE 3: External / public hostname (Netbird, Cloudflare…) ───
+        if (parsed.port) {
+            // Port-based service — that port is NOT exposed through the public proxy.
+            // Use the proxyPath subpath instead (requires Nginx location block).
+            if (proxyPath) {
+                return `${window.location.origin}${proxyPath}`;
+            }
+            return rawUrl; // No proxyPath defined — will likely fail externally
+        } else {
+            // Path-based service — rewrite to current public host + same path
+            return `${window.location.origin}${parsed.pathname}${parsed.search}${parsed.hash}`;
+        }
     };
 }());
 
@@ -323,7 +354,7 @@ function renderSections(sections) {
 function createFavoriteCard(item) {
     const card = document.createElement('a');
     card.className = 'app-card favorite-app-card';
-    card.href = window.resolveServiceUrl ? window.resolveServiceUrl(item.url) : item.url;
+    card.href = window.resolveServiceUrl ? window.resolveServiceUrl(item.url, item.proxyPath) : item.url;
     card.target = '_blank';
     card.setAttribute('aria-label', item.title);
 
@@ -345,7 +376,7 @@ function createFavoriteCard(item) {
 function createContentCard(item) {
     const card = document.createElement('a');
     card.className = 'app-card content-card';
-    card.href = window.resolveServiceUrl ? window.resolveServiceUrl(item.url) : item.url;
+    card.href = window.resolveServiceUrl ? window.resolveServiceUrl(item.url, item.proxyPath) : item.url;
     card.target = '_blank';
     card.setAttribute('aria-label', item.title);
 
