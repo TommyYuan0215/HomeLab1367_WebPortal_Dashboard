@@ -1,4 +1,7 @@
 {
+  "config": {
+    "authorUrl": "http://web.homelab1367.internal/author"
+  },
   "sections": [
     {
       "id": "home-media-services",
@@ -157,6 +160,7 @@
           "subtitle": "3D Sierpinski Gasket TV Ident",
           "course": "CPC354 - Computer Graphics & Visualization",
           "author": "Tan Jun Lin",
+          "authorUrl": "http://apps.homelab1367.internal/author",
           "active": true
         },
         {

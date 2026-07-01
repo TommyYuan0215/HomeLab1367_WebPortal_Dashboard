@@ -177,8 +177,16 @@ async function loadServices() {
         if (!data.sections || !Array.isArray(data.sections)) {
             throw new Error('Invalid JSON structure: "sections" array not found');
         }
+
+        // Apply author URL from config to navbar and mobile menu links
+        const authorUrl = data.config && data.config.authorUrl ? data.config.authorUrl : null;
+        if (authorUrl) {
+            document.querySelectorAll('a.nav-author-link').forEach(el => {
+                el.href = window.resolveServiceUrl ? window.resolveServiceUrl(authorUrl) : authorUrl;
+            });
+        }
         
-        renderSections(data.sections);
+        renderSections(data.sections, authorUrl);
     } catch (error) {
         console.error('Error loading services:', error);
         showErrorMessage(error);
@@ -263,7 +271,7 @@ function cleanTitle(title) {
 
 // --- Render Functions with active status---
 
-function renderSections(sections) {
+function renderSections(sections, authorUrl) {
     const container = document.getElementById('sections-container');
     if (!container) return;
     container.innerHTML = '';
@@ -343,7 +351,7 @@ function renderSections(sections) {
 
                     const card = section.type === 'favorite' 
                         ? createFavoriteCard(item) 
-                        : createContentCard(item);
+                        : createContentCard(item, authorUrl);
                     contentContainer.appendChild(card);
                 });
             }
@@ -377,7 +385,7 @@ function createFavoriteCard(item) {
     return card;
 }
 
-function createContentCard(item) {
+function createContentCard(item, authorUrl) {
     const card = document.createElement('a');
     card.className = 'app-card content-card';
     card.href = window.resolveServiceUrl ? window.resolveServiceUrl(item.url, item.proxyPath) : item.url;
@@ -401,7 +409,13 @@ function createContentCard(item) {
     if (item.course || item.author) {
         overlayContent += `<div class="overlay-meta">`;
         if (item.course) overlayContent += `<span class="meta-course"><i class="bi bi-journal-bookmark-fill"></i> ${item.course}</span><br>`;
-        if (item.author) overlayContent += `<span class="meta-author"><i class="bi bi-person-fill"></i> ${item.author}</span>`;
+        if (item.author) {
+            const effectiveAuthorUrl = item.authorUrl || authorUrl || null;
+            const authorDisplay = effectiveAuthorUrl
+                ? `<a href="${effectiveAuthorUrl}" target="_blank" rel="noopener" class="meta-author-link" onclick="event.stopPropagation();">${item.author}</a>`
+                : item.author;
+            overlayContent += `<span class="meta-author"><i class="bi bi-person-fill"></i> ${authorDisplay}</span>`;
+        }
         overlayContent += `</div>`;
     }
     
