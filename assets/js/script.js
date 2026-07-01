@@ -44,8 +44,8 @@ function updateGreeting() {
 // -------------------------------------------------------
 // 🔗 SMART URL RESOLVER
 // Handles three access modes automatically:
-//   1. LAN IP       (e.g. 192.168.0.221)
-//   2. Internal DNS (e.g. apps.homelab1367.internal)
+//   1. LAN IP       (e.g. 192.168.0.227)
+//   2. Internal DNS (e.g. web.homelab1367.internal)
 //   3. Public host  (e.g. ideahub.eu1.netbird.services)
 // -------------------------------------------------------
 
@@ -75,16 +75,16 @@ function updateGreeting() {
      *
      * Rewrite rules:
      *
-     *  [LAN IP - e.g. 192.168.0.221]
-     *    apps.homelab1367.internal/path  → 192.168.0.221/path
-     *    apps.homelab1367.internal:PORT  → 192.168.0.221:PORT  (port accessible on LAN)
+     *  [LAN IP - e.g. 192.168.0.227 or localhost]
+     *    web.homelab1367.internal/path  → 192.168.0.227/path
+     *    web.homelab1367.internal:PORT  → 192.168.0.227:PORT  (port accessible on LAN)
      *
-     *  [Internal DNS - e.g. apps.homelab1367.internal]
+     *  [Internal DNS - e.g. web.homelab1367.internal]
      *    All URLs → unchanged (local DNS resolves everything)
      *
      *  [External/public host - e.g. ideahub.eu1.netbird.services]
-     *    apps.homelab1367.internal/path  → publichost/path       (Nginx reverse-proxies)
-     *    apps.homelab1367.internal:PORT  → publichost/proxyPath  (Nginx subpath proxy)
+     *    web.homelab1367.internal/path  → publichost/path       (Nginx reverse-proxies)
+     *    web.homelab1367.internal:PORT  → publichost/proxyPath  (Nginx subpath proxy)
      *    Other hosts (adguard, router…) → unchanged
      */
     window.resolveServiceUrl = function (rawUrl, proxyPath) {
@@ -97,8 +97,9 @@ function updateGreeting() {
             return rawUrl;
         }
 
-        // Only rewrite URLs pointing at apps.homelab1367.internal
-        if (parsed.hostname !== 'apps.homelab1367.internal') return rawUrl;
+        // Only rewrite URLs pointing at known internal LAMP/homelab hostnames
+        const INTERNAL_HOSTS = ['web.homelab1367.internal', 'apps.homelab1367.internal'];
+        if (!INTERNAL_HOSTS.includes(parsed.hostname)) return rawUrl;
 
         // ── CASE 1: LAN IP access (e.g. 192.168.0.221) ─────────────────
         if (isIPAddress(currentHost)) {
@@ -116,6 +117,7 @@ function updateGreeting() {
         // ── CASE 2: Internal hostname (*.homelab1367.*) ─────────────────
         const isInternalHost = currentHost.endsWith('.homelab1367.internal') ||
                                currentHost.endsWith('.homelab1367.local')    ||
+                               currentHost === 'web.homelab1367.internal'    ||
                                currentHost === 'apps.homelab1367.internal';
         if (isInternalHost) {
             return rawUrl; // Local DNS resolves everything — use as-is

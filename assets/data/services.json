@@ -8,7 +8,7 @@
       "items": [
         {
           "title": "Media Server",
-          "url": "http://apps.homelab1367.internal/media",
+          "url": "https://media.homelab1367.internal",
           "icon": "bi-tv-fill",
           "color": "#AA5CC3",
           "description": "Jellyfin",
@@ -16,41 +16,25 @@
         },
         {
           "title": "Photo Viewer",
-          "url": "http://apps.homelab1367.internal:2283",
+          "url": "http://192.168.0.226:2283",
           "icon": "bi-image-fill",
-          "color": "#E91E63",
+          "color": "#4250AF",
           "description": "Immich",
-          "active": true
+          "active": false
         },
         {
           "title": "Cloud Storage",
-          "url": "http://apps.homelab1367.internal/cloud",
+          "url": "https://cloud.homelab1367.internal",
           "icon": "bi-cloud-fill",
           "color": "#0082C9",
           "description": "Nextcloud",
-          "active": true
-        },
-        {
-          "title": "File Explorer",
-          "url": "http://apps.homelab1367.internal/explorer",
-          "icon": "bi-folder-fill",
-          "color": "#F7CA18",
-          "description": "File Browser",
-          "active": true
-        },
-        {
-          "title": "Home Assistance",
-          "url": "http://apps.homelab1367.internal:8123",
-          "icon": "bi-house-fill",
-          "color": "#03A9F4",
-          "description": "Home Assistant",
           "active": true
         }
       ]
     },
     {
       "id": "system-management",
-      "title": "System Management",
+      "title": "Web Server",
       "icon": "bi-cpu-fill",
       "type": "favorite",
       "items": [
@@ -58,32 +42,104 @@
           "title": "Windows Admin Center",
           "url": "https://myhomeserver.homelab1367.internal:6600",
           "icon": "bi-windows",
-          "color": "#4ACBE9",
+          "color": "#0078D4",
           "description": "Windows",
           "active": false
         },
         {
-          "title": "Web Server Manager",
-          "url": "https://apps.homelab1367.internal:10000/",
+          "title": "Server Management",
+          "url": "https://web.homelab1367.internal:12321",
           "icon": "bi-hdd-rack-fill",
-          "color": "#1976D2",
+          "color": "#1C5FAA",
           "description": "Webmin",
           "active": true
         },
         {
-          "title": "Server Health",
-          "icon": "bi-activity",
-          "url": "http://apps.homelab1367.internal:19999",
-          "color": "#00AB44",
-          "description": "Netdata",
+          "title": "Database Management",
+          "url": "https://web.homelab1367.internal:12322",
+          "icon": "bi-database-fill",
+          "color": "#C55D7A",
+          "description": "Adminer",
           "active": true
         },
         {
-          "title": "Docker Manager",
-          "url": "http://apps.homelab1367.internal:9000",
-          "icon": "bi-box-seam-fill",
-          "color": "#2496ED",
-          "description": "Docker",
+          "title": "Health Monitoring",
+          "icon": "bi-activity",
+          "url": "http://web.homelab1367.internal:19999",
+          "color": "#00AB44",
+          "description": "Netdata",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "network-management",
+      "title": "Network & Infrastructure",
+      "icon": "bi-pci-card-network",
+      "type": "favorite",
+      "items": [
+        {
+          "title": "Main Router",
+          "url": "http://router.homelab1367.internal",
+          "icon": "bi-router-fill",
+          "color": "#F97316",
+          "description": "Router Admin",
+          "active": true
+        },
+        {
+          "title": "Deco Mesh 1",
+          "url": "http://deco1.homelab1367.internal",
+          "icon": "bi-broadcast",
+          "color": "#1D7ED8",
+          "description": "TP-Link Deco",
+          "active": true
+        },
+        {
+          "title": "Deco Mesh 2",
+          "url": "http://deco2.homelab1367.internal",
+          "icon": "bi-broadcast-pin",
+          "color": "#38BDF8",
+          "description": "TP-Link Deco",
+          "active": true
+        },
+        {
+          "title": "AdGuard Home",
+          "url": "http://adguard.homelab1367.internal",
+          "icon": "bi-shield-lock",
+          "color": "#68BC71",
+          "description": "DNS Ad-Block",
+          "active": true
+        },
+        {
+          "title": "VPN Cloud Management",
+          "url": "https://app.netbird.io",
+          "icon": "bi-diagram-2-fill",
+          "color": "#FF6B00",
+          "description": "Netbird Cloud",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "lab-tester-node",
+      "title": "Lab & Tester Node",
+      "icon": "bi-flask-fill",
+      "type": "favorite",
+      "items": [
+        {
+          "title": "Proxmox VE Dashboard",
+          "url": "https://lab.homelab1367.internal:8006/",
+          "icon": "bi-motherboard-fill",
+          "color": "#E57000",
+          "description": "Proxmox VE",
+          "active": true
+        },
+        {
+          "title": "Lab Cloud",
+          "url": "https://cloud.lab.homelab1367.internal",
+          "icon": "bi-cloud-fill",
+          "color": "#0082C9",
+          "description": "Nextcloud",
           "active": true
         }
       ]
@@ -96,8 +152,8 @@
       "items": [
         {
           "title": "TV Ident",
-          "url": "http://apps.homelab1367.internal/uni/tvi",
-          "image": "http://apps.homelab1367.internal/assets/img/tvi_thumbnail.png",
+          "url": "http://web.homelab1367.internal/uni/tvi",
+          "image": "http://web.homelab1367.internal/assets/img/tvi_thumbnail.png",
           "subtitle": "3D Sierpinski Gasket TV Ident",
           "course": "CPC354 - Computer Graphics & Visualization",
           "author": "Tan Jun Lin",
@@ -105,8 +161,8 @@
         },
         {
           "title": "3DAM",
-          "url": "http://apps.homelab1367.internal/uni/3dam",
-          "image": "http://apps.homelab1367.internal/assets/img/3dam_thumbnail.png",
+          "url": "http://web.homelab1367.internal/uni/3dam",
+          "image": "http://web.homelab1367.internal/assets/img/3dam_thumbnail.png",
           "subtitle": "3D Articulated Model",
           "course": "CPC354 - Computer Graphics & Visualization",
           "author": "Tan Jun Lin",
@@ -114,8 +170,8 @@
         },
         {
           "title": "Eco Recycle Penang",
-          "url": "http://apps.homelab1367.internal/uni/ecorecyclepenang",
-          "image": "http://apps.homelab1367.internal/assets/img/erp_thumbnail.png",
+          "url": "http://web.homelab1367.internal/uni/ecorecyclepenang",
+          "image": "http://web.homelab1367.internal/assets/img/erp_thumbnail.png",
           "subtitle": "Recycle Web App for Penang",
           "course": "CAT304 - Group Innovation Project & Study for Sustainability",
           "author": "Tan Jun Lin",
@@ -123,8 +179,8 @@
         },
         {
           "title": "Moment Snap",
-          "url": "http://apps.homelab1367.internal/uni/momentsnap",
-          "image": "http://apps.homelab1367.internal/assets/img/momentsnap_thumbnail.png",
+          "url": "http://web.homelab1367.internal/uni/momentsnap",
+          "image": "http://web.homelab1367.internal/assets/img/momentsnap_thumbnail.png",
           "subtitle": "USM Photography Participation App",
           "course": "CMT322 - Web Engineering & Technologies",
           "author": "Tan Jun Lin",

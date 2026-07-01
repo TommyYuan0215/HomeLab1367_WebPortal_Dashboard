@@ -135,7 +135,7 @@ class SettingsManager {
                 type: 'toggle',
                 elementId: 'show-news-toggle',
                 storageKey: 'homelab-show-news',
-                defaultValue: true,
+                defaultValue: false,
                 cssClass: 'hide-news',
                 inverted: true // true means we add class when OFF
             },
