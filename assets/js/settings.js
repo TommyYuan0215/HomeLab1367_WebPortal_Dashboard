@@ -15,6 +15,14 @@ class SettingsManager {
                 onChange: (value) => this.updateTheme(value),
                 onLoad: (value) => this.updateTheme(value, true)
             },
+            'theme-color': {
+                type: 'option',
+                groupId: 'theme-color-group',
+                storageKey: 'homelab-theme-color',
+                defaultValue: 'purple',
+                onChange: (value) => this.updateThemeColor(value),
+                onLoad: (value) => this.updateThemeColor(value)
+            },
             'font-size': {
                 type: 'range',
                 elementId: 'font-size-range',
@@ -403,6 +411,7 @@ class SettingsManager {
         const filterLabels = ['Off', 'Deuteranopia', 'Protanopia', 'Tritanopia', 'Greyscale'];
         const labels = {
             'theme': value ? 'Light Mode' : 'Dark Mode',
+            'theme-color': `Theme Color: ${value.charAt(0).toUpperCase() + value.slice(1)}`,
             'high-contrast': value ? 'High Contrast On' : 'High Contrast Off',
             'dyslexic-font': value ? 'Dyslexia Font On' : 'Dyslexia Font Off',
             'highlight-links': value ? 'Link Highlights On' : 'Link Highlights Off',
@@ -422,6 +431,25 @@ class SettingsManager {
     }
 
     // === Custom Handlers ===
+    updateThemeColor(val) {
+        const desc = document.getElementById('theme-color-desc');
+        const labels = {
+            'purple': 'Purple (Default)',
+            'pink': 'Pink',
+            'blue': 'Blue',
+            'green': 'Green'
+        };
+        if (desc) desc.textContent = labels[val] || 'Purple (Default)';
+
+        // Remove existing theme color classes
+        document.body.classList.remove('theme-pink', 'theme-blue', 'theme-green');
+
+        // Add selected class
+        if (val && val !== 'purple') {
+            document.body.classList.add(`theme-${val}`);
+        }
+    }
+
     updateTheme(isLight, skipNavbarUpdate = false) {
         const themeDesc = document.getElementById('theme-desc');
 

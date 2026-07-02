@@ -87,8 +87,15 @@ function updateGreeting() {
      *    web.homelab1367.internal:PORT  → publichost/proxyPath  (Nginx subpath proxy)
      *    Other hosts (adguard, router…) → unchanged
      */
-    window.resolveServiceUrl = function (rawUrl, proxyPath) {
+    window.resolveServiceUrl = function (rawUrl, proxyPath, altUrl) {
         const currentHost = window.location.hostname;
+
+        // ── FAST PATH: IP access + altUrl provided ───────────────────────
+        // If the dashboard is open via a raw IP address and the service has
+        // an explicit IP-based alternative URL, use it directly — no rewrite needed.
+        if (isIPAddress(currentHost) && altUrl) {
+            return altUrl;
+        }
 
         let parsed;
         try {
@@ -171,12 +178,49 @@ async function loadServices() {
             throw new Error(`Failed to load assets/data/services.json. Make sure you're running a local web server. Status: ${response?.status || 'Network Error'}`);
         }
         
-        const data = await response.json();
+        let data = await response.json();
         
         // Validate JSON structure
         if (!data.sections || !Array.isArray(data.sections)) {
             throw new Error('Invalid JSON structure: "sections" array not found');
         }
+
+        // Load config.json using the same base path
+        let configData = {};
+        try {
+            const configPath = response.url.replace('services.json', 'config.json');
+            const configResponse = await fetch(configPath);
+            if (configResponse.ok) {
+                const configJson = await configResponse.json();
+                configData = configJson.config || configJson;
+            }
+        } catch (err) {
+            console.warn('Failed to load config.json:', err);
+        }
+
+        data.config = configData;
+
+        // Store raw config for admin access
+        window._servicesConfig = data.config || {};
+
+        // Check localStorage for admin overrides and merge
+        const adminOverride = localStorage.getItem('homelab-admin-services');
+        if (adminOverride) {
+            try {
+                const overrideData = JSON.parse(adminOverride);
+                if (overrideData.sections && Array.isArray(overrideData.sections)) {
+                    data.sections = overrideData.sections;
+                }
+                if (overrideData.config) {
+                    data.config = Object.assign({}, data.config, overrideData.config);
+                }
+            } catch (e) {
+                console.warn('Admin override data is corrupt, using original services.json');
+            }
+        }
+
+        // Expose current data globally for admin.js
+        window._servicesData = data;
 
         // Apply author URL from config to navbar and mobile menu links
         const authorUrl = data.config && data.config.authorUrl ? data.config.authorUrl : null;
@@ -184,6 +228,13 @@ async function loadServices() {
             document.querySelectorAll('a.nav-author-link').forEach(el => {
                 el.href = window.resolveServiceUrl ? window.resolveServiceUrl(authorUrl) : authorUrl;
             });
+        }
+
+        // Apply version from config to footer
+        const version = data.config && data.config.version ? data.config.version : '2.3.7';
+        const versionEl = document.querySelector('.footer-version small');
+        if (versionEl) {
+            versionEl.textContent = `Version ${version}`;
         }
         
         renderSections(data.sections, authorUrl);
@@ -280,9 +331,13 @@ function renderSections(sections, authorUrl) {
         // SKIP: If the entire section is marked as inactive
         if (section.active === false) return;
 
+        // Ensure section has an ID for admin targeting
+        if (!section.id) section.id = 'section-' + Math.random().toString(36).substr(2, 6);
+
         const sectionDiv = document.createElement('section');
         sectionDiv.className = 'tv-row';
         sectionDiv.setAttribute('data-section-type', section.type);
+        sectionDiv.setAttribute('data-section-id', section.id);
         
         // Title
         const title = document.createElement('h3');
@@ -346,9 +401,8 @@ function renderSections(sections, authorUrl) {
             
             if (section.items) {
                 section.items.forEach(item => {
-                    // SKIP: If the specific app/project is marked as inactive
-                    if (item.active === false) return;
-
+                    // Inactive items are rendered with .card-disabled (hidden via CSS in normal mode,
+                    // visible as greyed-out in admin mode)
                     const card = section.type === 'favorite' 
                         ? createFavoriteCard(item) 
                         : createContentCard(item, authorUrl);
@@ -366,9 +420,15 @@ function renderSections(sections, authorUrl) {
 function createFavoriteCard(item) {
     const card = document.createElement('a');
     card.className = 'app-card favorite-app-card';
-    card.href = window.resolveServiceUrl ? window.resolveServiceUrl(item.url, item.proxyPath) : item.url;
+    card.href = window.resolveServiceUrl ? window.resolveServiceUrl(item.url, item.proxyPath, item.altUrl) : item.url;
     card.target = '_blank';
     card.setAttribute('aria-label', item.title);
+
+    // Disabled state: hide in normal mode, show greyed-out in admin mode
+    if (item.active === false) {
+        card.classList.add('card-disabled');
+        card.addEventListener('click', (e) => e.preventDefault());
+    }
 
     const icon = document.createElement('i');
     icon.className = `bi ${item.icon} app-icon`;
@@ -385,12 +445,21 @@ function createFavoriteCard(item) {
     return card;
 }
 
+// Expose for admin.js re-render calls
+window.renderSections = renderSections;
+
 function createContentCard(item, authorUrl) {
     const card = document.createElement('a');
     card.className = 'app-card content-card';
-    card.href = window.resolveServiceUrl ? window.resolveServiceUrl(item.url, item.proxyPath) : item.url;
+    card.href = window.resolveServiceUrl ? window.resolveServiceUrl(item.url, item.proxyPath, item.altUrl) : item.url;
     card.target = '_blank';
     card.setAttribute('aria-label', item.title);
+
+    // Disabled state: hide in normal mode, show greyed-out in admin mode
+    if (item.active === false) {
+        card.classList.add('card-disabled');
+        card.addEventListener('click', (e) => e.preventDefault());
+    }
 
     const image = document.createElement('img');
     image.src = item.image;
@@ -434,6 +503,9 @@ function createContentCard(item, authorUrl) {
 
     return card;
 }
+
+// Expose for admin.js re-render calls
+window.updateSearchFunctionality = updateSearchFunctionality;
 
 function updateSearchFunctionality() {
     const desktopSearchInput = document.getElementById('global-search-input');

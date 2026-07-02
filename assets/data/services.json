@@ -1,7 +1,4 @@
 {
-  "config": {
-    "authorUrl": "http://web.homelab1367.internal/author"
-  },
   "sections": [
     {
       "id": "home-media-services",
@@ -12,6 +9,7 @@
         {
           "title": "Media Server",
           "url": "https://media.homelab1367.internal",
+          "altUrl": "http://192.168.0.226",
           "icon": "bi-tv-fill",
           "color": "#AA5CC3",
           "description": "Jellyfin",
@@ -28,6 +26,7 @@
         {
           "title": "Cloud Storage",
           "url": "https://cloud.homelab1367.internal",
+          "altUrl": "http://192.168.0.225",
           "icon": "bi-cloud-fill",
           "color": "#0082C9",
           "description": "Nextcloud",
@@ -44,6 +43,7 @@
         {
           "title": "Windows Admin Center",
           "url": "https://myhomeserver.homelab1367.internal:6600",
+          "altUrl": "https://192.168.0.226:6600",
           "icon": "bi-windows",
           "color": "#0078D4",
           "description": "Windows",
@@ -52,6 +52,7 @@
         {
           "title": "Server Management",
           "url": "https://web.homelab1367.internal:12321",
+          "altUrl": "https://192.168.0.226:12321",
           "icon": "bi-hdd-rack-fill",
           "color": "#1C5FAA",
           "description": "Webmin",
@@ -60,6 +61,7 @@
         {
           "title": "Database Management",
           "url": "https://web.homelab1367.internal:12322",
+          "altUrl": "https://192.168.0.226:12322",
           "icon": "bi-database-fill",
           "color": "#C55D7A",
           "description": "Adminer",
@@ -69,6 +71,7 @@
           "title": "Health Monitoring",
           "icon": "bi-activity",
           "url": "http://web.homelab1367.internal:19999",
+          "altUrl": "http://192.168.0.226:19999",
           "color": "#00AB44",
           "description": "Netdata",
           "active": true
@@ -84,6 +87,7 @@
         {
           "title": "Main Router",
           "url": "http://router.homelab1367.internal",
+          "altUrl": "http://192.168.0.1",
           "icon": "bi-router-fill",
           "color": "#F97316",
           "description": "Router Admin",
@@ -132,6 +136,7 @@
         {
           "title": "Proxmox VE Dashboard",
           "url": "https://lab.homelab1367.internal:8006/",
+          "altUrl": "https://192.168.0.198:8006/",
           "icon": "bi-motherboard-fill",
           "color": "#E57000",
           "description": "Proxmox VE",
@@ -140,6 +145,7 @@
         {
           "title": "Lab Cloud",
           "url": "https://cloud.lab.homelab1367.internal",
+          "altUrl": "http://192.168.0.199",
           "icon": "bi-cloud-fill",
           "color": "#0082C9",
           "description": "Nextcloud",

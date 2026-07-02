@@ -97,19 +97,32 @@ A modern, responsive web portal for managing and accessing self-hosted applicati
 
 ```
 HomeLab1367_WebPortal_Dashboard/
-├── index.html                 # Main HTML file
+├── index.html                 # Main HTML entry file
 ├── assets/
 │   ├── css/
-│   │   └── styles.css        # All styles (1,725+ lines)
+│   │   ├── styles.css        # Master styles compiler (uses CSS @import)
+│   │   ├── variables.css     # Root design variables & color overrides
+│   │   ├── global.css        # Typography, global reset, & body layers
+│   │   ├── splash.css        # Animated futuristic HUD loader styles
+│   │   ├── navbar.css        # Header brand, clocks, search & dropdowns
+│   │   ├── main.css          # Featured greeting banner styling
+│   │   ├── cards.css         # Grid rows & card styles (Favorites & content)
+│   │   ├── settings.css      # Material Design Modal & visual filters
+│   │   ├── news.css          # RSS feed modules & layouts
+│   │   ├── responsive.css    # Media queries & mobile layout adaptation
+│   │   └── admin.css         # Admin banners, overlay boxes, & controls
 │   ├── js/
-│   │   ├── script.js         # Main application logic
-│   │   ├── settings.js       # Accessibility settings
-│   │   └── hamburger.js      # Mobile menu functionality
+│   │   ├── script.js         # Main UI layout & dashboard rendering
+│   │   ├── settings.js       # User settings & LocalStorage persistence
+│   │   ├── hamburger.js      # Mobile sidebar drawer controls
+│   │   ├── splash.js         # Splash HUD timeline & typing animations
+│   │   └── admin.js          # Admin authorization, editing & layout injects
 │   ├── data/
-│   │   └── services.json     # Service configuration
+│   │   ├── config.json       # General settings (version, author link, password)
+│   │   └── services.json     # Categories & link data objects
 │   └── img/
-│       ├── brand.png         # Logo
-│       └── [thumbnails]      # Project thumbnails
+│       ├── brand.png         # Logo icon
+│       └── [thumbnails]      # Service screenshots & backdrops
 └── README.md                 # This file
 ```
 
@@ -117,10 +130,20 @@ HomeLab1367_WebPortal_Dashboard/
 
 ## ⚙️ Configuration
 
-### Adding/Editing Services
+### 1. General Settings (`assets/data/config.json`)
+Edit general metadata, version details, and administrative variables here:
+```json
+{
+  "config": {
+    "authorUrl": "http://your-profile-url",
+    "adminPassword": "your-admin-password",
+    "version": "2.3.9"
+  }
+}
+```
 
-Edit `assets/data/services.json` to customize your dashboard:
-
+### 2. Adding/Editing Services (`assets/data/services.json`)
+Manage sections and cards in the main application data file:
 ```json
 {
   "sections": [
@@ -146,12 +169,10 @@ Edit `assets/data/services.json` to customize your dashboard:
 ### Section Types
 
 1. **`favorite`** - Icon-based cards (200x150px)
-
    - Best for: Quick-access apps, system tools
    - Required fields: `title`, `url`, `icon`, `color`, `description`
 
 2. **`content`** - Image-based cards (320x180px)
-
    - Best for: Projects, media content
    - Required fields: `title`, `url`, `image`, `subtitle`, `course`, `author`
 
@@ -161,7 +182,7 @@ Edit `assets/data/services.json` to customize your dashboard:
 
 ### Available Icons
 
-This project uses [Bootstrap Icons](https://icons.getbootstrap.com/). Browse the full list and use the class name (e.g., `bi-house-fill`, `bi-gear-fill`).
+This project uses [Bootstrap Icons](https://icons.getbootstrap.com/). Browse the list and use the class name (e.g., `bi-house-fill`, `bi-gear-fill`).
 
 ---
 
@@ -169,7 +190,7 @@ This project uses [Bootstrap Icons](https://icons.getbootstrap.com/). Browse the
 
 ### Changing Theme Colors
 
-Edit CSS variables in `assets/css/styles.css`:
+Edit CSS variables in `assets/css/variables.css`:
 
 ```css
 :root {
