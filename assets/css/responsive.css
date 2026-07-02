@@ -190,6 +190,17 @@ body.light-theme .mobile-menu-link:hover {
   font-size: 1.2rem;
 }
 
+/* Admin Panel button — active admin mode highlight */
+.mobile-menu-link.mobile-admin-active {
+  background: rgba(138, 57, 255, 0.15);
+  color: #a86bff;
+  border: 1px solid rgba(138, 57, 255, 0.3);
+}
+
+.mobile-menu-link.mobile-admin-active i {
+  color: #a86bff;
+}
+
 /* Mobile Search Popup */
 .mobile-search-popup {
   position: fixed;
@@ -333,11 +344,12 @@ body.light-theme .mobile-search-popup-close:hover {
     display: flex !important;
   }
 
-  /* Hide author, GitHub, settings, theme, and clock on mobile */
+  /* Hide author, GitHub, settings, admin shield, theme, and clock on mobile */
   .nav-author-link,
   .nav-github-link,
   .time,
   #settings-btn,
+  #admin-mode-btn,
   #theme-toggle-btn {
     display: none !important;
   }

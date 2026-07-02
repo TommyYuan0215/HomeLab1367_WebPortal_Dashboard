@@ -15,6 +15,8 @@ class AdminManager {
         this.currentType   = 'favorite';
         this.canSaveToServer = false;   // true when api/save-services.php is reachable
         this.serverType    = null;      // 'apache' | 'nginx' | null
+        this._dragEl       = null;      // currently dragged card element
+        this._preDragData  = null;      // deep copy of data taken at dragstart
 
         this._waitForData();
     }
@@ -105,6 +107,14 @@ class AdminManager {
         document.body.classList.add('admin-mode');
         document.getElementById('admin-icon').className = 'bi bi-shield-fill-check';
 
+        // Update mobile admin button appearance
+        const mobileAdminBtn = document.getElementById('mobile-admin-btn');
+        if (mobileAdminBtn) {
+            mobileAdminBtn.querySelector('i').className = 'bi bi-shield-fill-check';
+            mobileAdminBtn.querySelector('span').textContent = 'Exit Admin Mode';
+            mobileAdminBtn.classList.add('mobile-admin-active');
+        }
+
         this._injectBanner();
         this._injectSectionControls();
         this._injectOverlays();
@@ -117,6 +127,15 @@ class AdminManager {
         this.isAdminMode = false;
         document.body.classList.remove('admin-mode');
         document.getElementById('admin-icon').className = 'bi bi-shield-lock-fill';
+
+        // Reset mobile admin button appearance
+        const mobileAdminBtn = document.getElementById('mobile-admin-btn');
+        if (mobileAdminBtn) {
+            mobileAdminBtn.querySelector('i').className = 'bi bi-gear-fill';
+            mobileAdminBtn.querySelector('span').textContent = 'Admin Panel';
+            mobileAdminBtn.classList.remove('mobile-admin-active');
+        }
+
         document.getElementById('admin-banner')?.remove();
         document.getElementById('admin-add-section-row')?.remove();
         this.closeDrawer();
@@ -214,10 +233,18 @@ class AdminManager {
             row.querySelectorAll('.app-card:not(.admin-add-card)').forEach((card, idx) => {
                 if (card.querySelector('.admin-card-overlay')) return;
 
+                // Tag each card with its original section+index so we can
+                // reconstruct data order from the DOM after live reordering
+                card.dataset.itemSid = sid;
+                card.dataset.itemIdx = idx;
+
                 const isDisabled = card.classList.contains('card-disabled');
                 const overlay = document.createElement('div');
                 overlay.className = 'admin-card-overlay';
                 overlay.innerHTML = `
+                    <div class="admin-card-drag-handle" title="Drag to reorder">
+                      <i class="bi bi-grip-vertical"></i>
+                    </div>
                     <button class="admin-ctrl-btn edit"
                         data-action="edit" data-sid="${sid}" data-idx="${idx}">
                       <i class="bi bi-pencil-fill"></i> Edit
@@ -234,17 +261,99 @@ class AdminManager {
 
                 card.style.position = 'relative';
                 card.appendChild(overlay);
+                card.setAttribute('draggable', 'true');
+
+                // ── dragstart: snapshot data + mark the dragged element ──
+                card.addEventListener('dragstart', (e) => {
+                    this._dragEl = card;
+                    this._preDragData = JSON.parse(JSON.stringify(this._getData()));
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', 'drag'); // required for Firefox
+                    // Delay so ghost image is captured before we apply the dim
+                    requestAnimationFrame(() => card.classList.add('dragging'));
+                });
+
+                // ── dragover: LIVE reorder — immediately move card in DOM ──
+                card.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const dragging = this._dragEl;
+                    if (!dragging || dragging === card) return;
+
+                    const rect = card.getBoundingClientRect();
+                    const content = card.parentElement;
+
+                    if (e.clientX < rect.left + rect.width / 2) {
+                        // Cursor is on the left half → place dragged card before target
+                        if (card.previousElementSibling !== dragging) {
+                            content.insertBefore(dragging, card);
+                        }
+                    } else {
+                        // Cursor is on the right half → place dragged card after target
+                        const after = card.nextElementSibling;
+                        if (after !== dragging) {
+                            content.insertBefore(dragging, after); // null = append
+                        }
+                    }
+                });
+
+                // ── dragend: save the new DOM order to the data model ──
+                card.addEventListener('dragend', () => {
+                    card.classList.remove('dragging');
+                    document.querySelectorAll('.tv-row-content, .tv-fluid-content')
+                        .forEach(c => c.classList.remove('drag-over'));
+                    if (this._dragEl) {
+                        this._saveDomOrder();
+                        this._dragEl = null;
+                        this._preDragData = null;
+                    }
+                });
             });
         });
 
-        // Event delegation — bind once on the container
+        // ── Container drop zones (drag into an empty/different section) ──
+        document.querySelectorAll('.tv-row').forEach(row => {
+            const type = row.dataset.sectionType;
+            if (type === 'news') return;
+
+            const content = row.querySelector('.tv-row-content, .tv-fluid-content');
+            if (!content || content._dragBound) return;
+            content._dragBound = true;
+
+            content.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                if (!this._dragEl) return;
+                content.classList.add('drag-over');
+                // Move dragged card to end of this container (before add-card)
+                const addCard = content.querySelector('.admin-add-card');
+                const target = addCard || null;
+                if (this._dragEl.parentElement !== content ||
+                    content.lastElementChild !== this._dragEl &&
+                    content.lastElementChild !== addCard) {
+                    content.insertBefore(this._dragEl, target);
+                }
+            });
+
+            content.addEventListener('dragleave', (e) => {
+                if (!content.contains(e.relatedTarget)) {
+                    content.classList.remove('drag-over');
+                }
+            });
+
+            // drop is handled by dragend — just clean up visual
+            content.addEventListener('drop', (e) => {
+                e.preventDefault();
+                content.classList.remove('drag-over');
+            });
+        });
+
+        // ── Event delegation — click handlers for edit/toggle/delete ──
         const container = document.getElementById('sections-container');
         if (container && !container._adminBound) {
             container._adminBound = true;
             container.addEventListener('click', (e) => {
                 if (!this.isAdminMode) return;
 
-                // Section buttons (edit-section / delete-section)
                 const secBtn = e.target.closest('.admin-section-btn');
                 if (secBtn) {
                     e.preventDefault(); e.stopPropagation();
@@ -254,7 +363,6 @@ class AdminManager {
                     return;
                 }
 
-                // Card control buttons (edit / toggle / delete)
                 const cardBtn = e.target.closest('.admin-ctrl-btn');
                 if (cardBtn) {
                     e.preventDefault(); e.stopPropagation();
@@ -626,6 +734,91 @@ class AdminManager {
         this._persistData(data);
         this._refreshDashboard();
         this._showToast('Service saved!', 'success');
+    }
+
+    _moveCard(sourceSectionId, sourceIdx, targetSectionId, targetIdx, dropOnLeft) {
+        const data = this._getData();
+        const sourceSection = data.sections.find(s => s.id === sourceSectionId);
+        const targetSection = data.sections.find(s => s.id === targetSectionId);
+
+        if (!sourceSection || !targetSection) return;
+        if (!sourceSection.items || !sourceSection.items[sourceIdx]) return;
+
+        const itemToMove = sourceSection.items[sourceIdx];
+        const targetItem = targetIdx !== null && targetIdx !== undefined ? targetSection.items[targetIdx] : null;
+
+        // 1. Remove from source section
+        sourceSection.items.splice(sourceIdx, 1);
+
+        // 2. Insert into target section
+        if (targetItem) {
+            let newTargetIdx = targetSection.items.indexOf(targetItem);
+            if (newTargetIdx === -1) {
+                newTargetIdx = targetIdx;
+            }
+            if (dropOnLeft) {
+                targetSection.items.splice(newTargetIdx, 0, itemToMove);
+            } else {
+                targetSection.items.splice(newTargetIdx + 1, 0, itemToMove);
+            }
+        } else {
+            // Drop on container -> append to end
+            if (!targetSection.items) targetSection.items = [];
+            targetSection.items.push(itemToMove);
+        }
+
+        // 3. Persist and refresh
+        this._persistData(data);
+        this._refreshDashboard();
+        this._showToast('Card position updated!', 'success');
+    }
+
+    // ── Read DOM order → rebuild & persist data after live drag ──
+    _saveDomOrder() {
+        const snapshot = this._preDragData;
+        if (!snapshot) return;
+
+        // Deep-copy snapshot so we can safely mutate section.items
+        const data = JSON.parse(JSON.stringify(snapshot));
+
+        // Clear items for every non-news section that exists in the DOM
+        const touched = new Set();
+        document.querySelectorAll('.tv-row').forEach(row => {
+            const sid  = row.dataset.sectionId;
+            const type = row.dataset.sectionType;
+            if (type === 'news' || !sid) return;
+            const sec = data.sections.find(s => s.id === sid);
+            if (sec && !touched.has(sid)) {
+                touched.add(sid);
+                sec.items = [];
+            }
+        });
+
+        // Walk every content container in DOM order and push items in their
+        // new visual order using the original sid+idx tags to look them up
+        document.querySelectorAll('.tv-row').forEach(row => {
+            const sid  = row.dataset.sectionId;
+            const type = row.dataset.sectionType;
+            if (type === 'news' || !sid) return;
+
+            const content = row.querySelector('.tv-row-content, .tv-fluid-content');
+            if (!content) return;
+
+            const targetSec = data.sections.find(s => s.id === sid);
+            if (!targetSec) return;
+
+            content.querySelectorAll('.app-card:not(.admin-add-card)').forEach(card => {
+                const origSid = card.dataset.itemSid;
+                const origIdx = parseInt(card.dataset.itemIdx, 10);
+                const origSec = snapshot.sections.find(s => s.id === origSid);
+                const item    = origSec?.items?.[origIdx];
+                if (item) targetSec.items.push(JSON.parse(JSON.stringify(item)));
+            });
+        });
+
+        this._persistData(data);
+        this._refreshDashboard();
+        this._showToast('Order saved!', 'success');
     }
 
     _deleteItem(sectionId, itemIndex) {

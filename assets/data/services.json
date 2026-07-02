@@ -17,11 +17,12 @@
         },
         {
           "title": "Photo Viewer",
-          "url": "http://192.168.0.226:2283",
+          "url": "http://apps.homelab1367.internal:2283",
+          "altUrl": "http://192.168.0.227:2283",
           "icon": "bi-image-fill",
           "color": "#4250AF",
           "description": "Immich",
-          "active": false
+          "active": true
         },
         {
           "title": "Cloud Storage",

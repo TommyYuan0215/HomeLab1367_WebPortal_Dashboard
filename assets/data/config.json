@@ -2,6 +2,6 @@
   "config": {
     "authorUrl": "http://web.homelab1367.internal/author",
     "adminPassword": "admin1367",
-    "version": "2.3.9"
+    "version": "2.3.10"
   }
 }

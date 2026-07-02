@@ -101,6 +101,16 @@
         desktopSettingsBtn?.click();
     });
 
+    // Mobile Admin Button - opens admin login/toggle and closes hamburger menu
+    const mobileAdminBtn = document.getElementById('mobile-admin-btn');
+    mobileAdminBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeMobileMenu();
+        // Trigger the desktop admin shield button (injected by admin.js)
+        const desktopAdminBtn = document.getElementById('admin-mode-btn');
+        desktopAdminBtn?.click();
+    });
+
     // Close on Escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
