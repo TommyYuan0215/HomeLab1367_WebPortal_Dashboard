@@ -446,3 +446,35 @@ body.theme-green {
   cursor: grabbing;
 }
 
+/* ── Drag & Drop Section Reordering ──────────────────────────────── */
+.tv-row.dragging-section {
+  opacity: 0.35 !important;
+  outline: 2px dashed var(--admin-purple) !important;
+  outline-offset: 4px;
+  transform: scale(0.99) !important;
+  box-shadow: none !important;
+  pointer-events: none; /* so dragover fires on elements beneath */
+}
+
+.admin-section-drag-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  padding: 4px 8px;
+  margin-right: 4px;
+  color: var(--muted, #9aa0a6);
+  font-size: 1.2rem;
+  vertical-align: middle;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.admin-section-drag-handle:hover {
+  color: var(--admin-purple-lt);
+  transform: scale(1.1);
+}
+
+.admin-section-drag-handle:active {
+  cursor: grabbing;
+}
+

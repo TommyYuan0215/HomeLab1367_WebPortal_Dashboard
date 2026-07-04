@@ -1,0 +1,158 @@
+<!-- ===== Admin Service Edit / Add Drawer ===== -->
+<div id="admin-drawer-overlay" aria-hidden="true"></div>
+<div id="admin-drawer" aria-hidden="true" role="dialog" aria-label="Edit or Add Service">
+  <div class="admin-drawer-header">
+    <h3><i class="bi bi-pencil-square"></i> <span id="admin-drawer-title">Add Service</span></h3>
+    <button class="admin-drawer-close" id="admin-drawer-close" aria-label="Close drawer">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <div class="admin-drawer-body">
+    <!-- ── Common fields ── -->
+    <div class="admin-drawer-section-title admin-field-item-only"><i class="bi bi-info-circle"></i> Basic Info</div>
+
+    <div class="admin-field-group">
+      <label class="admin-field-label" for="admin-field-title">
+        Title <span class="required">*</span>
+      </label>
+      <input type="text" id="admin-field-title" class="admin-input-full" placeholder="e.g. Media Server" />
+    </div>
+
+    <div class="admin-field-group">
+      <label class="admin-field-label" for="admin-field-url">URL (Hostname)</label>
+      <input type="url" id="admin-field-url" class="admin-input-full"
+        placeholder="https://service.homelab1367.internal" />
+    </div>
+
+    <div class="admin-field-group">
+      <label class="admin-field-label" for="admin-field-alturl">Alt URL (IP Fallback)</label>
+      <input type="url" id="admin-field-alturl" class="admin-input-full" placeholder="http://192.168.0.xxx" />
+      <span class="admin-field-hint">Used when dashboard is accessed via a raw IP address</span>
+    </div>
+
+    <div class="admin-drawer-divider"></div>
+
+    <!-- ── Favorite-type fields ── -->
+    <div class="admin-field-favorite">
+      <div class="admin-drawer-section-title"><i class="bi bi-stars"></i> Appearance</div>
+
+      <div class="admin-field-group">
+        <label class="admin-field-label" for="admin-field-icon">Bootstrap Icon Class</label>
+        <div class="admin-icon-row">
+          <input type="text" id="admin-field-icon" class="admin-input-full" placeholder="bi-tv-fill" />
+          <div class="admin-icon-preview-wrap">
+            <i id="admin-icon-preview" class="bi bi-app" style="color:#8a39ff"></i>
+          </div>
+        </div>
+        <span class="admin-field-hint">Browse at <strong>icons.getbootstrap.com</strong></span>
+      </div>
+
+      <div class="admin-field-group">
+        <label class="admin-field-label">Icon Color</label>
+        <div class="admin-color-row">
+          <input type="text" id="admin-field-color-text" class="admin-input-full" placeholder="#8a39ff"
+            value="#8a39ff" />
+          <input type="color" id="admin-field-color" class="admin-color-picker" value="#8a39ff" />
+          <div id="admin-color-swatch" class="admin-color-swatch" style="background:#8a39ff"></div>
+        </div>
+      </div>
+
+      <div class="admin-field-group">
+        <label class="admin-field-label" for="admin-field-description">Description / App Name</label>
+        <input type="text" id="admin-field-description" class="admin-input-full" placeholder="e.g. Jellyfin" />
+      </div>
+    </div>
+
+    <!-- ── Content-type fields ── -->
+    <div class="admin-field-content" style="display:none">
+      <div class="admin-drawer-section-title"><i class="bi bi-card-image"></i> Content Details</div>
+
+      <div class="admin-field-group">
+        <label class="admin-field-label" for="admin-field-image">Thumbnail Image URL</label>
+        <input type="url" id="admin-field-image" class="admin-input-full"
+          placeholder="http://web.homelab1367.internal/assets/img/..." />
+      </div>
+
+      <div class="admin-field-group">
+        <label class="admin-field-label" for="admin-field-subtitle">Subtitle</label>
+        <input type="text" id="admin-field-subtitle" class="admin-input-full"
+          placeholder="Short project description" />
+      </div>
+
+      <div class="admin-field-group">
+        <label class="admin-field-label" for="admin-field-course">Course</label>
+        <input type="text" id="admin-field-course" class="admin-input-full"
+          placeholder="e.g. CPC354 - Computer Graphics" />
+      </div>
+
+      <div class="admin-field-group">
+        <label class="admin-field-label" for="admin-field-author">Author</label>
+        <input type="text" id="admin-field-author" class="admin-input-full" placeholder="Full name" />
+      </div>
+
+      <div class="admin-field-group">
+        <label class="admin-field-label" for="admin-field-authorurl">Author URL</label>
+        <input type="url" id="admin-field-authorurl" class="admin-input-full" placeholder="http://..." />
+      </div>
+    </div>
+
+    <div class="admin-drawer-divider"></div>
+
+    <!-- ── Active status ── -->
+    <div class="admin-toggle-row">
+      <span class="admin-toggle-label">
+        <i class="bi bi-toggle-on"></i> Active (visible on dashboard)
+      </span>
+      <label class="admin-switch">
+        <input type="checkbox" id="admin-field-active" checked />
+        <span class="admin-switch-slider"></span>
+      </label>
+    </div>
+
+    <!-- ── Section mode fields (hidden for item mode) ── -->
+    <div class="admin-field-section" style="display:none">
+      <div class="admin-drawer-section-title"><i class="bi bi-layout-text-sidebar-reverse"></i> Section Settings</div>
+
+      <div class="admin-field-group">
+        <label class="admin-field-label" for="admin-section-title">
+          Section Title <span class="required">*</span>
+        </label>
+        <input type="text" id="admin-section-title" class="admin-input-full"
+          placeholder="e.g. Home &amp; Media Services" />
+      </div>
+
+      <div class="admin-field-group">
+        <label class="admin-field-label">Section Icon</label>
+        <div class="admin-icon-row">
+          <input type="text" id="admin-section-icon" class="admin-input-full" placeholder="bi-house-heart-fill" />
+          <div class="admin-icon-preview-wrap">
+            <i id="admin-section-icon-preview" class="bi bi-grid"></i>
+          </div>
+        </div>
+        <span class="admin-field-hint">Browse at <strong>icons.getbootstrap.com</strong></span>
+      </div>
+
+      <div class="admin-field-group">
+        <label class="admin-field-label">Section Type</label>
+        <div class="admin-type-selector">
+          <label class="admin-type-option">
+            <input type="radio" name="admin-section-type" value="favorite" checked />
+            <span><i class="bi bi-grid-3x3-gap-fill"></i> Favorite Apps</span>
+          </label>
+          <label class="admin-type-option">
+            <input type="radio" name="admin-section-type" value="content" />
+            <span><i class="bi bi-card-image"></i> Project Cards</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-drawer-footer">
+    <button class="admin-drawer-btn cancel" id="admin-drawer-cancel">Cancel</button>
+    <button class="admin-drawer-btn save" id="admin-drawer-save">
+      <i class="bi bi-check-lg"></i> Save
+    </button>
+  </div>
+</div>

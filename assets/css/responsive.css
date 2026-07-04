@@ -76,8 +76,8 @@ body.light-theme .mobile-search-btn {
 .mobile-menu-content {
   position: fixed;
   top: 0;
-  left: -280px;
-  width: 280px;
+  left: -320px;
+  width: 320px;
   height: 100%;
   background: var(--card-dark);
   box-shadow: 8px 0 32px rgba(0, 0, 0, 0.3);
@@ -137,6 +137,8 @@ body.light-theme .mobile-menu-header h3 {
   padding: 20px;
   flex: 1;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .mobile-search {
@@ -450,4 +452,98 @@ body.light-theme .mobile-search-popup-close:hover {
   footer {
     padding-left: 15px;
   }
+}
+
+/* ── Mobile About Us Section ──────────────────────────────────── */
+.mobile-about-section {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.85rem;
+}
+
+body.light-theme .mobile-about-section {
+  border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+.mobile-about-section h4 {
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+  color: var(--accent);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+body.light-theme .mobile-about-section h4 {
+  color: var(--accent-600, #7326d6);
+}
+
+.mobile-about-section p {
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 15px;
+  font-size: 0.8rem;
+}
+
+body.light-theme .mobile-about-section p {
+  color: var(--light-muted);
+}
+
+.mobile-about-details {
+  color: var(--text);
+  line-height: 1.8;
+  font-size: 0.8rem;
+}
+
+body.light-theme .mobile-about-details {
+  color: var(--light-text);
+}
+
+.mobile-about-row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 4px 0;
+}
+
+body.light-theme .mobile-about-row {
+  border-bottom-color: rgba(0, 0, 0, 0.05);
+}
+
+.mobile-about-row span {
+  color: var(--muted);
+}
+
+body.light-theme .mobile-about-row span {
+  color: var(--light-muted);
+}
+
+/* ── Mobile Settings Dropdown ────────────────────────────────── */
+.mobile-settings-dropdown {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  margin-top: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease-out;
+}
+
+body.light-theme .mobile-settings-dropdown {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.mobile-settings-dropdown .settings-body {
+  padding: 15px 12px;
+  max-height: none;
+  overflow-y: visible;
+}
+
+.mobile-settings-dropdown .settings-footer {
+  padding: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body.light-theme .mobile-settings-dropdown .settings-footer {
+  border-top-color: rgba(0, 0, 0, 0.05);
 }

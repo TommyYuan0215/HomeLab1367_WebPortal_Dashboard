@@ -1,12 +1,23 @@
-/* ===== Settings Modal ===== */
-.settings-modal {
+/* ===== Settings variables (globalized for mobile accessibility dropdown) ===== */
+:root {
   --m3-surface: #1e1e24;
   --m3-surface-container: #2b2b31;
   --m3-primary: #d0bcff;
   --m3-on-primary: #381e72;
   --m3-outline: #938f99;
   --m3-text: #e6e1e5;
+}
 
+body.light-theme {
+  --m3-surface: #fdfcff;
+  --m3-surface-container: #f0f0f5;
+  --m3-primary: #6750a4;
+  --m3-on-primary: #ffffff;
+  --m3-outline: #79747e;
+  --m3-text: #1c1b1f;
+}
+
+.settings-modal {
   position: fixed;
   top: 0;
   right: 0;
@@ -16,15 +27,6 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-body.light-theme .settings-modal {
-  --m3-surface: #fdfcff;
-  --m3-surface-container: #f0f0f5;
-  --m3-primary: #6750a4;
-  --m3-on-primary: #ffffff;
-  --m3-outline: #79747e;
-  --m3-text: #1c1b1f;
 }
 
 .settings-modal.active {

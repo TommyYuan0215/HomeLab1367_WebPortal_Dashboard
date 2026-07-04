@@ -190,12 +190,35 @@ class SettingsManager {
     setupModalControls() {
         this.settingsBtn?.addEventListener('click', (e) => {
             e.preventDefault();
+            // Move settings wrapper back to desktop modal content
+            const wrapper = document.querySelector('.settings-wrapper');
+            const target = document.querySelector('.settings-modal-content');
+            if (wrapper && target) {
+                target.appendChild(wrapper);
+            }
             this.openModal();
         });
 
         this.mobileSettingsBtn?.addEventListener('click', (e) => {
             e.preventDefault();
-            this.openModal();
+            // Toggle panel inside mobile menu
+            const container = document.getElementById('mobile-settings-container');
+            const wrapper = document.querySelector('.settings-wrapper');
+            const chevron = this.mobileSettingsBtn.querySelector('.mobile-settings-chevron');
+            if (container && wrapper) {
+                if (container.style.display === 'none' || !container.style.display) {
+                    container.appendChild(wrapper);
+                    container.style.display = 'block';
+                    if (chevron) {
+                        chevron.style.transform = 'rotate(180deg)';
+                    }
+                } else {
+                    container.style.display = 'none';
+                    if (chevron) {
+                        chevron.style.transform = 'rotate(0deg)';
+                    }
+                }
+            }
         });
 
         this.settingsClose?.addEventListener('click', () => this.closeModal());

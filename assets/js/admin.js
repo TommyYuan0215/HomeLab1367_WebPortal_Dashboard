@@ -16,6 +16,7 @@ class AdminManager {
         this.canSaveToServer = false;   // true when api/save-services.php is reachable
         this.serverType    = null;      // 'apache' | 'nginx' | null
         this._dragEl       = null;      // currently dragged card element
+        this._dragSectionEl = null;     // currently dragged section element
         this._preDragData  = null;      // deep copy of data taken at dragstart
 
         this._waitForData();
@@ -199,6 +200,9 @@ class AdminManager {
             const ctrls = document.createElement('span');
             ctrls.className = 'admin-section-controls';
             ctrls.innerHTML = `
+                <div class="admin-section-drag-handle" title="Drag to reorder section">
+                  <i class="bi bi-grip-vertical"></i>
+                </div>
                 <button class="admin-section-btn" data-action="edit-section" data-sid="${sid}" title="Edit Section">
                   <i class="bi bi-pencil-fill"></i>
                 </button>
@@ -206,6 +210,60 @@ class AdminManager {
                   <i class="bi bi-trash3-fill"></i>
                 </button>`;
             titleEl.appendChild(ctrls);
+
+            const handle = ctrls.querySelector('.admin-section-drag-handle');
+            handle.addEventListener('mousedown', () => {
+                row.setAttribute('draggable', 'true');
+            });
+            handle.addEventListener('mouseup', () => {
+                row.setAttribute('draggable', 'false');
+            });
+
+            // dragstart
+            row.addEventListener('dragstart', (e) => {
+                if (e.target !== row) {
+                    return;
+                }
+                this._dragSectionEl = row;
+                this._preDragData = JSON.parse(JSON.stringify(this._getData()));
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', 'drag-section');
+                requestAnimationFrame(() => row.classList.add('dragging-section'));
+            });
+
+            // dragover: vertical reordering
+            row.addEventListener('dragover', (e) => {
+                if (!this._dragSectionEl || this._dragSectionEl === row) return;
+                e.preventDefault();
+                e.stopPropagation();
+
+                const rect = row.getBoundingClientRect();
+                const container = row.parentElement;
+
+                if (e.clientY < rect.top + rect.height / 2) {
+                    if (row.previousElementSibling !== this._dragSectionEl) {
+                        container.insertBefore(this._dragSectionEl, row);
+                    }
+                } else {
+                    const after = row.nextElementSibling;
+                    if (after && after.id === 'admin-add-section-row') {
+                        container.insertBefore(this._dragSectionEl, after);
+                    } else if (after !== this._dragSectionEl) {
+                        container.insertBefore(this._dragSectionEl, after);
+                    }
+                }
+            });
+
+            // dragend
+            row.addEventListener('dragend', () => {
+                row.setAttribute('draggable', 'false');
+                row.classList.remove('dragging-section');
+                if (this._dragSectionEl) {
+                    this._saveSectionDomOrder();
+                    this._dragSectionEl = null;
+                    this._preDragData = null;
+                }
+            });
         });
     }
 
@@ -484,6 +542,10 @@ class AdminManager {
         });
         const toggleRow = document.querySelector('.admin-toggle-row');
         if (toggleRow) toggleRow.style.display = isSectionMode ? 'none' : '';
+
+        // Hide "Basic Info" header in section mode
+        const itemOnlyHeader = document.querySelector('.admin-field-item-only');
+        if (itemOnlyHeader) itemOnlyHeader.style.display = isSectionMode ? 'none' : '';
 
         // First divider between common/appearance sections
         const dividers = document.querySelectorAll('.admin-drawer-divider');
@@ -819,6 +881,35 @@ class AdminManager {
         this._persistData(data);
         this._refreshDashboard();
         this._showToast('Order saved!', 'success');
+    }
+
+    _saveSectionDomOrder() {
+        const snapshot = this._preDragData;
+        if (!snapshot) return;
+
+        const data = JSON.parse(JSON.stringify(snapshot));
+        const newSections = [];
+
+        document.querySelectorAll('#sections-container .tv-row').forEach(row => {
+            const sid = row.dataset.sectionId;
+            if (!sid) return;
+            const sec = data.sections.find(s => s.id === sid);
+            if (sec) {
+                newSections.push(sec);
+            }
+        });
+
+        // Keep any sections that might not be rendered in the DOM currently
+        data.sections.forEach(sec => {
+            if (!newSections.some(s => s.id === sec.id)) {
+                newSections.push(sec);
+            }
+        });
+
+        data.sections = newSections;
+        this._persistData(data);
+        this._refreshDashboard();
+        this._showToast('Section order saved!', 'success');
     }
 
     _deleteItem(sectionId, itemIndex) {

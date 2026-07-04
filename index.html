@@ -33,42 +33,7 @@
     </defs>
   </svg>
 
-  <!-- ===== Splash Screen ===== -->
-  <div id="splash-screen" class="splash-screen" aria-hidden="true">
-    <!-- Animated dot-grid background -->
-    <div class="splash-grid"></div>
-    <!-- Horizontal scan line sweep -->
-    <div class="splash-scanline"></div>
-    <!-- HUD corner brackets -->
-    <div class="splash-corner splash-corner--tl"></div>
-    <div class="splash-corner splash-corner--tr"></div>
-    <div class="splash-corner splash-corner--bl"></div>
-    <div class="splash-corner splash-corner--br"></div>
-    <!-- Decorative data-stream lines -->
-    <div class="splash-hline splash-hline--top"></div>
-    <div class="splash-hline splash-hline--bot"></div>
-    <!-- Main content -->
-    <div class="splash-content">
-      <div class="splash-logo-wrap">
-        <img src="assets/img/brand.png" alt="IdealHub Logo" class="splash-logo" id="splash-logo" />
-        <div class="splash-logo-glow"></div>
-        <div class="splash-orbit-ring"></div>
-        <div class="splash-orbit-ring splash-orbit-ring--2"></div>
-      </div>
-      <div class="splash-brand" id="splash-brand">
-        <span class="splash-brand-text" id="splash-brand-text"></span><span class="splash-cursor">_</span>
-      </div>
-      <p class="splash-subtitle" id="splash-subtitle"></p>
-      <div class="splash-status" id="splash-status">INITIALIZING SYSTEMS</div>
-      <div class="splash-loader" id="splash-loader">
-        <div class="splash-loader-track">
-          <div class="splash-loader-bar" id="splash-bar"></div>
-          <div class="splash-loader-sweep"></div>
-        </div>
-        <div class="splash-loader-pct" id="splash-pct">0%</div>
-      </div>
-    </div>
-  </div>
+  <!-- Splash screen container (dynamically injected) -->
 
 
   <div id="particles-js"></div>
@@ -112,58 +77,6 @@
     </div>
   </nav>
 
-  <!-- Mobile Hamburger Menu -->
-  <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
-    <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
-    <div class="mobile-menu-content">
-      <div class="mobile-menu-header">
-        <h3>Menu</h3>
-        <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Close menu">
-          <i class="bi bi-x-lg"></i>
-        </button>
-      </div>
-
-      <div class="mobile-menu-body">
-        <!-- Links -->
-        <div class="mobile-menu-links">
-          <a href="http://web.homelab1367.internal/author" target="_blank" rel="noopener" class="mobile-menu-link nav-author-link">
-            <i class="bi bi-person-badge-fill"></i>
-            <span>Author Profile</span>
-          </a>
-          <a href="#" id="mobile-admin-btn" class="mobile-menu-link" aria-label="Open admin panel">
-            <i class="bi bi-gear-fill"></i>
-            <span>Admin Panel</span>
-          </a>
-          <a href="https://github.com/TommyYuan0215/HomeLab1367_WebPortal_Dashboard" target="_blank" rel="noopener"
-            class="mobile-menu-link">
-            <i class="bi bi-github"></i>
-            <span>GitHub Repository</span>
-          </a>
-          <a href="#" id="mobile-settings-btn" class="mobile-menu-link">
-            <i class="bi bi-gear-fill"></i>
-            <span>Settings</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mobile Search Popup -->
-  <div id="mobile-search-popup" class="mobile-search-popup" aria-hidden="true">
-    <div class="mobile-search-popup-overlay" id="mobile-search-popup-overlay"></div>
-    <div class="mobile-search-popup-content">
-      <div class="mobile-search-popup-header">
-        <div class="mobile-search-popup-input">
-          <i class="bi bi-search"></i>
-          <input type="text" id="mobile-popup-search-input" placeholder="Search apps" aria-label="Search content" />
-        </div>
-        <button class="mobile-search-popup-close" id="mobile-search-popup-close" aria-label="Close search">
-          <i class="bi bi-x-lg"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- Main Interface -->
   <main class="main-container-tv">
     <div class="feature-banner">
@@ -200,511 +113,55 @@
       </div>
     </footer>
   </main>
-  <!-- Settings Modal -->
-  <div id="settings-modal" class="settings-modal" aria-hidden="true">
-    <div class="settings-modal-overlay" id="settings-overlay"></div>
-    <div class="settings-modal-content">
-      <div class="settings-header">
-        <h2><i class="bi bi-universal-access"></i> Accessibility</h2>
-        <button class="settings-close" id="settings-close" aria-label="Close settings">
-          <i class="bi bi-x-lg"></i>
-        </button>
-      </div>
-
-      <div class="settings-body">
-        <!-- ── Appearance ── -->
-        <div class="setting-group-title">
-          <i class="bi bi-palette-fill"></i> Appearance
-        </div>
-
-        <div class="setting-item">
-          <div class="setting-label">
-            <span>Theme</span>
-            <span class="setting-desc" id="theme-desc">Dark Mode</span>
-          </div>
-          <div class="setting-controls">
-            <label class="toggle-switch">
-              <input type="checkbox" id="theme-toggle-setting" />
-              <span class="toggle-slider"></span>
-            </label>
-            <button class="btn-reset-individual" data-reset="theme" aria-label="Reset theme">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="setting-item block">
-          <div class="setting-label-row">
-            <div class="setting-label">
-              <span>Theme Color</span>
-              <span class="setting-desc" id="theme-color-desc">Purple (Default)</span>
-            </div>
-            <button class="btn-reset-individual" data-reset="theme-color" aria-label="Reset theme color">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-          </div>
-          <div class="btn-group-option theme-color-selector" id="theme-color-group">
-            <button class="opt-btn color-dot purple" data-value="purple" aria-label="Purple theme color"></button>
-            <button class="opt-btn color-dot pink" data-value="pink" aria-label="Pink theme color"></button>
-            <button class="opt-btn color-dot blue" data-value="blue" aria-label="Blue theme color"></button>
-            <button class="opt-btn color-dot green" data-value="green" aria-label="Green theme color"></button>
-          </div>
-        </div>
-
-        <div class="setting-item block">
-          <div class="setting-label-row">
-            <div class="setting-label">
-              <span>Text Size</span>
-              <span class="setting-desc" id="font-size-value">100%</span>
-            </div>
-            <button class="btn-reset-individual" data-reset="font-size" aria-label="Reset text size">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-          </div>
-          <input type="range" id="font-size-range" min="75" max="150" value="100" step="5" />
-        </div>
-
-        <div class="setting-item">
-          <div class="setting-label">
-            <span>High Contrast</span>
-            <span class="setting-desc">Boost color separation</span>
-          </div>
-          <div class="setting-controls">
-            <label class="toggle-switch">
-              <input type="checkbox" id="high-contrast-toggle" />
-              <span class="toggle-slider"></span>
-            </label>
-            <button class="btn-reset-individual" data-reset="high-contrast" aria-label="Reset high contrast">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Card Density -->
-        <div class="setting-item block">
-          <div class="setting-label-row">
-            <div class="setting-label">
-              <span>Card Density</span>
-              <span class="setting-desc" id="card-density-desc">Comfortable</span>
-            </div>
-            <button class="btn-reset-individual" data-reset="card-density" aria-label="Reset card density">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-          </div>
-          <div class="range-labels">
-            <span>Compact</span><span>Comfortable</span><span>Cozy</span>
-          </div>
-          <input type="range" id="card-density-range" min="0" max="2" value="1" step="1" />
-        </div>
-
-        <!-- Screen Zoom -->
-        <div class="setting-item block">
-          <div class="setting-label-row">
-            <div class="setting-label">
-              <span>Screen Zoom</span>
-              <span class="setting-desc" id="zoom-level-value">100%</span>
-            </div>
-            <button class="btn-reset-individual" data-reset="zoom-level" aria-label="Reset screen zoom">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-          </div>
-          <input type="range" id="zoom-level-range" min="80" max="130" value="100" step="5" />
-        </div>
-
-        <!-- ── Vision ── -->
-        <div class="setting-group-title">
-          <i class="bi bi-eye-fill"></i> Vision
-        </div>
-
-        <!-- Color Filter -->
-        <div class="setting-item block">
-          <div class="setting-label-row">
-            <div class="setting-label">
-              <span>Color Filter</span>
-              <span class="setting-desc" id="color-filter-desc">Off</span>
-            </div>
-            <button class="btn-reset-individual" data-reset="color-filter" aria-label="Reset color filter">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-          </div>
-          <div class="range-labels">
-            <span>Off</span><span>Deutan</span><span>Protan</span><span>Tritan</span><span>Grey</span>
-          </div>
-          <input type="range" id="color-filter-range" min="0" max="4" value="0" step="1" />
-        </div>
-
-        <!-- Text Shadow -->
-        <div class="setting-item">
-          <div class="setting-label">
-            <span>Text Shadow</span>
-            <span class="setting-desc">Improve text legibility on images</span>
-          </div>
-          <div class="setting-controls">
-            <label class="toggle-switch">
-              <input type="checkbox" id="text-shadow-toggle" />
-              <span class="toggle-slider"></span>
-            </label>
-            <button class="btn-reset-individual" data-reset="text-shadow" aria-label="Reset text shadow">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- ── Interaction ── -->
-        <div class="setting-group-title">
-          <i class="bi bi-hand-index-fill"></i> Interaction
-        </div>
-
-        <div class="setting-item">
-          <div class="setting-label">
-            <span>Dyslexia Friendly</span>
-            <span class="setting-desc">OpenDyslexic font for readability</span>
-          </div>
-          <div class="setting-controls">
-            <label class="toggle-switch">
-              <input type="checkbox" id="dyslexic-font-toggle" />
-              <span class="toggle-slider"></span>
-            </label>
-            <button class="btn-reset-individual" data-reset="dyslexic-font" aria-label="Reset dyslexic font">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="setting-item">
-          <div class="setting-label">
-            <span>Highlight Links</span>
-            <span class="setting-desc">Underline all clickable links</span>
-          </div>
-          <div class="setting-controls">
-            <label class="toggle-switch">
-              <input type="checkbox" id="highlight-links-toggle" />
-              <span class="toggle-slider"></span>
-            </label>
-            <button class="btn-reset-individual" data-reset="highlight-links" aria-label="Reset highlight links">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Focus Highlight -->
-        <div class="setting-item">
-          <div class="setting-label">
-            <span>Focus Highlight</span>
-            <span class="setting-desc">Bold ring on focused elements</span>
-          </div>
-          <div class="setting-controls">
-            <label class="toggle-switch">
-              <input type="checkbox" id="focus-highlight-toggle" />
-              <span class="toggle-slider"></span>
-            </label>
-            <button class="btn-reset-individual" data-reset="focus-highlight" aria-label="Reset focus highlight">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Sticky Hover -->
-        <div class="setting-item">
-          <div class="setting-label">
-            <span>Sticky Hover</span>
-            <span class="setting-desc">Keep card focused after hover</span>
-          </div>
-          <div class="setting-controls">
-            <label class="toggle-switch">
-              <input type="checkbox" id="sticky-hover-toggle" />
-              <span class="toggle-slider"></span>
-            </label>
-            <button class="btn-reset-individual" data-reset="sticky-hover" aria-label="Reset sticky hover">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Navigation Sound -->
-        <div class="setting-item">
-          <div class="setting-label">
-            <span>Navigation Sound</span>
-            <span class="setting-desc">Soft click on card interaction</span>
-          </div>
-          <div class="setting-controls">
-            <label class="toggle-switch">
-              <input type="checkbox" id="nav-sound-toggle" />
-              <span class="toggle-slider"></span>
-            </label>
-            <button class="btn-reset-individual" data-reset="nav-sound" aria-label="Reset navigation sound">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="setting-item">
-          <div class="setting-label">
-            <span>Reduce Motion</span>
-            <span class="setting-desc">Disable all UI animations</span>
-          </div>
-          <div class="setting-controls">
-            <label class="toggle-switch">
-              <input type="checkbox" id="reduced-motion-toggle" />
-              <span class="toggle-slider"></span>
-            </label>
-            <button class="btn-reset-individual" data-reset="reduced-motion" aria-label="Reset reduce motion">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- ── Content ── -->
-        <div class="setting-group-title">
-          <i class="bi bi-layout-text-window-reverse"></i> Content
-        </div>
-
-        <div class="setting-item">
-          <div class="setting-label">
-            <span>Show News Feed</span>
-            <span class="setting-desc">Display the news section</span>
-          </div>
-          <div class="setting-controls">
-            <label class="toggle-switch">
-              <input type="checkbox" id="show-news-toggle" checked />
-              <span class="toggle-slider"></span>
-            </label>
-            <button class="btn-reset-individual" data-reset="show-news" aria-label="Reset show news">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Splash Screen Mode -->
-        <div class="setting-item">
-          <div class="setting-label">
-            <span>Splash Screen</span>
-            <span class="setting-desc" id="splash-mode-desc">Always show on startup</span>
-          </div>
-          <div class="setting-controls">
-            <label class="toggle-switch">
-              <input type="checkbox" id="splash-mode-toggle" checked />
-              <span class="toggle-slider"></span>
-            </label>
-            <button class="btn-reset-individual" data-reset="splash-mode" aria-label="Reset splash mode">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="settings-footer">
-        <button class="btn-reset-all" id="reset-all-settings">
-          <i class="bi bi-arrow-counterclockwise"></i> Reset All Settings
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== Admin Login Modal ===== -->
-  <div id="admin-login-modal" aria-hidden="true">
-    <div id="admin-login-overlay"></div>
-    <div class="admin-login-content">
-      <div class="admin-login-header">
-        <h3><i class="bi bi-shield-lock-fill"></i> Admin Access</h3>
-        <button class="admin-login-close" id="admin-login-close" aria-label="Close admin login">
-          <i class="bi bi-x-lg"></i>
-        </button>
-      </div>
-      <div class="admin-login-body">
-        <div>
-          <label for="admin-password-input">Password</label>
-          <input type="password" id="admin-password-input" class="admin-login-input" placeholder="Enter admin password"
-            autocomplete="current-password" />
-        </div>
-        <p class="admin-login-error" id="admin-login-error">
-          <i class="bi bi-exclamation-circle-fill"></i> Incorrect password. Please try again.
-        </p>
-        <button class="admin-login-submit" id="admin-login-submit">
-          <i class="bi bi-unlock-fill"></i> Sign In
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== Admin Service Edit / Add Drawer ===== -->
-  <div id="admin-drawer-overlay" aria-hidden="true"></div>
-  <div id="admin-drawer" aria-hidden="true" role="dialog" aria-label="Edit or Add Service">
-    <div class="admin-drawer-header">
-      <h3><i class="bi bi-pencil-square"></i> <span id="admin-drawer-title">Add Service</span></h3>
-      <button class="admin-drawer-close" id="admin-drawer-close" aria-label="Close drawer">
-        <i class="bi bi-x-lg"></i>
-      </button>
-    </div>
-
-    <div class="admin-drawer-body">
-      <!-- ── Common fields ── -->
-      <div class="admin-drawer-section-title"><i class="bi bi-info-circle"></i> Basic Info</div>
-
-      <div class="admin-field-group">
-        <label class="admin-field-label" for="admin-field-title">
-          Title <span class="required">*</span>
-        </label>
-        <input type="text" id="admin-field-title" class="admin-input-full" placeholder="e.g. Media Server" />
-      </div>
-
-      <div class="admin-field-group">
-        <label class="admin-field-label" for="admin-field-url">URL (Hostname)</label>
-        <input type="url" id="admin-field-url" class="admin-input-full"
-          placeholder="https://service.homelab1367.internal" />
-      </div>
-
-      <div class="admin-field-group">
-        <label class="admin-field-label" for="admin-field-alturl">Alt URL (IP Fallback)</label>
-        <input type="url" id="admin-field-alturl" class="admin-input-full" placeholder="http://192.168.0.xxx" />
-        <span class="admin-field-hint">Used when dashboard is accessed via a raw IP address</span>
-      </div>
-
-      <div class="admin-drawer-divider"></div>
-
-      <!-- ── Favorite-type fields ── -->
-      <div class="admin-field-favorite">
-        <div class="admin-drawer-section-title"><i class="bi bi-stars"></i> Appearance</div>
-
-        <div class="admin-field-group">
-          <label class="admin-field-label" for="admin-field-icon">Bootstrap Icon Class</label>
-          <div class="admin-icon-row">
-            <input type="text" id="admin-field-icon" class="admin-input-full" placeholder="bi-tv-fill" />
-            <div class="admin-icon-preview-wrap">
-              <i id="admin-icon-preview" class="bi bi-app" style="color:#8a39ff"></i>
-            </div>
-          </div>
-          <span class="admin-field-hint">Browse at <strong>icons.getbootstrap.com</strong></span>
-        </div>
-
-        <div class="admin-field-group">
-          <label class="admin-field-label">Icon Color</label>
-          <div class="admin-color-row">
-            <input type="text" id="admin-field-color-text" class="admin-input-full" placeholder="#8a39ff"
-              value="#8a39ff" />
-            <input type="color" id="admin-field-color" class="admin-color-picker" value="#8a39ff" />
-            <div id="admin-color-swatch" class="admin-color-swatch" style="background:#8a39ff"></div>
-          </div>
-        </div>
-
-        <div class="admin-field-group">
-          <label class="admin-field-label" for="admin-field-description">Description / App Name</label>
-          <input type="text" id="admin-field-description" class="admin-input-full" placeholder="e.g. Jellyfin" />
-        </div>
-      </div>
-
-      <!-- ── Content-type fields ── -->
-      <div class="admin-field-content" style="display:none">
-        <div class="admin-drawer-section-title"><i class="bi bi-card-image"></i> Content Details</div>
-
-        <div class="admin-field-group">
-          <label class="admin-field-label" for="admin-field-image">Thumbnail Image URL</label>
-          <input type="url" id="admin-field-image" class="admin-input-full"
-            placeholder="http://web.homelab1367.internal/assets/img/..." />
-        </div>
-
-        <div class="admin-field-group">
-          <label class="admin-field-label" for="admin-field-subtitle">Subtitle</label>
-          <input type="text" id="admin-field-subtitle" class="admin-input-full"
-            placeholder="Short project description" />
-        </div>
-
-        <div class="admin-field-group">
-          <label class="admin-field-label" for="admin-field-course">Course</label>
-          <input type="text" id="admin-field-course" class="admin-input-full"
-            placeholder="e.g. CPC354 - Computer Graphics" />
-        </div>
-
-        <div class="admin-field-group">
-          <label class="admin-field-label" for="admin-field-author">Author</label>
-          <input type="text" id="admin-field-author" class="admin-input-full" placeholder="Full name" />
-        </div>
-
-        <div class="admin-field-group">
-          <label class="admin-field-label" for="admin-field-authorurl">Author URL</label>
-          <input type="url" id="admin-field-authorurl" class="admin-input-full" placeholder="http://..." />
-        </div>
-      </div>
-
-      <div class="admin-drawer-divider"></div>
-
-      <!-- ── Active status ── -->
-      <div class="admin-toggle-row">
-        <span class="admin-toggle-label">
-          <i class="bi bi-toggle-on"></i> Active (visible on dashboard)
-        </span>
-        <label class="admin-switch">
-          <input type="checkbox" id="admin-field-active" checked />
-          <span class="admin-switch-slider"></span>
-        </label>
-      </div>
-
-      <!-- ── Section mode fields (hidden for item mode) ── -->
-      <div class="admin-field-section" style="display:none">
-        <div class="admin-drawer-section-title"><i class="bi bi-layout-text-sidebar-reverse"></i> Section Settings</div>
-
-        <div class="admin-field-group">
-          <label class="admin-field-label" for="admin-section-title">
-            Section Title <span class="required">*</span>
-          </label>
-          <input type="text" id="admin-section-title" class="admin-input-full"
-            placeholder="e.g. Home &amp; Media Services" />
-        </div>
-
-        <div class="admin-field-group">
-          <label class="admin-field-label">Section Icon</label>
-          <div class="admin-icon-row">
-            <input type="text" id="admin-section-icon" class="admin-input-full" placeholder="bi-house-heart-fill" />
-            <div class="admin-icon-preview-wrap">
-              <i id="admin-section-icon-preview" class="bi bi-grid"></i>
-            </div>
-          </div>
-          <span class="admin-field-hint">Browse at <strong>icons.getbootstrap.com</strong></span>
-        </div>
-
-        <div class="admin-field-group">
-          <label class="admin-field-label">Section Type</label>
-          <div class="admin-type-selector">
-            <label class="admin-type-option">
-              <input type="radio" name="admin-section-type" value="favorite" checked />
-              <span><i class="bi bi-grid-3x3-gap-fill"></i> Favorite Apps</span>
-            </label>
-            <label class="admin-type-option">
-              <input type="radio" name="admin-section-type" value="content" />
-              <span><i class="bi bi-card-image"></i> Project Cards</span>
-            </label>
-            <label class="admin-type-option">
-              <input type="radio" name="admin-section-type" value="news" />
-              <span><i class="bi bi-newspaper"></i> News Feed</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="admin-field-group admin-news-url-field" style="display:none">
-          <label class="admin-field-label" for="admin-section-rssurl">RSS Feed URL</label>
-          <input type="url" id="admin-section-rssurl" class="admin-input-full"
-            placeholder="https://news.google.com/rss/..." />
-          <span class="admin-field-hint">Only required for News Feed sections</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="admin-drawer-footer">
-      <button class="admin-drawer-btn cancel" id="admin-drawer-cancel">Cancel</button>
-      <button class="admin-drawer-btn save" id="admin-drawer-save">
-        <i class="bi bi-check-lg"></i> Save
-      </button>
-
-    </div>
-  </div>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
-  <script src="assets/js/script.js"></script>
-  <script src="assets/js/settings.js"></script>
-  <script src="assets/js/hamburger.js"></script>
-  <script src="assets/js/splash.js"></script>
-  <script src="assets/js/admin.js"></script>
+  <script>
+    (async function() {
+        const components = [
+            'assets/html/splash.html',
+            'assets/html/hamburger.html',
+            'assets/html/search-popup.html',
+            'assets/html/settings.html',
+            'assets/html/admin-login.html',
+            'assets/html/admin-drawer.html'
+        ];
+
+        // Fetch and append components in parallel
+        await Promise.all(components.map(async (path) => {
+            try {
+                const res = await fetch(path);
+                if (res.ok) {
+                    const html = await res.text();
+                    const temp = document.createElement('div');
+                    temp.innerHTML = html;
+                    while (temp.firstChild) {
+                        document.body.appendChild(temp.firstChild);
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to load component:', path, e);
+            }
+        }));
+
+        // Load the scripts sequentially so they execute in the correct order
+        const scripts = [
+            'assets/js/script.js',
+            'assets/js/settings.js',
+            'assets/js/hamburger.js',
+            'assets/js/splash.js',
+            'assets/js/admin.js'
+        ];
+
+        for (const src of scripts) {
+            await new Promise((resolve) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                document.body.appendChild(script);
+            });
+        }
+    })();
+  </script>
 </body>
 
 </html>

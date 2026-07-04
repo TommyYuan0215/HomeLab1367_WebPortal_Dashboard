@@ -1,0 +1,25 @@
+<!-- ===== Admin Login Modal ===== -->
+<div id="admin-login-modal" aria-hidden="true">
+  <div id="admin-login-overlay"></div>
+  <div class="admin-login-content">
+    <div class="admin-login-header">
+      <h3><i class="bi bi-shield-lock-fill"></i> Admin Access</h3>
+      <button class="admin-login-close" id="admin-login-close" aria-label="Close admin login">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div class="admin-login-body">
+      <div>
+        <label for="admin-password-input">Password</label>
+        <input type="password" id="admin-password-input" class="admin-login-input" placeholder="Enter admin password"
+          autocomplete="current-password" />
+      </div>
+      <p class="admin-login-error" id="admin-login-error">
+        <i class="bi bi-exclamation-circle-fill"></i> Incorrect password. Please try again.
+      </p>
+      <button class="admin-login-submit" id="admin-login-submit">
+        <i class="bi bi-unlock-fill"></i> Sign In
+      </button>
+    </div>
+  </div>
+</div>

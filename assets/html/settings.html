@@ -1,0 +1,330 @@
+<!-- Settings Modal -->
+<div id="settings-modal" class="settings-modal" aria-hidden="true">
+  <div class="settings-modal-overlay" id="settings-overlay"></div>
+  <div class="settings-modal-content">
+    <div class="settings-header">
+      <h2><i class="bi bi-gear-fill"></i> System Settings</h2>
+      <button class="settings-close" id="settings-close" aria-label="Close settings">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="settings-wrapper">
+      <div class="settings-body">
+      <!-- ── Appearance ── -->
+      <div class="setting-group-title">
+        <i class="bi bi-palette-fill"></i> Appearance
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Theme</span>
+          <span class="setting-desc" id="theme-desc">Dark Mode</span>
+        </div>
+        <div class="setting-controls">
+          <label class="toggle-switch">
+            <input type="checkbox" id="theme-toggle-setting" />
+            <span class="toggle-slider"></span>
+          </label>
+          <button class="btn-reset-individual" data-reset="theme" aria-label="Reset theme">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="setting-item block">
+        <div class="setting-label-row">
+          <div class="setting-label">
+            <span>Theme Color</span>
+            <span class="setting-desc" id="theme-color-desc">Purple (Default)</span>
+          </div>
+          <button class="btn-reset-individual" data-reset="theme-color" aria-label="Reset theme color">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+        <div class="btn-group-option theme-color-selector" id="theme-color-group">
+          <button class="opt-btn color-dot purple" data-value="purple" aria-label="Purple theme color"></button>
+          <button class="opt-btn color-dot pink" data-value="pink" aria-label="Pink theme color"></button>
+          <button class="opt-btn color-dot blue" data-value="blue" aria-label="Blue theme color"></button>
+          <button class="opt-btn color-dot green" data-value="green" aria-label="Green theme color"></button>
+        </div>
+      </div>
+
+      <div class="setting-item block">
+        <div class="setting-label-row">
+          <div class="setting-label">
+            <span>Text Size</span>
+            <span class="setting-desc" id="font-size-value">100%</span>
+          </div>
+          <button class="btn-reset-individual" data-reset="font-size" aria-label="Reset text size">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+        <input type="range" id="font-size-range" min="75" max="150" value="100" step="5" />
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>High Contrast</span>
+          <span class="setting-desc">Boost color separation</span>
+        </div>
+        <div class="setting-controls">
+          <label class="toggle-switch">
+            <input type="checkbox" id="high-contrast-toggle" />
+            <span class="toggle-slider"></span>
+          </label>
+          <button class="btn-reset-individual" data-reset="high-contrast" aria-label="Reset high contrast">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Card Density -->
+      <div class="setting-item block">
+        <div class="setting-label-row">
+          <div class="setting-label">
+            <span>Card Density</span>
+            <span class="setting-desc" id="card-density-desc">Comfortable</span>
+          </div>
+          <button class="btn-reset-individual" data-reset="card-density" aria-label="Reset card density">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+        <div class="range-labels">
+          <span>Compact</span><span>Comfortable</span><span>Cozy</span>
+        </div>
+        <input type="range" id="card-density-range" min="0" max="2" value="1" step="1" />
+      </div>
+
+      <!-- Screen Zoom -->
+      <div class="setting-item block">
+        <div class="setting-label-row">
+          <div class="setting-label">
+            <span>Screen Zoom</span>
+            <span class="setting-desc" id="zoom-level-value">100%</span>
+          </div>
+          <button class="btn-reset-individual" data-reset="zoom-level" aria-label="Reset screen zoom">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+        <input type="range" id="zoom-level-range" min="80" max="130" value="100" step="5" />
+      </div>
+
+      <!-- ── Vision ── -->
+      <div class="setting-group-title">
+        <i class="bi bi-eye-fill"></i> Vision
+      </div>
+
+      <!-- Color Filter -->
+      <div class="setting-item block">
+        <div class="setting-label-row">
+          <div class="setting-label">
+            <span>Color Filter</span>
+            <span class="setting-desc" id="color-filter-desc">Off</span>
+          </div>
+          <button class="btn-reset-individual" data-reset="color-filter" aria-label="Reset color filter">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+        <div class="range-labels">
+          <span>Off</span><span>Deutan</span><span>Protan</span><span>Tritan</span><span>Grey</span>
+        </div>
+        <input type="range" id="color-filter-range" min="0" max="4" value="0" step="1" />
+      </div>
+
+      <!-- Text Shadow -->
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Text Shadow</span>
+          <span class="setting-desc">Improve text legibility on images</span>
+        </div>
+        <div class="setting-controls">
+          <label class="toggle-switch">
+            <input type="checkbox" id="text-shadow-toggle" />
+            <span class="toggle-slider"></span>
+          </label>
+          <button class="btn-reset-individual" data-reset="text-shadow" aria-label="Reset text shadow">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Interaction ── -->
+      <div class="setting-group-title">
+        <i class="bi bi-hand-index-fill"></i> Interaction
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Dyslexia Friendly</span>
+          <span class="setting-desc">OpenDyslexic font for readability</span>
+        </div>
+        <div class="setting-controls">
+          <label class="toggle-switch">
+            <input type="checkbox" id="dyslexic-font-toggle" />
+            <span class="toggle-slider"></span>
+          </label>
+          <button class="btn-reset-individual" data-reset="dyslexic-font" aria-label="Reset dyslexic font">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Highlight Links</span>
+          <span class="setting-desc">Underline all clickable links</span>
+        </div>
+        <div class="setting-controls">
+          <label class="toggle-switch">
+            <input type="checkbox" id="highlight-links-toggle" />
+            <span class="toggle-slider"></span>
+          </label>
+          <button class="btn-reset-individual" data-reset="highlight-links" aria-label="Reset highlight links">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Focus Highlight -->
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Focus Highlight</span>
+          <span class="setting-desc">Bold ring on focused elements</span>
+        </div>
+        <div class="setting-controls">
+          <label class="toggle-switch">
+            <input type="checkbox" id="focus-highlight-toggle" />
+            <span class="toggle-slider"></span>
+          </label>
+          <button class="btn-reset-individual" data-reset="focus-highlight" aria-label="Reset focus highlight">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Sticky Hover -->
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Sticky Hover</span>
+          <span class="setting-desc">Keep card focused after hover</span>
+        </div>
+        <div class="setting-controls">
+          <label class="toggle-switch">
+            <input type="checkbox" id="sticky-hover-toggle" />
+            <span class="toggle-slider"></span>
+          </label>
+          <button class="btn-reset-individual" data-reset="sticky-hover" aria-label="Reset sticky hover">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navigation Sound -->
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Navigation Sound</span>
+          <span class="setting-desc">Soft click on card interaction</span>
+        </div>
+        <div class="setting-controls">
+          <label class="toggle-switch">
+            <input type="checkbox" id="nav-sound-toggle" />
+            <span class="toggle-slider"></span>
+          </label>
+          <button class="btn-reset-individual" data-reset="nav-sound" aria-label="Reset navigation sound">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Reduce Motion</span>
+          <span class="setting-desc">Disable all UI animations</span>
+        </div>
+        <div class="setting-controls">
+          <label class="toggle-switch">
+            <input type="checkbox" id="reduced-motion-toggle" />
+            <span class="toggle-slider"></span>
+          </label>
+          <button class="btn-reset-individual" data-reset="reduced-motion" aria-label="Reset reduce motion">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Content ── -->
+      <div class="setting-group-title">
+        <i class="bi bi-layout-text-window-reverse"></i> Content
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Show News Feed</span>
+          <span class="setting-desc">Display the news section</span>
+        </div>
+        <div class="setting-controls">
+          <label class="toggle-switch">
+            <input type="checkbox" id="show-news-toggle" checked />
+            <span class="toggle-slider"></span>
+          </label>
+          <button class="btn-reset-individual" data-reset="show-news" aria-label="Reset show news">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Splash Screen Mode -->
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Splash Screen</span>
+          <span class="setting-desc" id="splash-mode-desc">Always show on startup</span>
+        </div>
+        <div class="setting-controls">
+          <label class="toggle-switch">
+            <input type="checkbox" id="splash-mode-toggle" checked />
+            <span class="toggle-slider"></span>
+          </label>
+          <button class="btn-reset-individual" data-reset="splash-mode" aria-label="Reset splash mode">
+            <i class="bi bi-arrow-counterclockwise"></i>
+        </div>
+      </div>
+
+      <!-- About Us Section -->
+      <div class="setting-group-title" style="margin-top: 25px;">
+        <i class="bi bi-info-circle-fill"></i> About Us
+      </div>
+      <div class="setting-item block" style="border-bottom: none; margin-bottom: 0;">
+        <div class="setting-label-row">
+          <div class="setting-label">
+            <span style="font-size: 0.95rem; font-weight: 500;">IdealHub Web Portal</span>
+            <span class="setting-desc" style="line-height: 1.5; margin-top: 6px;">
+              A clean, modern home server navigation dashboard. Securely configure apps, categories, and layout slots from the admin panel.
+            </span>
+          </div>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-light, #f1f3f4); margin-top: 12px; line-height: 1.8;">
+          <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span style="color: var(--muted, #9aa0a6);">Web Master</span>
+            <strong>Tan Jun Lin</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span style="color: var(--muted, #9aa0a6);">Version</span>
+            <strong>2.3.11</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+            <span style="color: var(--muted, #9aa0a6);">Stack</span>
+            <span>HTML5 • CSS3 • JS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-footer">
+      <button class="btn-reset-all" id="reset-all-settings">
+        <i class="bi bi-arrow-counterclockwise"></i> Reset All Settings
+      </button>
+    </div>
+    </div>
+  </div>
+</div>

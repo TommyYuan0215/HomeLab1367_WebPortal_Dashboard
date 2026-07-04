@@ -91,15 +91,7 @@
     mobileSearchPopupClose?.addEventListener('click', () => closeSearchPopup());
     mobileSearchPopupOverlay?.addEventListener('click', () => closeSearchPopup());
 
-    // Mobile Settings Button - opens settings modal and closes hamburger menu
-    const mobileSettingsBtn = document.getElementById('mobile-settings-btn');
-    mobileSettingsBtn?.addEventListener('click', (e) => {
-        e.preventDefault();
-        closeMobileMenu();
-        // Trigger the desktop settings button
-        const desktopSettingsBtn = document.getElementById('settings-btn');
-        desktopSettingsBtn?.click();
-    });
+
 
     // Mobile Admin Button - opens admin login/toggle and closes hamburger menu
     const mobileAdminBtn = document.getElementById('mobile-admin-btn');
