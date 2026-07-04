@@ -1,3 +1,5 @@
+const APP_VERSION = '2.3.11';
+
 // 🕑 GLOBAL CLOCK LOGIC (Must be outside the IIFE for setTimeout)
 // =======================================================
 
@@ -175,6 +177,20 @@ async function loadServices() {
         }
         
         if (!response || !response.ok) {
+            // Check if setup is needed
+            try {
+                const setupCheck = await fetch('api/setup.php');
+                if (setupCheck.ok) {
+                    const setupStatus = await setupCheck.json();
+                    if (setupStatus.initialized === false) {
+                        showSetupWizard(setupStatus);
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.log('Setup API not available:', e);
+            }
+
             throw new Error(`Failed to load assets/data/services.json. Make sure you're running a local web server. Status: ${response?.status || 'Network Error'}`);
         }
         
@@ -222,19 +238,16 @@ async function loadServices() {
         // Expose current data globally for admin.js
         window._servicesData = data;
 
-        // Apply author URL from config to navbar and mobile menu links
-        const authorUrl = data.config && data.config.authorUrl ? data.config.authorUrl : null;
-        if (authorUrl) {
-            document.querySelectorAll('a.nav-author-link').forEach(el => {
-                el.href = window.resolveServiceUrl ? window.resolveServiceUrl(authorUrl) : authorUrl;
-            });
-        }
+        // Apply author URL to navbar and mobile menu links (resolved dynamically if LAN/remote rules apply)
+        const authorUrl = 'http://web.homelab1367.internal/author';
+        document.querySelectorAll('a.nav-author-link').forEach(el => {
+            el.href = window.resolveServiceUrl ? window.resolveServiceUrl(authorUrl) : authorUrl;
+        });
 
-        // Apply version from config to footer
-        const version = data.config && data.config.version ? data.config.version : '2.3.7';
+        // Apply version to footer
         const versionEl = document.querySelector('.footer-version small');
         if (versionEl) {
-            versionEl.textContent = `Version ${version}`;
+            versionEl.textContent = `Version ${APP_VERSION}`;
         }
         
         renderSections(data.sections, authorUrl);
@@ -276,6 +289,114 @@ function showErrorMessage(error) {
     `;
     
     container.innerHTML = errorHTML;
+}
+
+function showSetupWizard(setupStatus) {
+    const container = document.getElementById('sections-container');
+    if (!container) return;
+
+    let formOrWarningHTML = '';
+    
+    if (setupStatus.writable === false) {
+        const webUser = setupStatus.server === 'nginx' ? 'nginx' : 'www-data';
+        formOrWarningHTML = `
+            <div style="color: #ef4444; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 20px; border-radius: 8px; font-size: 0.95rem; line-height: 1.6; text-align: left;">
+                <h4 style="margin-bottom: 12px; display: flex; align-items: center; gap: 8px; color: #ef4444;"><i class="bi bi-exclamation-octagon-fill"></i> Directory Permissions Error</h4>
+                <p>The web server does not have permission to write to the <code>assets/data/</code> directory. Please run the following command on your server to allow configuration setup:</p>
+                <code style="display: block; background: rgba(0, 0, 0, 0.3); padding: 12px; border-radius: 6px; margin: 15px 0; border: 1px solid var(--glass); color: var(--accent); font-family: monospace; word-break: break-all;">sudo chown -R ${webUser}:${webUser} assets/data</code>
+                <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 0;">Once permissions are fixed, reload this page to complete the setup.</p>
+            </div>
+        `;
+    } else {
+        formOrWarningHTML = `
+            <div id="setup-error-msg" style="color: #ef4444; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 12px; border-radius: 8px; margin-bottom: 20px; display: none; font-size: 0.9rem;"></div>
+            <form id="setup-wizard-form">
+                <div style="margin-bottom: 20px;">
+                    <label for="setup-password" style="display: block; color: var(--muted); margin-bottom: 8px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Admin Password</label>
+                    <input type="password" id="setup-password" required minlength="4" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass); border-radius: 8px; color: #fff; font-size: 1rem; outline: none; transition: border-color 0.2s;" />
+                </div>
+                <div style="margin-bottom: 25px;">
+                    <label for="setup-confirm" style="display: block; color: var(--muted); margin-bottom: 8px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Confirm Password</label>
+                    <input type="password" id="setup-confirm" required minlength="4" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass); border-radius: 8px; color: #fff; font-size: 1rem; outline: none; transition: border-color 0.2s;" />
+                </div>
+                
+                <button type="submit" id="setup-submit-btn" style="width: 100%; padding: 14px; background: var(--accent); border: none; border-radius: 8px; color: #000; font-weight: 600; font-size: 1rem; cursor: pointer; transition: opacity 0.2s, transform 0.1s;">
+                    <i class="bi bi-rocket-takeoff-fill"></i> Complete Setup & Initialize
+                </button>
+            </form>
+        `;
+    }
+
+    const wizardHTML = `
+        <div class="setup-container" style="max-width: 500px; margin: 40px auto; padding: 30px; background: var(--card-dark); border: 1px solid var(--glass); border-radius: 12px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); backdrop-filter: blur(4px);">
+            <h3 style="color: var(--accent); margin-bottom: 20px; font-weight: 500; display: flex; align-items: center; gap: 10px;">
+                <i class="bi bi-shield-lock-fill"></i> Initialize IdealHub Dashboard
+            </h3>
+            <p style="color: var(--muted); font-size: 0.95rem; margin-bottom: 25px; line-height: 1.6;">
+                Welcome to your new dashboard! To secure the administration panel, please configure your administrator password below.
+            </p>
+            ${formOrWarningHTML}
+        </div>
+    `;
+
+    container.innerHTML = wizardHTML;
+
+    // Attach form handler
+    const form = document.getElementById('setup-wizard-form');
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('setup-password').value;
+            const confirm = document.getElementById('setup-confirm').value;
+            const errorMsg = document.getElementById('setup-error-msg');
+            const submitBtn = document.getElementById('setup-submit-btn');
+
+            if (password !== confirm) {
+                errorMsg.textContent = 'Passwords do not match.';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            errorMsg.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Initializing...';
+
+            try {
+                const resp = await fetch('api/setup.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+
+                const result = await resp.json();
+
+                if (!resp.ok) {
+                    errorMsg.textContent = result.error || 'Setup failed.';
+                    errorMsg.style.display = 'block';
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="bi bi-rocket-takeoff-fill"></i> Complete Setup & Initialize';
+                } else {
+                    container.innerHTML = `
+                        <div class="setup-container" style="max-width: 500px; margin: 40px auto; padding: 40px 30px; background: var(--card-dark); border: 1px solid var(--glass); border-radius: 12px; text-align: center;">
+                            <h3 style="color: #10b981; margin-bottom: 20px;"><i class="bi bi-check-circle-fill" style="font-size: 2.5rem; display: block; margin-bottom: 15px;"></i> Setup Complete!</h3>
+                            <p style="color: var(--muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px;">
+                                Your configuration files have been successfully created and populated. The dashboard is ready to use.
+                            </p>
+                            <p style="color: var(--accent); font-weight: 500;">Reloading the page in 3 seconds...</p>
+                        </div>
+                    `;
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 3000);
+                }
+            } catch (err) {
+                errorMsg.textContent = 'Network error: ' + err.message;
+                errorMsg.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="bi bi-rocket-takeoff-fill"></i> Complete Setup & Initialize';
+            }
+        });
+    }
 }
 
 // --- Helper Functions for News ---
@@ -462,7 +583,7 @@ function createContentCard(item, authorUrl) {
     }
 
     const image = document.createElement('img');
-    image.src = item.image;
+    image.src = item.image || 'https://via.placeholder.com/320x180?text=' + encodeURIComponent(item.title);
     image.alt = item.title;
     image.className = 'card-image';
     
@@ -737,4 +858,4 @@ startTime();
     } else {
         init();
     }
-})();
+})();

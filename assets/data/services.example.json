@@ -1,0 +1,29 @@
+{
+  "sections": [
+    {
+      "id": "example-section",
+      "title": "Example Services Section",
+      "icon": "bi-house-heart-fill",
+      "type": "favorite",
+      "items": [
+        {
+          "title": "Example Service 1",
+          "url": "https://service1.local",
+          "altUrl": "http://192.168.1.10",
+          "icon": "bi-tv-fill",
+          "color": "#AA5CC3",
+          "description": "Short description of the service",
+          "active": true
+        },
+        {
+          "title": "Example Service 2",
+          "url": "https://service2.local",
+          "icon": "bi-image-fill",
+          "color": "#4250AF",
+          "description": "Another service description",
+          "active": false
+        }
+      ]
+    }
+  ]
+}

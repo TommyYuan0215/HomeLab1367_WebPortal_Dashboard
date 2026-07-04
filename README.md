@@ -118,8 +118,10 @@ HomeLab1367_WebPortal_Dashboard/
 │   │   ├── splash.js         # Splash HUD timeline & typing animations
 │   │   └── admin.js          # Admin authorization, editing & layout injects
 │   ├── data/
-│   │   ├── config.json       # General settings (version, author link, password)
-│   │   └── services.json     # Categories & link data objects
+│   │   ├── config.example.json   # Template for config.json (version, author link)
+│   │   ├── services.example.json # Template for services.json (categories & link data)
+│   │   ├── config.json           # General settings (gitignored, auto-created)
+│   │   └── services.json         # Categories & link data (gitignored, auto-created)
 │   └── img/
 │       ├── brand.png         # Logo icon
 │       └── [thumbnails]      # Service screenshots & backdrops
@@ -128,16 +130,34 @@ HomeLab1367_WebPortal_Dashboard/
 
 ---
 
-## ⚙️ Configuration
+## ⚙️ Setup & Configuration
 
-### 1. General Settings (`assets/data/config.json`)
-Edit general metadata, version details, and administrative variables here:
+This project is now equipped with an **Automatic Setup Wizard**. When deploying the dashboard for the first time:
+
+1. **Automatic Initialization**: If `config.json` and `services.json` are absent, the dashboard enters initialization mode and presents a setup wizard requesting a custom administrator password.
+2. **Template Copying**: Upon setting a password, the system copies `config.example.json` to `config.json` (injecting your password) and `services.example.json` to `services.json`.
+3. **Ignored Files**: To protect your private credentials and custom service listings, both `config.json` and `services.json` are excluded from Git tracking via `.gitignore`.
+
+### Directory Permissions Setup
+
+The web server needs write access to the `assets/data/` directory to create these configuration files.
+
+- **Apache (Linux)**:
+  ```bash
+  sudo chown -R www-data:www-data assets/data
+  ```
+- **Nginx (Linux)**:
+  ```bash
+  sudo chown -R nginx:nginx assets/data
+  ```
+
+### Manual Configuration (`assets/data/config.json`)
+
+Once created, you can change your administrator password here:
 ```json
 {
   "config": {
-    "authorUrl": "http://your-profile-url",
-    "adminPassword": "your-admin-password",
-    "version": "2.3.9"
+    "adminPassword": "your-admin-password"
   }
 }
 ```

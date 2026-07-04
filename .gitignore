@@ -1,0 +1,3 @@
+# Ignore data files containing configuration and services information
+assets/data/config.json
+assets/data/services.json
