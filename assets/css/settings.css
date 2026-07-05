@@ -104,9 +104,18 @@ body.light-theme {
   color: var(--m3-text);
 }
 
+.settings-wrapper {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
 .settings-body {
   padding: 24px;
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
 }
 

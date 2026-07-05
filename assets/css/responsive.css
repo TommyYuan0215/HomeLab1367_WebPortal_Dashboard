@@ -350,6 +350,7 @@ body.light-theme .mobile-search-popup-close:hover {
   .nav-author-link,
   .nav-github-link,
   .time,
+  .nav-clock-weather,
   #settings-btn,
   #admin-mode-btn,
   #theme-toggle-btn {
@@ -547,3 +548,57 @@ body.light-theme .mobile-settings-dropdown {
 body.light-theme .mobile-settings-dropdown .settings-footer {
   border-top-color: rgba(0, 0, 0, 0.05);
 }
+
+/* ── Mobile Menu Status Panel (Bottom of Hamburger Pane) ── */
+.mobile-menu-status-panel {
+  margin-top: auto; /* Push to the absolute bottom of the content container */
+  padding: 16px 0 24px; /* Set side padding to 0, inner rows handle the padding alignment */
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px dashed rgba(255, 255, 255, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+body.light-theme .mobile-menu-status-panel {
+  background: rgba(0, 0, 0, 0.01);
+  border-top-color: rgba(0, 0, 0, 0.07);
+}
+
+.m-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 6px 16px; /* Match horizontal padding of links */
+}
+
+body.light-theme .m-status-row {
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.m-label {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Match link icon-to-text gap */
+  font-weight: 500;
+}
+
+.m-label i {
+  color: var(--accent-400, #a86bff);
+  font-size: 1.1rem; /* Match link icon size */
+  width: 1.25rem; /* Match link icon alignment width */
+  text-align: center;
+}
+
+.m-val {
+  font-weight: 600;
+  color: #fff;
+  padding-right: 4px;
+}
+
+body.light-theme .m-val {
+  color: #111;
+}
+

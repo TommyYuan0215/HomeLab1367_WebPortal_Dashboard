@@ -155,3 +155,545 @@ body.light-theme .nav-github-link i:hover {
 #theme-toggle-btn {
   display: none !important;
 }
+
+/* Clock + Weather wrapper */
+.nav-clock-weather {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;       /* never squash on narrow viewports */
+  white-space: nowrap;
+}
+
+/* Clock — fixed width so 12/24hr switch doesn't reflow */
+#real-time-clock {
+  min-width: 7.5ch;     /* fits '12:59:59 PM' without jumping */
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  text-align: left;
+}
+
+/* When seconds are hidden, shrink the reserved space.
+   Use 8ch: covers '12:59 PM' (widest 12hr no-seconds string). */
+#real-time-clock.clock-no-seconds {
+  min-width: 8ch;
+}
+
+/* Clock sub-settings (format + hide-seconds): collapse when clock is off */
+#clock-sub-settings {
+  overflow: hidden;
+  /* Transition height, opacity, AND margin so the gap below also disappears */
+  transition: max-height 0.3s ease, opacity 0.25s ease, margin-bottom 0.3s ease;
+  margin-bottom: 12px; /* gap between Hide Seconds card and Show Weather card */
+}
+
+/* Remove the last item's own bottom margin — the wrapper's margin-bottom provides the gap */
+#clock-sub-settings .setting-item:last-child {
+  margin-bottom: 0;
+}
+
+.nav-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 1rem;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* Thin separator before status (between settings icon and status) */
+.nav-status::before {
+  content: '|';
+  margin-right: 12px;
+  opacity: 0.25;
+  font-weight: 300;
+  pointer-events: none;
+}
+
+.nav-status i {
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+
+.nav-status #status-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* Thin separator between status and weather */
+.nav-status::after {
+  content: '|';
+  margin-left: 10px;
+  opacity: 0.25;
+  font-weight: 300;
+  pointer-events: none;
+}
+
+body.light-theme .nav-status {
+  color: var(--light-text);
+}
+
+/* Weather widget */
+.nav-weather {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 1rem;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.nav-weather i {
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+
+.nav-weather #weather-temp {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* Thin separator between weather and clock */
+.nav-weather::after {
+  content: '|';
+  margin-left: 10px;
+  opacity: 0.25;
+  font-weight: 300;
+  pointer-events: none;
+}
+
+body.light-theme .nav-weather {
+  color: var(--light-text);
+}
+
+/* ── Weather Hover Popup ──────────────────────────────────── */
+.weather-popup {
+  position: fixed;
+  z-index: 1999;
+  width: 320px;
+  background: rgba(22, 22, 30, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.04) inset;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px) scale(0.97);
+  transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  pointer-events: none;
+  font-family: inherit;
+  color: #e6e1f0;
+}
+
+.weather-popup.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: all;
+}
+
+/* Loading state */
+.wp-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.45);
+  font-size: 0.85rem;
+  padding: 8px 0;
+}
+
+@keyframes wpSpin {
+  to { transform: rotate(360deg); }
+}
+
+.wp-spin {
+  display: inline-block;
+  animation: wpSpin 1s linear infinite;
+}
+
+/* Header row: location + updated time */
+.wp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.wp-location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent-400, #a86bff);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.wp-location i {
+  font-size: 0.78rem;
+}
+
+.wp-updated {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.3);
+}
+
+/* Main: big icon + temp + description */
+.wp-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.wp-big-icon {
+  font-size: 3rem;
+  line-height: 1;
+  color: #ffd580;
+  flex-shrink: 0;
+  text-shadow: 0 0 20px rgba(255, 213, 128, 0.4);
+}
+
+/* icon color overrides per weather type */
+.wp-big-icon.bi-sun-fill            { color: #ffd580; text-shadow: 0 0 20px rgba(255,213,128,0.5); }
+.wp-big-icon.bi-cloud-sun-fill      { color: #f0c070; }
+.wp-big-icon.bi-clouds-fill         { color: #a0b0c8; }
+.wp-big-icon.bi-cloud-haze2-fill    { color: #b0b8c8; }
+.wp-big-icon.bi-cloud-drizzle-fill,
+.wp-big-icon.bi-cloud-rain-fill,
+.wp-big-icon.bi-cloud-rain-heavy-fill { color: #78aaee; }
+.wp-big-icon.bi-cloud-snow-fill     { color: #c8e0ff; }
+.wp-big-icon.bi-cloud-lightning-rain-fill { color: #e8c040; }
+
+.wp-temp-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.wp-temp {
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  letter-spacing: -1px;
+}
+
+.wp-desc {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.55);
+  margin-top: 4px;
+  font-weight: 400;
+}
+
+/* Stat grid: 3 columns */
+.wp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px 8px;
+}
+
+.wp-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.wp-stat i {
+  font-size: 0.85rem;
+  color: var(--accent-400, #a86bff);
+  margin-bottom: 2px;
+}
+
+.wp-stat-label {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.38);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.wp-stat-val {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.88);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Light theme */
+body.light-theme .weather-popup {
+  background: rgba(250, 248, 255, 0.95);
+  border-color: rgba(0,0,0,0.08);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+  color: #222;
+}
+
+body.light-theme .wp-updated {
+  color: rgba(0,0,0,0.35);
+}
+
+body.light-theme .wp-big-icon { filter: brightness(0.85); }
+
+body.light-theme .wp-temp { color: #111; }
+
+body.light-theme .wp-desc { color: rgba(0,0,0,0.5); }
+
+body.light-theme .wp-main {
+  border-bottom-color: rgba(0,0,0,0.07);
+}
+
+body.light-theme .wp-stat {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.06);
+}
+
+body.light-theme .wp-stat-label { color: rgba(0,0,0,0.4); }
+
+body.light-theme .wp-stat-val { color: rgba(0,0,0,0.8); }
+
+.status-popup {
+  position: fixed;
+  z-index: 1999;
+  width: 340px; /* Slightly wider */
+  background: rgba(22, 22, 30, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.04) inset;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px) scale(0.97);
+  transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  pointer-events: none;
+  font-family: inherit;
+  color: #e6e1f0;
+}
+
+.status-popup.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: all;
+}
+
+.sp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.sp-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent-400, #a86bff);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sp-uptime {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.3);
+}
+
+.sp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px 8px;
+  margin-bottom: 14px;
+}
+
+.sp-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.sp-stat i {
+  font-size: 0.85rem;
+  color: var(--accent-400, #a86bff);
+  margin-bottom: 2px;
+}
+
+.sp-stat-label {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.38);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.sp-stat-val {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.88);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.sp-net-speed {
+  display: flex;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 14px;
+  font-size: 0.78rem;
+}
+
+.sp-net-item {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: rgba(255,255,255,0.6);
+}
+
+.sp-net-item span {
+  font-weight: 600;
+  color: #fff;
+}
+
+.sp-services-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  padding-bottom: 6px;
+}
+
+.sp-services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-height: 180px; /* Make longer */
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Custom scrollbar for services list */
+.sp-services-list::-webkit-scrollbar {
+  width: 4px;
+}
+.sp-services-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sp-services-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+.sp-services-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.sp-service-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 4px;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.8);
+  border-bottom: 1px dashed rgba(255,255,255,0.04);
+}
+
+.sp-service-row:last-child {
+  border-bottom: none;
+}
+
+.sp-service-name {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sp-service-port {
+  color: rgba(255,255,255,0.45);
+  font-family: inherit;
+  font-size: 0.7rem;
+}
+
+/* Light theme overrides */
+body.light-theme .status-popup {
+  background: rgba(250, 248, 255, 0.95);
+  border-color: rgba(0,0,0,0.08);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+  color: #222;
+}
+
+body.light-theme .sp-uptime {
+  color: rgba(0,0,0,0.35);
+}
+
+body.light-theme .sp-stat {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.06);
+}
+
+body.light-theme .sp-stat-label {
+  color: rgba(0,0,0,0.4);
+}
+
+body.light-theme .sp-stat-val {
+  color: rgba(0,0,0,0.8);
+}
+
+body.light-theme .sp-net-speed {
+  background: rgba(0,0,0,0.02);
+  border-color: rgba(0,0,0,0.05);
+}
+
+body.light-theme .sp-net-item {
+  color: rgba(0,0,0,0.6);
+}
+
+body.light-theme .sp-net-item span {
+  color: #111;
+}
+
+body.light-theme .sp-services-header {
+  color: rgba(0,0,0,0.6);
+  border-bottom-color: rgba(0,0,0,0.08);
+}
+
+body.light-theme .sp-service-row {
+  color: rgba(0,0,0,0.75);
+  border-bottom-color: rgba(0,0,0,0.06);
+}
+
+body.light-theme .sp-service-port {
+  color: rgba(0,0,0,0.5);
+}
+
+

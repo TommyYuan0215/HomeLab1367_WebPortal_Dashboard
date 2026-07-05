@@ -290,6 +290,88 @@
         </div>
       </div>
 
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Show Clock</span>
+          <span class="setting-desc">Display the clock in the navbar</span>
+        </div>
+        <div class="setting-controls">
+          <label class="toggle-switch">
+            <input type="checkbox" id="show-clock-toggle" checked />
+            <span class="toggle-slider"></span>
+          </label>
+          <button class="btn-reset-individual" data-reset="show-clock" aria-label="Reset show clock">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+      </div>
+
+      <div id="clock-sub-settings">
+        <div class="setting-item">
+          <div class="setting-label">
+            <span>12-Hour Format</span>
+            <span class="setting-desc" id="clock-format-desc">24-hour clock</span>
+          </div>
+          <div class="setting-controls">
+            <label class="toggle-switch">
+              <input type="checkbox" id="clock-format-toggle" />
+              <span class="toggle-slider"></span>
+            </label>
+            <button class="btn-reset-individual" data-reset="clock-format" aria-label="Reset clock format">
+              <i class="bi bi-arrow-counterclockwise"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-label">
+            <span>Hide Seconds</span>
+            <span class="setting-desc">Show hours and minutes only</span>
+          </div>
+          <div class="setting-controls">
+            <label class="toggle-switch">
+              <input type="checkbox" id="hide-seconds-toggle" />
+              <span class="toggle-slider"></span>
+            </label>
+            <button class="btn-reset-individual" data-reset="hide-seconds" aria-label="Reset hide seconds">
+              <i class="bi bi-arrow-counterclockwise"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Show Server Status</span>
+          <span class="setting-desc">Display CPU and memory usage info</span>
+        </div>
+        <div class="setting-controls">
+          <label class="toggle-switch">
+            <input type="checkbox" id="show-status-toggle" checked />
+            <span class="toggle-slider"></span>
+          </label>
+          <button class="btn-reset-individual" data-reset="show-status" aria-label="Reset show server status">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Show Weather</span>
+          <span class="setting-desc">Display weather next to the clock</span>
+        </div>
+        <div class="setting-controls">
+          <label class="toggle-switch">
+            <input type="checkbox" id="show-weather-toggle" checked />
+            <span class="toggle-slider"></span>
+          </label>
+          <button class="btn-reset-individual" data-reset="show-weather" aria-label="Reset show weather">
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+        </div>
+      </div>
+
       <!-- About Us Section -->
       <div class="setting-group-title" style="margin-top: 25px;">
         <i class="bi bi-info-circle-fill"></i> About Us
@@ -310,7 +392,7 @@
           </div>
           <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
             <span style="color: var(--muted, #9aa0a6);">Version</span>
-            <strong>2.3.11</strong>
+            <strong id="about-version">—</strong>
           </div>
           <div style="display: flex; justify-content: space-between; padding: 4px 0;">
             <span style="color: var(--muted, #9aa0a6);">Stack</span>

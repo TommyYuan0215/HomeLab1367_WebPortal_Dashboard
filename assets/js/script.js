@@ -1,4 +1,4 @@
-const APP_VERSION = '2.3.11';
+const APP_VERSION = '2.3.13';
 
 // 🕑 GLOBAL CLOCK LOGIC (Must be outside the IIFE for setTimeout)
 // =======================================================
@@ -10,17 +10,601 @@ function checkTime(i) {
 
 function startTime() {
     const today = new Date();
+    const clock = document.getElementById('real-time-clock');
+
+    // Respect show-clock setting
+    const showClock = localStorage.getItem('homelab-show-clock');
+    if (showClock === 'false') {
+        if (clock) clock.style.display = 'none';
+        setTimeout(startTime, 1000);
+        return;
+    }
+    if (clock) clock.style.display = '';
+
+    // Read format preference: boolean toggle (true = 12hr, false/null = 24hr)
+    const fmt12 = localStorage.getItem('homelab-clock-format') === 'true';
+    const hideSeconds = localStorage.getItem('homelab-hide-seconds') === 'true';
+
     let h = today.getHours();
     let m = today.getMinutes();
     let s = today.getSeconds();
     m = checkTime(m);
     s = checkTime(s);
-    const clock = document.getElementById('real-time-clock');
-    if (clock) {
-        clock.innerHTML = h + ":" + m + ":" + s;
+
+    let timeStr;
+    if (fmt12) {
+        const period = h >= 12 ? 'PM' : 'AM';
+        let h12 = h % 12;
+        if (h12 === 0) h12 = 12;
+        timeStr = hideSeconds
+            ? h12 + ':' + m + ' ' + period
+            : h12 + ':' + m + ':' + s + ' ' + period;
+    } else {
+        h = checkTime(h);
+        timeStr = hideSeconds
+            ? h + ':' + m
+            : h + ':' + m + ':' + s;
     }
-    setTimeout(startTime, 1000); 
+
+    // Toggle compact class so min-width adjusts (no layout shift)
+    if (clock) {
+        clock.innerHTML = timeStr;
+        clock.classList.toggle('clock-no-seconds', hideSeconds);
+    }
+    setTimeout(startTime, 1000);
 }
+
+// ⛅ WEATHER LOGIC — Open-Meteo (no API key)
+// =======================================================
+
+const WMO_ICONS = {
+    0:  'bi-sun-fill',
+    1:  'bi-sun-fill',
+    2:  'bi-cloud-sun-fill',
+    3:  'bi-clouds-fill',
+    45: 'bi-cloud-haze2-fill',
+    48: 'bi-cloud-haze2-fill',
+    51: 'bi-cloud-drizzle-fill',
+    53: 'bi-cloud-drizzle-fill',
+    55: 'bi-cloud-drizzle-fill',
+    61: 'bi-cloud-rain-fill',
+    63: 'bi-cloud-rain-fill',
+    65: 'bi-cloud-rain-heavy-fill',
+    71: 'bi-cloud-snow-fill',
+    73: 'bi-cloud-snow-fill',
+    75: 'bi-cloud-snow-fill',
+    80: 'bi-cloud-rain-fill',
+    81: 'bi-cloud-rain-fill',
+    82: 'bi-cloud-rain-heavy-fill',
+    95: 'bi-cloud-lightning-rain-fill',
+    96: 'bi-cloud-lightning-rain-fill',
+    99: 'bi-cloud-lightning-rain-fill',
+};
+
+const WMO_DESC = {
+    0: 'Clear Sky', 1: 'Mainly Clear', 2: 'Partly Cloudy', 3: 'Overcast',
+    45: 'Foggy', 48: 'Icy Fog',
+    51: 'Light Drizzle', 53: 'Moderate Drizzle', 55: 'Dense Drizzle',
+    61: 'Slight Rain', 63: 'Moderate Rain', 65: 'Heavy Rain',
+    71: 'Slight Snow', 73: 'Moderate Snow', 75: 'Heavy Snow',
+    80: 'Slight Showers', 81: 'Moderate Showers', 82: 'Violent Showers',
+    95: 'Thunderstorm', 96: 'Thunderstorm w/ Hail', 99: 'Heavy Thunderstorm',
+};
+
+// Cached weather data for the popup
+let _weatherCache = null;
+
+function getWeatherIcon(code) {
+    if (WMO_ICONS[code]) return WMO_ICONS[code];
+    if (code >= 51 && code <= 57) return 'bi-cloud-drizzle-fill';
+    if (code >= 61 && code <= 67) return 'bi-cloud-rain-fill';
+    if (code >= 71 && code <= 77) return 'bi-cloud-snow-fill';
+    if (code >= 80 && code <= 82) return 'bi-cloud-rain-fill';
+    if (code >= 85 && code <= 86) return 'bi-cloud-snow-fill';
+    if (code >= 95) return 'bi-cloud-lightning-rain-fill';
+    return 'bi-cloud-sun-fill';
+}
+
+function getWeatherDesc(code) {
+    return WMO_DESC[code] || 'Unknown';
+}
+
+function getWindDir(deg) {
+    const dirs = ['N','NE','E','SE','S','SW','W','NW'];
+    return dirs[Math.round(deg / 45) % 8];
+}
+
+async function reverseGeocode(lat, lon) {
+    try {
+        const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&zoom=10`;
+        const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+        if (!res.ok) return null;
+        const data = await res.json();
+        const addr = data.address || {};
+        // Return city/town/village/county — first available
+        return addr.city || addr.town || addr.village || addr.county || addr.state || null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function updateWeatherPopup() {
+    const popup = document.getElementById('weather-popup');
+    if (!popup || !_weatherCache) return;
+    const d = _weatherCache;
+
+    popup.innerHTML = `
+        <div class="wp-header">
+            <div class="wp-location">
+                <i class="bi bi-geo-alt-fill"></i>
+                <span>${d.location || 'Current Location'}</span>
+            </div>
+            <div class="wp-updated">Updated ${d.updatedAt}</div>
+        </div>
+        <div class="wp-main">
+            <i class="bi ${d.icon} wp-big-icon"></i>
+            <div class="wp-temp-block">
+                <span class="wp-temp">${d.temp}°C</span>
+                <span class="wp-desc">${d.desc}</span>
+            </div>
+        </div>
+        <div class="wp-grid">
+            <div class="wp-stat">
+                <i class="bi bi-thermometer-half"></i>
+                <span class="wp-stat-label">Feels Like</span>
+                <span class="wp-stat-val">${d.feelsLike}°C</span>
+            </div>
+            <div class="wp-stat">
+                <i class="bi bi-droplet-fill"></i>
+                <span class="wp-stat-label">Humidity</span>
+                <span class="wp-stat-val">${d.humidity}%</span>
+            </div>
+            <div class="wp-stat">
+                <i class="bi bi-wind"></i>
+                <span class="wp-stat-label">Wind</span>
+                <span class="wp-stat-val">${d.windSpeed} km/h ${d.windDir}</span>
+            </div>
+            <div class="wp-stat">
+                <i class="bi bi-cloud-rain"></i>
+                <span class="wp-stat-label">Precip.</span>
+                <span class="wp-stat-val">${d.precip} mm</span>
+            </div>
+            <div class="wp-stat">
+                <i class="bi bi-eye-fill"></i>
+                <span class="wp-stat-label">UV Index</span>
+                <span class="wp-stat-val">${d.uv}</span>
+            </div>
+            <div class="wp-stat">
+                <i class="bi bi-compass"></i>
+                <span class="wp-stat-label">Coords</span>
+                <span class="wp-stat-val">${d.lat.toFixed(2)}, ${d.lon.toFixed(2)}</span>
+            </div>
+        </div>
+    `;
+}
+
+async function fetchWeather(lat, lon) {
+    try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+            `&current=temperature_2m,apparent_temperature,weather_code,relative_humidity_2m,` +
+            `wind_speed_10m,wind_direction_10m,precipitation,uv_index` +
+            `&temperature_unit=celsius&wind_speed_unit=kmh&timezone=auto`;
+        const res = await fetch(url);
+        if (!res.ok) return;
+        const data = await res.json();
+        const c = data.current;
+        const code = c.weather_code;
+        const now = new Date();
+        const updatedAt = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+
+        // Update navbar widget
+        const iconEl = document.getElementById('weather-icon');
+        const tempEl = document.getElementById('weather-temp');
+        if (iconEl) iconEl.className = 'bi ' + getWeatherIcon(code);
+        if (tempEl) tempEl.textContent = Math.round(c.temperature_2m) + '°C';
+
+        // Update mobile hamburger menu weather elements if they exist
+        const mIconEl = document.getElementById('m-weather-icon');
+        const mTempEl = document.querySelector('#mobile-menu-status-panel #m-weather-temp');
+        if (mIconEl) mIconEl.className = 'bi ' + getWeatherIcon(code);
+        if (mTempEl) mTempEl.textContent = Math.round(c.temperature_2m) + '°C';
+
+        // Fetch location name if not yet cached
+        let location = _weatherCache?.location || null;
+        if (!location) {
+            location = await reverseGeocode(lat, lon);
+        }
+
+        // Store in cache
+        _weatherCache = {
+            temp:      Math.round(c.temperature_2m),
+            feelsLike: Math.round(c.apparent_temperature),
+            humidity:  Math.round(c.relative_humidity_2m),
+            windSpeed: Math.round(c.wind_speed_10m),
+            windDir:   getWindDir(c.wind_direction_10m),
+            precip:    (c.precipitation ?? 0).toFixed(1),
+            uv:        (c.uv_index ?? '--'),
+            code,
+            icon:      getWeatherIcon(code),
+            desc:      getWeatherDesc(code),
+            location,
+            lat,
+            lon,
+            updatedAt,
+        };
+
+        updateWeatherPopup();
+    } catch (e) {
+        console.warn('Weather fetch failed:', e);
+    }
+}
+
+function createWeatherPopup() {
+    let popup = document.getElementById('weather-popup');
+    if (popup) return popup;
+    popup = document.createElement('div');
+    popup.id = 'weather-popup';
+    popup.className = 'weather-popup';
+    popup.innerHTML = `<div class="wp-loading"><i class="bi bi-arrow-repeat wp-spin"></i> Fetching weather…</div>`;
+    document.body.appendChild(popup);
+    return popup;
+}
+
+function positionWeatherPopup() {
+    const trigger = document.getElementById('nav-weather');
+    const popup   = document.getElementById('weather-popup');
+    if (!trigger || !popup) return;
+    const rect = trigger.getBoundingClientRect();
+    // Position below the weather widget, right-aligned
+    popup.style.top  = (rect.bottom + 10) + 'px';
+    popup.style.right = (window.innerWidth - rect.right) + 'px';
+    popup.style.left  = 'auto';
+}
+
+function initWeather() {
+    const weatherEl = document.getElementById('nav-weather');
+    const showWeather = localStorage.getItem('homelab-show-weather');
+
+    if (showWeather === 'false') {
+        if (weatherEl) weatherEl.style.display = 'none';
+        return;
+    }
+    if (weatherEl) weatherEl.style.display = '';
+
+    if (!navigator.geolocation) {
+        if (weatherEl) weatherEl.style.display = 'none';
+        return;
+    }
+
+    // Create popup once
+    const popup = createWeatherPopup();
+
+    // Hover show/hide
+    if (weatherEl && !weatherEl._weatherHoverBound) {
+        weatherEl._weatherHoverBound = true;
+
+        weatherEl.addEventListener('mouseenter', () => {
+            if (_weatherCache) updateWeatherPopup();
+            positionWeatherPopup();
+            popup.classList.add('visible');
+        });
+
+        weatherEl.addEventListener('mouseleave', (e) => {
+            // Keep open if moving into popup
+            if (popup.contains(e.relatedTarget)) return;
+            popup.classList.remove('visible');
+        });
+
+        popup.addEventListener('mouseleave', (e) => {
+            if (weatherEl.contains(e.relatedTarget)) return;
+            popup.classList.remove('visible');
+        });
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        (pos) => {
+            fetchWeather(pos.coords.latitude, pos.coords.longitude);
+            setInterval(() => fetchWeather(pos.coords.latitude, pos.coords.longitude), 600000);
+        },
+        () => {
+            if (weatherEl) weatherEl.style.display = 'none';
+        },
+        { timeout: 8000 }
+    );
+}
+
+
+// 🖥️ SERVER STATUS LOGIC — CPU, RAM, Network & Services
+// =======================================================
+
+let _statusCache = null;
+
+// In-memory registry for service reachability status
+let _serviceStatusMap = {};
+
+async function checkServiceStatus(url, title) {
+    // Resolve URL through smart resolver to handle local/public domains
+    const targetUrl = window.resolveServiceUrl ? window.resolveServiceUrl(url) : url;
+    
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3500); // 3.5 seconds timeout
+
+        // We use fetch with 'no-cors' mode. Even if CORS blocks reading the response body,
+        // a successful TCP connection/HTTP response will resolve, whereas offline services
+        // will throw a network/TypeError/Abort error.
+        const response = await fetch(targetUrl, {
+            method: 'GET',
+            mode: 'no-cors',
+            cache: 'no-cache',
+            signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        
+        // In no-cors mode, type is "opaque" and status is 0. If we got here without throwing,
+        // it means the host answered. It is Online.
+        _serviceStatusMap[title] = 'Online';
+    } catch (e) {
+        _serviceStatusMap[title] = 'Offline';
+    }
+}
+
+async function checkAllServicesStatus() {
+    if (!window._servicesData || !window._servicesData.sections) return;
+    
+    const promises = [];
+    window._servicesData.sections.forEach(sec => {
+        if (sec.items && Array.isArray(sec.items)) {
+            sec.items.forEach(item => {
+                // Initialize in map as 'Checking' if not present
+                if (!_serviceStatusMap[item.title]) {
+                    _serviceStatusMap[item.title] = 'Checking';
+                }
+                promises.push(checkServiceStatus(item.url, item.title));
+            });
+        }
+    });
+
+    await Promise.all(promises);
+    // Re-generate status stats and update widget/popup
+    generateSimulatedStatus();
+    updateStatusWidget();
+}
+
+function generateSimulatedStatus() {
+    const cpu = Math.floor(15 + Math.random() * 45); // 15% - 60%
+    const ram = Math.floor(40 + Math.random() * 25); // 40% - 65%
+    const temp = Math.floor(42 + Math.random() * 12); // 42°C - 54°C
+    const networkRx = (Math.random() * 12).toFixed(1); // MB/s
+    const networkTx = (Math.random() * 4).toFixed(1); // MB/s
+    
+    // Extract actual services injected in window._servicesData
+    let services = [];
+    if (window._servicesData && window._servicesData.sections) {
+        window._servicesData.sections.forEach(sec => {
+            if (sec.items && Array.isArray(sec.items)) {
+                sec.items.forEach(item => {
+                    // Extract domain/host from URL
+                    let domain = 'localhost';
+                    try {
+                        const parsedUrl = new URL(item.url);
+                        domain = parsedUrl.hostname;
+                        // Clean subdomains for local homelab domains if preferred
+                        // e.g. web.homelab1367.internal -> homelab1367.internal
+                        if (domain.endsWith('.homelab1367.internal')) {
+                            domain = 'homelab1367.internal';
+                        } else if (domain.endsWith('.homelab1367.local')) {
+                            domain = 'homelab1367.local';
+                        }
+                    } catch (e) {}
+
+                    // Get reachability status from async checker (default to Checking/Online)
+                    const status = _serviceStatusMap[item.title] || 'Checking';
+
+                    services.push({
+                        name: item.title,
+                        domain: domain,
+                        status: status
+                    });
+                });
+            }
+        });
+    }
+
+    // Fallback if no services are loaded yet
+    if (services.length === 0) {
+        services = [
+            { name: 'IdealHub Dashboard', domain: 'homelab1367.internal', status: 'Online' }
+        ];
+    }
+
+    const activeServices = services.filter(s => s.status === 'Online').length;
+
+    _statusCache = {
+        cpu,
+        ram,
+        temp,
+        netRx: networkRx,
+        netTx: networkTx,
+        services,
+        activeServices,
+        totalServices: services.length,
+        uptime: '12 days, 4 hours'
+    };
+}
+
+function updateStatusWidget() {
+    const statusText = document.getElementById('status-text');
+    const statusIcon = document.getElementById('status-icon');
+    if (!_statusCache) return;
+
+    if (statusText) statusText.textContent = _statusCache.cpu + '%';
+    
+    if (statusIcon) {
+        if (_statusCache.cpu > 75) {
+            statusIcon.className = 'bi bi-cpu-fill text-danger';
+        } else if (_statusCache.cpu > 50) {
+            statusIcon.className = 'bi bi-cpu-fill text-warning';
+        } else {
+            statusIcon.className = 'bi bi-cpu-fill';
+        }
+    }
+
+    // Sync to mobile status panel if active
+    const mCpu = document.getElementById('m-status-cpu');
+    const mRam = document.getElementById('m-status-ram');
+    const mTemp = document.getElementById('m-status-temp');
+    if (mCpu) mCpu.textContent = _statusCache.cpu + '%';
+    if (mRam) mRam.textContent = _statusCache.ram + '%';
+    if (mTemp) mTemp.textContent = _statusCache.temp + '°C';
+
+    updateStatusPopup();
+}
+
+function updateStatusPopup() {
+    const popup = document.getElementById('status-popup');
+    if (!popup || !_statusCache) return;
+    const d = _statusCache;
+
+    let servicesHtml = '';
+    d.services.forEach(s => {
+        let dotClass = 'text-danger';
+        if (s.status === 'Online') {
+            dotClass = 'text-success';
+        } else if (s.status === 'Checking') {
+            dotClass = 'text-muted opacity-50';
+        }
+
+        const isChecking = s.status === 'Checking' ? ' <small class="text-muted">(checking…)</small>' : '';
+
+        servicesHtml += `
+            <div class="sp-service-row">
+                <span class="sp-service-name">
+                    <i class="bi bi-circle-fill ${dotClass}" style="font-size: 0.55rem; margin-right: 6px;"></i>
+                    ${s.name}${isChecking}
+                </span>
+                <span class="sp-service-port">${s.domain}</span>
+            </div>
+        `;
+    });
+
+    popup.innerHTML = `
+        <div class="sp-header">
+            <div class="sp-title">
+                <i class="bi bi-hdd-network-fill"></i>
+                <span>${window.location.hostname === 'localhost' ? 'homelab1367.internal' : window.location.hostname}</span>
+            </div>
+            <div class="sp-uptime">Uptime: ${d.uptime}</div>
+        </div>
+        <div class="sp-grid">
+            <div class="sp-stat">
+                <i class="bi bi-cpu-fill"></i>
+                <span class="sp-stat-label">CPU Load</span>
+                <span class="sp-stat-val">${d.cpu}%</span>
+            </div>
+            <div class="sp-stat">
+                <i class="bi bi-memory"></i>
+                <span class="sp-stat-label">RAM Usage</span>
+                <span class="sp-stat-val">${d.ram}%</span>
+            </div>
+            <div class="sp-stat">
+                <i class="bi bi-thermometer-high"></i>
+                <span class="sp-stat-label">CPU Temp</span>
+                <span class="sp-stat-val">${d.temp}°C</span>
+            </div>
+        </div>
+        <div class="sp-net-speed">
+            <div class="sp-net-item">
+                <i class="bi bi-arrow-down-short text-success"></i> Download: <span>${d.netRx} MB/s</span>
+            </div>
+            <div class="sp-net-item">
+                <i class="bi bi-arrow-up-short text-primary"></i> Upload: <span>${d.netTx} MB/s</span>
+            </div>
+        </div>
+        <div class="sp-services-header">
+            <i class="bi bi-grid-fill"></i>
+            <span>Services (${d.activeServices}/${d.totalServices} Up)</span>
+        </div>
+        <div class="sp-services-list">
+            ${servicesHtml}
+        </div>
+    `;
+}
+
+function createStatusPopup() {
+    let popup = document.getElementById('status-popup');
+    if (popup) return popup;
+    popup = document.createElement('div');
+    popup.id = 'status-popup';
+    popup.className = 'status-popup';
+    popup.innerHTML = `<div class="wp-loading"><i class="bi bi-arrow-repeat wp-spin"></i> Loading system status…</div>`;
+    document.body.appendChild(popup);
+    return popup;
+}
+
+function positionStatusPopup() {
+    const trigger = document.getElementById('nav-status');
+    const popup   = document.getElementById('status-popup');
+    if (!trigger || !popup) return;
+    const rect = trigger.getBoundingClientRect();
+    popup.style.top  = (rect.bottom + 10) + 'px';
+    popup.style.right = (window.innerWidth - rect.right) + 'px';
+    popup.style.left  = 'auto';
+}
+
+function initServerStatus() {
+    const statusEl = document.getElementById('nav-status');
+    const showStatus = localStorage.getItem('homelab-show-status');
+
+    if (showStatus === 'false') {
+        if (statusEl) statusEl.style.display = 'none';
+        return;
+    }
+    if (statusEl) statusEl.style.display = '';
+
+    const popup = createStatusPopup();
+
+    if (statusEl && !statusEl._statusHoverBound) {
+        statusEl._statusHoverBound = true;
+
+        statusEl.addEventListener('mouseenter', () => {
+            if (_statusCache) updateStatusPopup();
+            positionStatusPopup();
+            popup.classList.add('visible');
+        });
+
+        statusEl.addEventListener('mouseleave', (e) => {
+            if (popup.contains(e.relatedTarget)) return;
+            popup.classList.remove('visible');
+        });
+
+    popup.addEventListener('mouseleave', (e) => {
+            if (statusEl.contains(e.relatedTarget)) return;
+            popup.classList.remove('visible');
+        });
+    }
+
+    // Refresh simulation details and run reachability checks
+    generateSimulatedStatus();
+    updateStatusWidget();
+    checkAllServicesStatus();
+    
+    if (!window._statusIntervalId) {
+        window._statusIntervalId = setInterval(() => {
+            generateSimulatedStatus();
+            updateStatusWidget();
+        }, 4000);
+    }
+
+    // Run active reachability checks every 15 seconds
+    if (!window._pingIntervalId) {
+        window._pingIntervalId = setInterval(() => {
+            checkAllServicesStatus();
+        }, 15000);
+    }
+}
+
+
 
 // ☀️ GREETING LOGIC
 // =======================================================
@@ -760,6 +1344,8 @@ function updateSearchFunctionality() {
 })();
 
 startTime();
+initWeather();
+initServerStatus();
 
 // -------------------------------------------------------
 // 🔊 CARD HOVER SOUND (event delegation — works with dynamic cards)

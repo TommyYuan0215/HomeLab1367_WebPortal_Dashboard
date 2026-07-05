@@ -73,7 +73,18 @@
       <a href="#" id="theme-toggle-btn" aria-label="Toggle Dark/Light Theme">
         <i id="theme-toggle-icon" class="bi bi-moon-fill"></i>
       </a>
-      <div id="real-time-clock" class="time"></div>
+      <!-- Server Status + Weather + Clock wrapper -->
+      <div class="nav-clock-weather" id="nav-clock-weather">
+        <div class="nav-status" id="nav-status" title="Server Status">
+          <i class="bi bi-cpu-fill" id="status-icon"></i>
+          <span id="status-text">--%</span>
+        </div>
+        <div class="nav-weather" id="nav-weather" title="Current weather">
+          <i class="bi bi-cloud-sun-fill" id="weather-icon"></i>
+          <span id="weather-temp">--°</span>
+        </div>
+        <div id="real-time-clock" class="time"></div>
+      </div>
     </div>
   </nav>
 

@@ -20,11 +20,6 @@
           <i class="bi bi-gear-fill"></i>
           <span>Admin Panel</span>
         </a>
-        <a href="https://github.com/TommyYuan0215/HomeLab1367_WebPortal_Dashboard" target="_blank" rel="noopener"
-          class="mobile-menu-link">
-          <i class="bi bi-github"></i>
-          <span>GitHub Repository</span>
-        </a>
         <a href="#" id="mobile-settings-btn" class="mobile-menu-link">
           <i class="bi bi-gear-fill"></i>
           <span>Settings</span>
@@ -32,8 +27,26 @@
         </a>
         <div id="mobile-settings-container" class="mobile-settings-dropdown" style="display: none; width: 100%;"></div>
       </div>
+    </div>
 
-
+    <!-- Mobile Status and Weather Panel -->
+    <div class="mobile-menu-status-panel" id="mobile-menu-status-panel">
+      <div class="m-status-row" id="m-status-row">
+        <span class="m-label"><i class="bi bi-cpu-fill"></i> CPU Load:</span>
+        <span class="m-val" id="m-status-cpu">--%</span>
+      </div>
+      <div class="m-status-row" id="m-status-row-ram">
+        <span class="m-label"><i class="bi bi-memory"></i> RAM Usage:</span>
+        <span class="m-val" id="m-status-ram">--%</span>
+      </div>
+      <div class="m-status-row" id="m-status-row-temp">
+        <span class="m-label"><i class="bi bi-thermometer-high"></i> CPU Temp:</span>
+        <span class="m-val" id="m-status-temp">--°C</span>
+      </div>
+      <div class="m-status-row" id="m-status-row-weather">
+        <span class="m-label"><i class="bi bi-cloud-sun-fill" id="m-weather-icon"></i> Weather:</span>
+        <span class="m-val" id="m-weather-temp">--°C</span>
+      </div>
     </div>
   </div>
 </div>

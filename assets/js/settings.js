@@ -156,6 +156,51 @@ class SettingsManager {
                 defaultValue: true, // true = always, false = never
                 onChange: (value) => this.updateSplashMode(value),
                 onLoad: (value) => this.updateSplashMode(value)
+            },
+            // ── NEW: Show Clock ──
+            'show-clock': {
+                type: 'toggle',
+                elementId: 'show-clock-toggle',
+                storageKey: 'homelab-show-clock',
+                defaultValue: true,
+                onChange: (value) => this.updateShowClock(value),
+                onLoad: (value) => this.updateShowClock(value)
+            },
+            // ── Clock Format (toggle: false=24hr, true=12hr) ──
+            'clock-format': {
+                type: 'toggle',
+                elementId: 'clock-format-toggle',
+                storageKey: 'homelab-clock-format',
+                defaultValue: false,
+                onChange: (value) => this.updateClockFormat(value),
+                onLoad: (value) => this.updateClockFormat(value)
+            },
+            // ── Hide Seconds ──
+            'hide-seconds': {
+                type: 'toggle',
+                elementId: 'hide-seconds-toggle',
+                storageKey: 'homelab-hide-seconds',
+                defaultValue: false,
+                onChange: () => {}, // clock loop reads localStorage directly
+                onLoad: () => {}
+            },
+            // ── Show Server Status ──
+            'show-status': {
+                type: 'toggle',
+                elementId: 'show-status-toggle',
+                storageKey: 'homelab-show-status',
+                defaultValue: true,
+                onChange: (value) => this.updateShowStatus(value),
+                onLoad: (value) => this.updateShowStatus(value)
+            },
+            // ── Show Weather ──
+            'show-weather': {
+                type: 'toggle',
+                elementId: 'show-weather-toggle',
+                storageKey: 'homelab-show-weather',
+                defaultValue: true,
+                onChange: (value) => this.updateShowWeather(value),
+                onLoad: (value) => this.updateShowWeather(value)
             }
         };
 
@@ -184,6 +229,12 @@ class SettingsManager {
         this.setupSettings();
         this.setupResetButtons();
         this.loadAllSettings();
+
+        // Sync version from APP_VERSION (defined in script.js)
+        const versionEl = document.getElementById('about-version');
+        if (versionEl && typeof APP_VERSION !== 'undefined') {
+            versionEl.textContent = APP_VERSION;
+        }
     }
 
     // === Modal Controls ===
@@ -448,7 +499,12 @@ class SettingsManager {
             'splash-mode': value ? 'Splash: Always' : 'Splash: Never',
             'card-density': `Density: ${densityLabels[value] || 'Comfortable'}`,
             'color-filter': `Filter: ${filterLabels[value] || 'Off'}`,
-            'zoom-level': `Zoom: ${value}%`
+            'zoom-level': `Zoom: ${value}%`,
+            'show-clock': value ? 'Clock Shown' : 'Clock Hidden',
+            'clock-format': value ? 'Clock: 12-hour' : 'Clock: 24-hour',
+            'hide-seconds': value ? 'Seconds Hidden' : 'Seconds Shown',
+            'show-status': value ? 'Status Shown' : 'Status Hidden',
+            'show-weather': value ? 'Weather Shown' : 'Weather Hidden'
         };
         return labels[key] || null;
     }
@@ -602,6 +658,54 @@ class SettingsManager {
             osc.stop(ctx.currentTime + 0.12);
         } catch (err) {
             // AudioContext unavailable — silently skip
+        }
+    }
+
+    updateShowClock(val) {
+        const clock = document.getElementById('real-time-clock');
+        if (clock) clock.style.display = val ? '' : 'none';
+
+        // Hide / show the dependent clock-sub-settings (format + hide-seconds)
+        const sub = document.getElementById('clock-sub-settings');
+        if (sub) {
+            if (val) {
+                sub.style.maxHeight = sub.scrollHeight + 'px';
+                sub.style.opacity = '1';
+                sub.style.pointerEvents = '';
+                sub.style.marginBottom = ''; // revert to CSS: 12px
+            } else {
+                sub.style.maxHeight = '0';
+                sub.style.opacity = '0';
+                sub.style.pointerEvents = 'none';
+                sub.style.marginBottom = '0'; // collapse the gap too
+            }
+        }
+    }
+
+    updateClockFormat(val) {
+        const desc = document.getElementById('clock-format-desc');
+        // val is boolean: true = 12hr, false = 24hr
+        if (desc) desc.textContent = val ? '12-hour clock' : '24-hour clock';
+        // The clock loop reads from localStorage on every tick — no extra action needed
+    }
+
+    updateShowStatus(val) {
+        const statusEl = document.getElementById('nav-status');
+        if (!val) {
+            if (statusEl) statusEl.style.display = 'none';
+        } else {
+            if (statusEl) statusEl.style.display = '';
+            if (typeof initServerStatus === 'function') initServerStatus();
+        }
+    }
+
+    updateShowWeather(val) {
+        const weatherEl = document.getElementById('nav-weather');
+        if (!val) {
+            if (weatherEl) weatherEl.style.display = 'none';
+        } else {
+            // Re-trigger weather init (calls geolocation + fetch)
+            if (typeof initWeather === 'function') initWeather();
         }
     }
 
