@@ -38,14 +38,20 @@
       <div class="admin-drawer-section-title"><i class="bi bi-stars"></i> Appearance</div>
 
       <div class="admin-field-group">
-        <label class="admin-field-label" for="admin-field-icon">Bootstrap Icon Class</label>
+        <label class="admin-field-label" for="admin-field-icon">Icon (Bootstrap Class or Custom Image)</label>
         <div class="admin-icon-row">
-          <input type="text" id="admin-field-icon" class="admin-input-full" placeholder="bi-tv-fill" />
+          <input type="text" id="admin-field-icon" class="admin-input-full" placeholder="bi-tv-fill or custom path" />
           <div class="admin-icon-preview-wrap">
             <i id="admin-icon-preview" class="bi bi-app" style="color:#8a39ff"></i>
           </div>
         </div>
-        <span class="admin-field-hint">Browse at <strong>icons.getbootstrap.com</strong></span>
+        <div class="admin-upload-row" style="margin-top: 6px; display: flex; align-items: center; gap: 8px;">
+          <label class="admin-drawer-btn" style="flex: none; padding: 4px 8px; font-size: 0.75rem; margin: 0; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); cursor: pointer;" for="admin-field-icon-upload">
+            <i class="bi bi-upload"></i> Upload Custom Icon
+          </label>
+          <input type="file" id="admin-field-icon-upload" accept="image/*" style="display: none;" />
+          <span class="admin-field-hint" style="margin: 0;">Or browse at <strong>icons.getbootstrap.com</strong></span>
+        </div>
       </div>
 
       <div class="admin-field-group">
@@ -123,14 +129,20 @@
       </div>
 
       <div class="admin-field-group">
-        <label class="admin-field-label">Section Icon</label>
+        <label class="admin-field-label">Section Icon (Bootstrap Class or Custom Image)</label>
         <div class="admin-icon-row">
-          <input type="text" id="admin-section-icon" class="admin-input-full" placeholder="bi-house-heart-fill" />
+          <input type="text" id="admin-section-icon" class="admin-input-full" placeholder="bi-house-heart-fill or custom path" />
           <div class="admin-icon-preview-wrap">
             <i id="admin-section-icon-preview" class="bi bi-grid"></i>
           </div>
         </div>
-        <span class="admin-field-hint">Browse at <strong>icons.getbootstrap.com</strong></span>
+        <div class="admin-upload-row" style="margin-top: 6px; display: flex; align-items: center; gap: 8px;">
+          <label class="admin-drawer-btn" style="flex: none; padding: 4px 8px; font-size: 0.75rem; margin: 0; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); cursor: pointer;" for="admin-section-icon-upload">
+            <i class="bi bi-upload"></i> Upload Custom Icon
+          </label>
+          <input type="file" id="admin-section-icon-upload" accept="image/*" style="display: none;" />
+          <span class="admin-field-hint" style="margin: 0;">Or browse at <strong>icons.getbootstrap.com</strong></span>
+        </div>
       </div>
 
       <div class="admin-field-group">

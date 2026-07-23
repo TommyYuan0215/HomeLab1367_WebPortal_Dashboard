@@ -545,6 +545,9 @@ class SettingsManager {
                 this.navbarThemeIcon.className = 'bi bi-moon-fill';
             }
         }
+        if (window.applyHeaderWallpaper) {
+            window.applyHeaderWallpaper();
+        }
     }
 
     updateFontSize(val) {

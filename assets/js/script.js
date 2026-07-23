@@ -1,4 +1,4 @@
-const APP_VERSION = '2.3.13';
+const APP_VERSION = '2.3.14';
 
 // 🕑 GLOBAL CLOCK LOGIC (Must be outside the IIFE for setTimeout)
 // =======================================================
@@ -734,6 +734,32 @@ function updateGreeting() {
 }());
 
 // -------------------------------------------------------
+// 🎨 BANNER WALLPAPER CUSTOMIZATION
+// -------------------------------------------------------
+
+function applyHeaderWallpaper() {
+    const banner = document.querySelector('.feature-banner');
+    if (!banner) return;
+
+    const data = window._servicesData || {};
+    const wallpaperType = data.wallpaperType || 'auto';
+    const customWallpaper = data.customWallpaper || '';
+
+    const isLightTheme = document.body.classList.contains('light-theme');
+
+    if (wallpaperType === 'custom' && customWallpaper) {
+        if (isLightTheme) {
+            banner.style.backgroundImage = `linear-gradient(100deg, var(--light-bg) 30%, rgba(255, 255, 255, 0.8) 60%, rgba(138, 57, 255, 0.1) 100%), url("${customWallpaper}")`;
+        } else {
+            banner.style.backgroundImage = `linear-gradient(100deg, var(--bg-dark) 0%, rgba(15, 15, 18, 0.9) 40%, rgba(138, 57, 255, 0.15) 100%), url("${customWallpaper}")`;
+        }
+    } else {
+        banner.style.backgroundImage = '';
+    }
+}
+window.applyHeaderWallpaper = applyHeaderWallpaper;
+
+// -------------------------------------------------------
 // 📦 DYNAMIC CONTENT LOADING FROM JSON
 // -------------------------------------------------------
 
@@ -835,6 +861,7 @@ async function loadServices() {
         }
         
         renderSections(data.sections, authorUrl);
+        applyHeaderWallpaper();
     } catch (error) {
         console.error('Error loading services:', error);
         showErrorMessage(error);
@@ -1047,7 +1074,15 @@ function renderSections(sections, authorUrl) {
         // Title
         const title = document.createElement('h3');
         title.className = 'row-title';
-        title.innerHTML = `<i class="bi ${section.icon}"></i>${section.title}`;
+        if (section.icon && (section.icon.includes('/') || section.icon.includes('.'))) {
+            const img = document.createElement('img');
+            img.src = section.icon;
+            img.style.cssText = 'width: 1.25rem; height: 1.25rem; object-fit: contain; vertical-align: middle; margin-right: 0.5rem; display: inline-block;';
+            title.appendChild(img);
+            title.appendChild(document.createTextNode(section.title));
+        } else {
+            title.innerHTML = `<i class="bi ${section.icon || 'bi-grid'}"></i>${section.title}`;
+        }
         
         // Container
         const contentContainer = document.createElement('div');
@@ -1135,10 +1170,19 @@ function createFavoriteCard(item) {
         card.addEventListener('click', (e) => e.preventDefault());
     }
 
-    const icon = document.createElement('i');
-    icon.className = `bi ${item.icon} app-icon`;
-    icon.style.cssText = `color: ${item.color || 'var(--accent)'}; font-size: 3rem;`;
-    icon.setAttribute('aria-hidden', 'true');
+    let icon;
+    if (item.icon && (item.icon.includes('/') || item.icon.includes('.'))) {
+        icon = document.createElement('img');
+        icon.className = 'app-icon';
+        icon.src = item.icon;
+        icon.style.cssText = 'width: 3rem; height: 3rem; object-fit: contain;';
+        icon.setAttribute('aria-hidden', 'true');
+    } else {
+        icon = document.createElement('i');
+        icon.className = `bi ${item.icon || 'bi-app'} app-icon`;
+        icon.style.cssText = `color: ${item.color || 'var(--accent)'}; font-size: 3rem;`;
+        icon.setAttribute('aria-hidden', 'true');
+    }
 
     const title = document.createElement('div');
     title.className = 'app-title';
@@ -1316,6 +1360,7 @@ function updateSearchFunctionality() {
             initParticles('#ffffff'); 
         }
         localStorage.setItem(storageKey, t);
+        if (window.applyHeaderWallpaper) window.applyHeaderWallpaper();
     }
 
     const saved = localStorage.getItem(storageKey) || 'dark';

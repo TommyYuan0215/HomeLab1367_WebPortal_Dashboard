@@ -138,6 +138,7 @@ class AdminManager {
         }
 
         document.getElementById('admin-banner')?.remove();
+        document.getElementById('admin-wallpaper-modal')?.remove();
         document.getElementById('admin-add-section-row')?.remove();
         this.closeDrawer();
         this._refreshDashboard();
@@ -169,6 +170,9 @@ class AdminManager {
               </span>
               <div class="admin-banner-actions">
                 ${saveBtn}
+                <button id="admin-wallpaper-btn" class="admin-banner-btn export" style="background: rgba(168,85,247,0.15); color: #c084fc; border-color: rgba(168,85,247,0.28);">
+                  <i class="bi bi-image"></i> Customize Banner
+                </button>
                 <button id="admin-export-btn" class="admin-banner-btn export">
                   <i class="bi bi-download"></i> Export JSON
                 </button>
@@ -183,8 +187,122 @@ class AdminManager {
         if (sections && main) main.insertBefore(banner, sections);
 
         document.getElementById('admin-save-server-btn')?.addEventListener('click', () => this._saveToServer());
+        document.getElementById('admin-wallpaper-btn')?.addEventListener('click',    () => this._openWallpaperModal());
         document.getElementById('admin-export-btn')?.addEventListener('click',       () => this._exportJson());
         document.getElementById('admin-exit-btn')?.addEventListener('click',         () => this.exitAdminMode());
+    }
+
+    _openWallpaperModal() {
+        this._injectWallpaperModal();
+        const data = this._getData();
+        const type = data.wallpaperType || 'auto';
+        const url = data.customWallpaper || '';
+
+        const radio = document.querySelector(`input[name="admin-wallpaper-mode"][value="${type}"]`);
+        if (radio) {
+            radio.checked = true;
+            const event = new Event('change');
+            radio.dispatchEvent(event);
+        }
+
+        const urlInput = document.getElementById('admin-field-wallpaper-url');
+        if (urlInput) urlInput.value = url;
+
+        const modal = document.getElementById('admin-wallpaper-modal');
+        if (modal) modal.style.display = 'flex';
+    }
+
+    _closeWallpaperModal() {
+        const modal = document.getElementById('admin-wallpaper-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    _injectWallpaperModal() {
+        if (document.getElementById('admin-wallpaper-modal')) return;
+
+        const modal = document.createElement('div');
+        modal.id = 'admin-wallpaper-modal';
+        modal.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 2000; display: none; align-items: center; justify-content: center;
+        `;
+        modal.innerHTML = `
+            <div id="admin-wallpaper-overlay" style="position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);"></div>
+            <div class="admin-login-content" style="position: relative; z-index: 2; width: 400px; max-width: 90vw; background: #1a1a24; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+                    <h3 style="margin: 0; font-size: 1.1rem; color: var(--admin-purple-lt); display: flex; align-items: center; gap: 0.5rem;"><i class="bi bi-image"></i> Header Wallpaper</h3>
+                    <button id="admin-wallpaper-close" style="background: none; border: none; color: #9aa0a6; cursor: pointer; font-size: 1.2rem;"><i class="bi bi-x-lg"></i></button>
+                </div>
+
+                <div class="admin-field-group" style="margin-bottom: 1rem;">
+                    <label class="admin-field-label" style="display: block; margin-bottom: 0.5rem; color: #fff; font-size: 0.85rem;">Wallpaper Mode</label>
+                    <div style="display: flex; gap: 1rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #e9eef8; font-size: 0.85rem;">
+                            <input type="radio" name="admin-wallpaper-mode" value="auto" checked /> Auto Wallpaper
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #e9eef8; font-size: 0.85rem;">
+                            <input type="radio" name="admin-wallpaper-mode" value="custom" /> Custom Image
+                        </label>
+                    </div>
+                </div>
+
+                <div id="admin-custom-wallpaper-fields" style="display: none; margin-bottom: 1.2rem;">
+                    <div class="admin-field-group" style="margin-bottom: 0.8rem;">
+                        <label class="admin-field-label" style="display: block; margin-bottom: 0.4rem; color: #fff; font-size: 0.85rem;">Custom Image URL / Path</label>
+                        <input type="text" id="admin-field-wallpaper-url" class="admin-input-full" placeholder="e.g. assets/data/custom-icons/my-bg.jpg" />
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <label class="admin-drawer-btn" style="flex: none; padding: 4px 8px; font-size: 0.75rem; margin: 0; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); cursor: pointer;" for="admin-field-wallpaper-upload">
+                            <i class="bi bi-upload"></i> Upload Custom Wallpaper
+                        </label>
+                        <input type="file" id="admin-field-wallpaper-upload" accept="image/*" style="display: none;" />
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 0.7rem; margin-top: 1.5rem;">
+                    <button class="admin-drawer-btn cancel" id="admin-wallpaper-cancel" style="flex: 1; padding: 0.6rem;">Cancel</button>
+                    <button class="admin-drawer-btn save" id="admin-wallpaper-save" style="flex: 1; padding: 0.6rem;">Save</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        // Wire up events
+        document.getElementById('admin-wallpaper-close').addEventListener('click', () => this._closeWallpaperModal());
+        document.getElementById('admin-wallpaper-cancel').addEventListener('click', () => this._closeWallpaperModal());
+        document.getElementById('admin-wallpaper-overlay').addEventListener('click', () => this._closeWallpaperModal());
+
+        document.querySelectorAll('input[name="admin-wallpaper-mode"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                document.getElementById('admin-custom-wallpaper-fields').style.display =
+                    (e.target.value === 'custom') ? 'block' : 'none';
+            });
+        });
+
+        document.getElementById('admin-field-wallpaper-upload').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) this._uploadIcon(file, 'admin-field-wallpaper-url');
+        });
+
+        document.getElementById('admin-wallpaper-save').addEventListener('click', () => {
+            const mode = document.querySelector('input[name="admin-wallpaper-mode"]:checked').value;
+            const url = document.getElementById('admin-field-wallpaper-url').value.trim();
+
+            const data = this._getData();
+            data.wallpaperType = mode;
+            if (mode === 'custom') {
+                data.customWallpaper = url;
+            }
+
+            // Save to localStorage (admin override)
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+
+            // Apply wallpaper immediately
+            if (window.applyHeaderWallpaper) window.applyHeaderWallpaper();
+
+            this._closeWallpaperModal();
+            this._showToast('Wallpaper configuration updated!', 'success');
+        });
     }
 
     // ── Section header controls (edit / delete section) ────────
@@ -475,14 +593,27 @@ class AdminManager {
 
         // Icon preview (item icon)
         document.getElementById('admin-field-icon')?.addEventListener('input', (e) => {
-            const p = document.getElementById('admin-icon-preview');
-            if (p) p.className = `bi ${e.target.value.trim() || 'bi-app'}`;
+            const color = document.getElementById('admin-field-color')?.value || '#8a39ff';
+            this._updateIconPreview(e.target.value, 'admin-icon-preview', 'bi-app', color);
         });
 
         // Icon preview (section icon)
         document.getElementById('admin-section-icon')?.addEventListener('input', (e) => {
-            const p = document.getElementById('admin-section-icon-preview');
-            if (p) p.className = `bi ${e.target.value.trim() || 'bi-grid'}`;
+            this._updateIconPreview(e.target.value, 'admin-section-icon-preview', 'bi-grid');
+        });
+
+        // Handle custom icon file upload (item icon)
+        document.getElementById('admin-field-icon-upload')?.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            this._uploadIcon(file, 'admin-field-icon');
+        });
+
+        // Handle custom icon file upload (section icon)
+        document.getElementById('admin-section-icon-upload')?.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            this._uploadIcon(file, 'admin-section-icon');
         });
 
         // Color picker → text + swatch
@@ -516,9 +647,73 @@ class AdminManager {
             if (el) el.value = hex;
         });
         const swatch = document.getElementById('admin-color-swatch');
-        const icon   = document.getElementById('admin-icon-preview');
         if (swatch) swatch.style.background = hex;
-        if (icon)   icon.style.color = hex;
+        
+        const iconInput = document.getElementById('admin-field-icon');
+        if (iconInput) {
+            this._updateIconPreview(iconInput.value, 'admin-icon-preview', 'bi-app', hex);
+        }
+    }
+
+    _updateIconPreview(inputVal, previewWrapId, defaultClass, color = '') {
+        const previewEl = document.getElementById(previewWrapId);
+        if (!previewEl) return;
+        const wrap = previewEl.parentElement;
+        if (!wrap) return;
+
+        const trimmed = inputVal.trim();
+        if (trimmed.includes('/') || trimmed.includes('.')) {
+            // Render image
+            wrap.innerHTML = `<img id="${previewWrapId}" src="${trimmed}" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px;" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2224%22 height=%2224%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%238a39ff%22 stroke-width=%222%22><rect x=%223%22 y=%223%22 width=%2218%22 height=%2218%22 rx=%222%22/></svg>'">`;
+        } else {
+            // Render bootstrap icon
+            const colorStyle = color ? `style="color:${color}"` : '';
+            wrap.innerHTML = `<i id="${previewWrapId}" class="bi ${trimmed || defaultClass}" ${colorStyle}></i>`;
+        }
+    }
+
+    async _uploadIcon(file, inputId) {
+        const formData = new FormData();
+        formData.append('icon', file);
+
+        try {
+            const input = document.getElementById(inputId);
+            const originalVal = input ? input.value : '';
+            if (input) {
+                input.value = 'Uploading...';
+                input.disabled = true;
+            }
+
+            const response = await fetch('api/upload-icon.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.error || 'Upload failed');
+            }
+
+            const data = await response.json();
+            if (data.status === 'uploaded' && data.path) {
+                if (input) {
+                    input.value = data.path;
+                    input.disabled = false;
+                    // Trigger input event to update preview
+                    const event = new Event('input', { bubbles: true });
+                    input.dispatchEvent(event);
+                }
+            } else {
+                throw new Error('Invalid server response');
+            }
+        } catch (err) {
+            alert('Icon upload failed: ' + err.message);
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.value = '';
+                input.disabled = false;
+            }
+        }
     }
 
     // ── Open drawer ────────────────────────────────────────────
@@ -605,12 +800,12 @@ class AdminManager {
         document.getElementById('admin-field-active').checked = (item.active !== false);
 
         if (this.currentType === 'favorite') {
-            document.getElementById('admin-field-icon').value        = item.icon        || '';
+            const iconVal = item.icon || '';
+            document.getElementById('admin-field-icon').value        = iconVal;
             document.getElementById('admin-field-description').value = item.description || '';
             const color = item.color || '#8a39ff';
             this._syncColor(color);
-            const p = document.getElementById('admin-icon-preview');
-            if (p) { p.className = `bi ${item.icon || 'bi-app'}`; p.style.color = color; }
+            this._updateIconPreview(iconVal, 'admin-icon-preview', 'bi-app', color);
         } else {
             document.getElementById('admin-field-image').value     = item.image     || '';
             document.getElementById('admin-field-subtitle').value  = item.subtitle  || '';
@@ -631,8 +826,11 @@ class AdminManager {
         const activeEl = document.getElementById('admin-field-active');
         if (activeEl) activeEl.checked = true;
         this._syncColor('#8a39ff');
-        const p = document.getElementById('admin-icon-preview');
-        if (p) { p.className = 'bi bi-app'; p.style.color = '#8a39ff'; }
+        this._updateIconPreview('', 'admin-icon-preview', 'bi-app', '#8a39ff');
+        
+        // Reset file inputs
+        const fileInput = document.getElementById('admin-field-icon-upload');
+        if (fileInput) fileInput.value = '';
     }
 
     // ── Drawer populate (sections) ─────────────────────────────
@@ -642,11 +840,11 @@ class AdminManager {
         if (!section) return;
 
         document.getElementById('admin-section-title').value  = section.title  || '';
-        document.getElementById('admin-section-icon').value   = section.icon   || '';
+        const iconVal = section.icon || '';
+        document.getElementById('admin-section-icon').value   = iconVal;
         document.getElementById('admin-section-rssurl').value = section.rssUrl || '';
 
-        const p = document.getElementById('admin-section-icon-preview');
-        if (p) p.className = `bi ${section.icon || 'bi-grid'}`;
+        this._updateIconPreview(iconVal, 'admin-section-icon-preview', 'bi-grid');
 
         const type  = section.type || 'favorite';
         const radio = document.querySelector(`input[name="admin-section-type"][value="${type}"]`);
@@ -661,14 +859,17 @@ class AdminManager {
             const el = document.getElementById(id);
             if (el) el.value = '';
         });
-        const p = document.getElementById('admin-section-icon-preview');
-        if (p) p.className = 'bi bi-grid';
+        this._updateIconPreview('', 'admin-section-icon-preview', 'bi-grid');
 
         const radio = document.querySelector('input[name="admin-section-type"][value="favorite"]');
         if (radio) radio.checked = true;
 
         const newsField = document.querySelector('.admin-news-url-field');
         if (newsField) newsField.style.display = 'none';
+
+        // Reset file inputs
+        const fileInput = document.getElementById('admin-section-icon-upload');
+        if (fileInput) fileInput.value = '';
     }
 
     // ── Save dispatcher ────────────────────────────────────────
